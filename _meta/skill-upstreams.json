@@ -1,6 +1,6 @@
 {
   "version": "1.1",
-  "updated_at": "2026-09-05",
+  "updated_at": "2026-09-15",
   "purpose": "Track verified original upstream repositories for Skill-hub skills so future upgrades can compare evidence-backed sources instead of guessing by skill name.",
   "scope": {
     "startsFrom": [
@@ -45,11 +45,11 @@
         "ref": "main"
       },
       "lastChecked": {
-        "date": "2026-08-29",
-        "commit": "656d4b5746413e4e78f9c62cb34d686515931f4f"
+        "date": "2026-09-15",
+        "commit": "8321021c54d670126ce3b2969d5deb880b4b0c2a"
       },
       "updatePolicy": "mirror",
-      "status": "updated",
+      "status": "current",
       "evidence": [
         "Prior source index entry existed or explicit local URL was present.",
         "Repository cloned or fetched during this audit.",
@@ -114,11 +114,11 @@
         "ref": "main"
       },
       "lastChecked": {
-        "date": "2026-08-29",
-        "commit": "656d4b5746413e4e78f9c62cb34d686515931f4f"
+        "date": "2026-09-15",
+        "commit": "8321021c54d670126ce3b2969d5deb880b4b0c2a"
       },
       "updatePolicy": "mirror",
-      "status": "updated",
+      "status": "current",
       "evidence": [
         "Prior source index entry existed or explicit local URL was present.",
         "Repository cloned or fetched during this audit.",
@@ -140,8 +140,8 @@
         "ref": "main"
       },
       "lastChecked": {
-        "date": "2026-08-29",
-        "commit": "3b3fad96af16a10759d930941b4520ba0c40edae"
+        "date": "2026-09-15",
+        "commit": "34040c9c568585f6929bedeaad110ad08f079624"
       },
       "updatePolicy": "mirror",
       "status": "current",
@@ -186,11 +186,11 @@
         "ref": "main"
       },
       "lastChecked": {
-        "date": "2026-08-29",
-        "commit": "656d4b5746413e4e78f9c62cb34d686515931f4f"
+        "date": "2026-09-15",
+        "commit": "8321021c54d670126ce3b2969d5deb880b4b0c2a"
       },
       "updatePolicy": "mirror",
-      "status": "updated",
+      "status": "current",
       "evidence": [
         "Prior source index entry existed or explicit local URL was present.",
         "Repository cloned or fetched during this audit.",
@@ -235,11 +235,11 @@
         "ref": "main"
       },
       "lastChecked": {
-        "date": "2026-08-29",
-        "commit": "656d4b5746413e4e78f9c62cb34d686515931f4f"
+        "date": "2026-09-15",
+        "commit": "8321021c54d670126ce3b2969d5deb880b4b0c2a"
       },
       "updatePolicy": "mirror",
-      "status": "updated",
+      "status": "current",
       "evidence": [
         "Prior source index entry existed or explicit local URL was present.",
         "Repository cloned or fetched during this audit.",
@@ -261,11 +261,11 @@
         "ref": "main"
       },
       "lastChecked": {
-        "date": "2026-08-29",
-        "commit": "3b3fad96af16a10759d930941b4520ba0c40edae"
+        "date": "2026-09-15",
+        "commit": "34040c9c568585f6929bedeaad110ad08f079624"
       },
       "updatePolicy": "mirror",
-      "status": "updated",
+      "status": "current",
       "evidence": [
         "Prior source index entry existed or explicit local URL was present.",
         "Repository cloned or fetched during this audit.",
@@ -330,130 +330,240 @@
       "name": "general-video",
       "path": "skills/07-media-content/general-video/",
       "classification": "open-source",
-      "upstream": { "url": "https://github.com/heygen-com/hyperframes", "path": "skills/general-video/", "ref": "main" },
-      "lastChecked": { "date": "2026-09-05", "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062" },
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/general-video/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
       "license": "Apache-2.0",
       "updatePolicy": "mapped",
       "status": "installed-snapshot-current",
-      "evidence": ["Installed tree matched the pinned upstream directory file-for-file before backup."],
-      "verificationPath": ["Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."],
+      "evidence": [
+        "Installed tree matched the pinned upstream directory file-for-file before backup."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."
+      ],
       "notes": "Backup of the installed Skill removed from the active Codex roots during the Astra transition."
     },
     {
       "name": "hyperframes",
       "path": "skills/07-media-content/hyperframes/",
       "classification": "open-source",
-      "upstream": { "url": "https://github.com/heygen-com/hyperframes", "path": "skills/hyperframes/", "ref": "main" },
-      "lastChecked": { "date": "2026-09-05", "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062" },
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/hyperframes/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
       "license": "Apache-2.0",
       "updatePolicy": "mapped",
       "status": "installed-snapshot-current",
-      "evidence": ["Installed tree matched the pinned upstream directory file-for-file before backup."],
-      "verificationPath": ["Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."],
+      "evidence": [
+        "Installed tree matched the pinned upstream directory file-for-file before backup."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."
+      ],
       "notes": "Backup of the installed Skill removed from the active Codex roots during the Astra transition."
     },
     {
       "name": "hyperframes-animation",
       "path": "skills/07-media-content/hyperframes-animation/",
       "classification": "open-source",
-      "upstream": { "url": "https://github.com/heygen-com/hyperframes", "path": "skills/hyperframes-animation/", "ref": "main" },
-      "lastChecked": { "date": "2026-09-05", "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062" },
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/hyperframes-animation/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
       "license": "Apache-2.0",
       "updatePolicy": "mapped",
       "status": "installed-snapshot-current",
-      "evidence": ["Installed tree matched the pinned upstream directory file-for-file before backup."],
-      "verificationPath": ["Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."],
+      "evidence": [
+        "Installed tree matched the pinned upstream directory file-for-file before backup."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."
+      ],
       "notes": "Backup of the installed Skill removed from the active Codex roots during the Astra transition."
     },
     {
       "name": "hyperframes-audio",
       "path": "skills/07-media-content/hyperframes-audio/",
       "classification": "open-source",
-      "upstream": { "url": "https://github.com/heygen-com/hyperframes", "path": "skills/hyperframes-audio/", "ref": "main" },
-      "lastChecked": { "date": "2026-09-05", "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062" },
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/hyperframes-audio/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
       "license": "Apache-2.0",
       "updatePolicy": "mapped",
       "status": "installed-snapshot-validator-mapped",
-      "evidence": ["Installed tree matched the pinned upstream before a description-only angle-bracket normalization required by the repository validator."],
-      "verificationPath": ["Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."],
+      "evidence": [
+        "Installed tree matched the pinned upstream before a description-only angle-bracket normalization required by the repository validator."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."
+      ],
       "notes": "Automatic mirror is disabled because the public Skill Hub copy normalizes one custom-element mention in frontmatter."
     },
     {
       "name": "hyperframes-cli",
       "path": "skills/07-media-content/hyperframes-cli/",
       "classification": "open-source",
-      "upstream": { "url": "https://github.com/heygen-com/hyperframes", "path": "skills/hyperframes-cli/", "ref": "main" },
-      "lastChecked": { "date": "2026-09-05", "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062" },
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/hyperframes-cli/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
       "license": "Apache-2.0",
       "updatePolicy": "mapped",
       "status": "installed-snapshot-current",
-      "evidence": ["Installed tree matched the pinned upstream directory file-for-file before backup."],
-      "verificationPath": ["Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."],
+      "evidence": [
+        "Installed tree matched the pinned upstream directory file-for-file before backup."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."
+      ],
       "notes": "Backup of the installed Skill removed from the active Codex roots during the Astra transition."
     },
     {
       "name": "hyperframes-core",
       "path": "skills/07-media-content/hyperframes-core/",
       "classification": "open-source",
-      "upstream": { "url": "https://github.com/heygen-com/hyperframes", "path": "skills/hyperframes-core/", "ref": "main" },
-      "lastChecked": { "date": "2026-09-05", "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062" },
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/hyperframes-core/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
       "license": "Apache-2.0",
       "updatePolicy": "mapped",
       "status": "installed-snapshot-current",
-      "evidence": ["Installed tree matched the pinned upstream directory file-for-file before backup."],
-      "verificationPath": ["Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."],
+      "evidence": [
+        "Installed tree matched the pinned upstream directory file-for-file before backup."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."
+      ],
       "notes": "Backup of the installed Skill removed from the active Codex roots during the Astra transition."
     },
     {
       "name": "hyperframes-creative",
       "path": "skills/07-media-content/hyperframes-creative/",
       "classification": "open-source",
-      "upstream": { "url": "https://github.com/heygen-com/hyperframes", "path": "skills/hyperframes-creative/", "ref": "main" },
-      "lastChecked": { "date": "2026-09-05", "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062" },
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/hyperframes-creative/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
       "license": "Apache-2.0",
       "updatePolicy": "mapped",
       "status": "installed-snapshot-with-declared-divergence",
-      "evidence": ["The installed snapshot differs from the pinned upstream only at references/house-style.md."],
-      "verificationPath": ["Compare the installed-source hash and declared divergence in docs/astra-transition-skill-snapshots.md."],
+      "evidence": [
+        "The installed snapshot differs from the pinned upstream only at references/house-style.md."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash and declared divergence in docs/astra-transition-skill-snapshots.md."
+      ],
       "notes": "The older installed file is intentionally preserved; updates require review."
     },
     {
       "name": "hyperframes-keyframes",
       "path": "skills/07-media-content/hyperframes-keyframes/",
       "classification": "open-source",
-      "upstream": { "url": "https://github.com/heygen-com/hyperframes", "path": "skills/hyperframes-keyframes/", "ref": "main" },
-      "lastChecked": { "date": "2026-09-05", "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062" },
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/hyperframes-keyframes/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
       "license": "Apache-2.0",
       "updatePolicy": "mapped",
       "status": "installed-snapshot-current",
-      "evidence": ["Installed tree matched the pinned upstream directory file-for-file before backup."],
-      "verificationPath": ["Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."],
+      "evidence": [
+        "Installed tree matched the pinned upstream directory file-for-file before backup."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."
+      ],
       "notes": "Backup of the installed Skill removed from the active Codex roots during the Astra transition."
     },
     {
       "name": "hyperframes-registry",
       "path": "skills/07-media-content/hyperframes-registry/",
       "classification": "open-source",
-      "upstream": { "url": "https://github.com/heygen-com/hyperframes", "path": "skills/hyperframes-registry/", "ref": "main" },
-      "lastChecked": { "date": "2026-09-05", "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062" },
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/hyperframes-registry/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
       "license": "Apache-2.0",
       "updatePolicy": "mapped",
       "status": "installed-snapshot-with-declared-divergence",
-      "evidence": ["The installed snapshot differs from the pinned upstream only at references/contributing.md."],
-      "verificationPath": ["Compare the installed-source hash and declared divergence in docs/astra-transition-skill-snapshots.md."],
+      "evidence": [
+        "The installed snapshot differs from the pinned upstream only at references/contributing.md."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash and declared divergence in docs/astra-transition-skill-snapshots.md."
+      ],
       "notes": "The older installed file is intentionally preserved; updates require review."
     },
     {
       "name": "media-use",
       "path": "skills/07-media-content/media-use/",
       "classification": "open-source",
-      "upstream": { "url": "https://github.com/heygen-com/hyperframes", "path": "skills/media-use/", "ref": "main" },
-      "lastChecked": { "date": "2026-09-05", "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062" },
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/media-use/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
       "license": "Apache-2.0",
       "updatePolicy": "mapped",
       "status": "installed-snapshot-privacy-mapped",
-      "evidence": ["Installed tree matched the pinned upstream before one repository-only PostHog project-key redaction."],
-      "verificationPath": ["Compare the installed-source hash and privacy mapping in docs/astra-transition-skill-snapshots.md."],
+      "evidence": [
+        "Installed tree matched the pinned upstream before one repository-only PostHog project-key redaction."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash and privacy mapping in docs/astra-transition-skill-snapshots.md."
+      ],
       "notes": "Automatic mirror is disabled because the public Skill Hub copy intentionally redacts the embedded telemetry project key."
     },
     {
@@ -521,7 +631,7 @@
         "ref": "main"
       },
       "lastChecked": {
-        "date": "2026-08-29",
+        "date": "2026-09-15",
         "commit": "49f948faa9258a0c61caceaf225e179651397431"
       },
       "updatePolicy": "mirror",
@@ -547,11 +657,11 @@
         "ref": "main"
       },
       "lastChecked": {
-        "date": "2026-08-29",
-        "commit": "f421c8a036f4fda888a83b38fc90bb9c00d6faa9"
+        "date": "2026-09-15",
+        "commit": "32c56928ded4f9e2c2b80e099dc7abb793d2c30b"
       },
       "updatePolicy": "mirror",
-      "status": "current",
+      "status": "updated",
       "evidence": [
         "Prior source index entry existed or explicit local URL was present.",
         "Repository cloned or fetched during this audit.",
@@ -576,7 +686,7 @@
         "ref": "main"
       },
       "lastChecked": {
-        "date": "2026-08-29",
+        "date": "2026-09-15",
         "commit": "49f948faa9258a0c61caceaf225e179651397431"
       },
       "updatePolicy": "mirror",
@@ -619,11 +729,11 @@
         "ref": "main"
       },
       "lastChecked": {
-        "date": "2026-08-29",
-        "commit": "3b3fad96af16a10759d930941b4520ba0c40edae"
+        "date": "2026-09-15",
+        "commit": "34040c9c568585f6929bedeaad110ad08f079624"
       },
       "updatePolicy": "mirror",
-      "status": "updated",
+      "status": "current",
       "evidence": [
         "Prior source index entry existed or explicit local URL was present.",
         "Repository cloned or fetched during this audit.",
@@ -691,11 +801,11 @@
         "ref": "main"
       },
       "lastChecked": {
-        "date": "2026-08-29",
-        "commit": "3b3fad96af16a10759d930941b4520ba0c40edae"
+        "date": "2026-09-15",
+        "commit": "34040c9c568585f6929bedeaad110ad08f079624"
       },
       "updatePolicy": "mirror",
-      "status": "updated",
+      "status": "current",
       "evidence": [
         "Prior source index entry existed or explicit local URL was present.",
         "Repository cloned or fetched during this audit.",
@@ -788,11 +898,11 @@
         "ref": "main"
       },
       "lastChecked": {
-        "date": "2026-08-29",
-        "commit": "656d4b5746413e4e78f9c62cb34d686515931f4f"
+        "date": "2026-09-15",
+        "commit": "8321021c54d670126ce3b2969d5deb880b4b0c2a"
       },
       "updatePolicy": "mirror",
-      "status": "updated",
+      "status": "current",
       "evidence": [
         "Prior source index entry existed or explicit local URL was present.",
         "Repository cloned or fetched during this audit.",
@@ -814,11 +924,11 @@
         "ref": "main"
       },
       "lastChecked": {
-        "date": "2026-08-29",
-        "commit": "656d4b5746413e4e78f9c62cb34d686515931f4f"
+        "date": "2026-09-15",
+        "commit": "8321021c54d670126ce3b2969d5deb880b4b0c2a"
       },
       "updatePolicy": "mirror",
-      "status": "updated",
+      "status": "current",
       "evidence": [
         "Prior source index entry existed or explicit local URL was present.",
         "Repository cloned or fetched during this audit.",
@@ -840,11 +950,11 @@
         "ref": "main"
       },
       "lastChecked": {
-        "date": "2026-08-29",
-        "commit": "656d4b5746413e4e78f9c62cb34d686515931f4f"
+        "date": "2026-09-15",
+        "commit": "8321021c54d670126ce3b2969d5deb880b4b0c2a"
       },
       "updatePolicy": "mirror",
-      "status": "updated",
+      "status": "current",
       "evidence": [
         "Prior source index entry existed or explicit local URL was present.",
         "Repository cloned or fetched during this audit.",
@@ -866,11 +976,11 @@
         "ref": "main"
       },
       "lastChecked": {
-        "date": "2026-08-29",
-        "commit": "656d4b5746413e4e78f9c62cb34d686515931f4f"
+        "date": "2026-09-15",
+        "commit": "8321021c54d670126ce3b2969d5deb880b4b0c2a"
       },
       "updatePolicy": "mirror",
-      "status": "updated",
+      "status": "current",
       "evidence": [
         "Prior source index entry existed or explicit local URL was present.",
         "Repository cloned or fetched during this audit.",

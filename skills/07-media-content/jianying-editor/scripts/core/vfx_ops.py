@@ -12,10 +12,10 @@ class VfxOpsMixin:
         if start_time is None:
             start_time = self.get_track_duration(track_name)
         self._ensure_track(draft.TrackType.effect, track_name)
-
+        
         eff_type = self._resolve_enum(draft.VideoSceneEffectType, effect_name)
         if not eff_type: return None
-
+        
         seg = draft.EffectSegment(eff_type, draft.Timerange(safe_tim(start_time), safe_tim(duration)))
         self.script.add_segment(seg, track_name)
         return seg
@@ -39,20 +39,20 @@ class VfxOpsMixin:
 
         trans_type = self._resolve_enum(draft.TransitionType, transition_name)
         if not trans_type: return None
-
+        
         video_segment.add_transition(trans_type, duration=duration)
         return video_segment.transition
 
-    def add_web_asset_safe(self, html_path: str, start_time: Union[str, int] = None, duration: Union[str, int] = "5s",
+    def add_web_asset_safe(self, html_path: str, start_time: Union[str, int] = None, duration: Union[str, int] = "5s", 
                            track_name: str = "WebVfxTrack", output_dir: Optional[str] = None):
         from web_recorder import record_web_animation
-
+        
         if start_time is None:
             start_time = self.get_track_duration(track_name)
         if output_dir is None:
             output_dir = os.path.join(self.root, self.name, "temp_assets")
         os.makedirs(output_dir, exist_ok=True)
-
+        
         video_output = os.path.join(output_dir, f"web_vfx_{int(time.time())}.webm")
         if record_web_animation(html_path, video_output, max_duration=safe_tim(duration)/1e6 + 5):
             return self.add_media_safe(video_output, start_time, duration, track_name=track_name)

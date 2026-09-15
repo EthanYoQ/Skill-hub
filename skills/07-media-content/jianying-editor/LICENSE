@@ -19,3 +19,14 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+--------------------------------------------------------------------------------
+Third-Party Software and Component Licenses:
+
+This project bundles and adapts portions of the following third-party software:
+
+1. pyJianYingDraft (located under scripts/vendor/pyJianYingDraft/)
+   - Author: GuanYixuan (https://github.com/GuanYixuan/pyJianYingDraft)
+   - License: Apache License, Version 2.0
+   - License copy: scripts/vendor/pyJianYingDraft/LICENSE
+   - Copyright (c) 2024 GuanYixuan

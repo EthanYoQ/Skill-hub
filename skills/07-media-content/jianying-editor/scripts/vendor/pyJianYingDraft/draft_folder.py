@@ -130,7 +130,7 @@ class DraftFolder:
         if not os.path.exists(info_path):
             # 兼容旧版本
             info_path = os.path.join(draft_path, "draft_content.json")
-
+            
         return ScriptFile.load_template(info_path)
 
     def duplicate_as_template(self, template_name: str, new_draft_name: str, allow_replace: bool = False) -> ScriptFile:

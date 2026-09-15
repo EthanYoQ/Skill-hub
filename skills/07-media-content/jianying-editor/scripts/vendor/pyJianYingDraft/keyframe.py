@@ -40,8 +40,8 @@ class Keyframe:
         # 如果传入的是预设字典
         if isinstance(curve_type, dict):
             # 这种情况通常是调用时直接解包了预设，但如果用户误传，我们也尝试处理
-            pass
-
+            pass 
+            
         self.kf_id = uuid.uuid4().hex
 
         self.time_offset = time_offset
@@ -139,3 +139,4 @@ class KeyframeList:
 
 # ── 预设缓动曲线 ──────────────────────────────────────────
 # 用法: segment.add_keyframe(KP.uniform_scale, t, 1.0, **EASE_IN)
+

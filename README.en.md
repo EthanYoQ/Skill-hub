@@ -14,7 +14,7 @@
 
 **Start here:** [Browse every skill by name](./_meta/by-name.md) · [Explore by capability domain](./_meta/by-domain.md) · [Read the machine-readable index](./_meta/skills-lock.json) · [Check sources and maintenance boundaries](./_meta/skill-upstreams.json)
 
-Skill-hub is a public Chinese-first AI Agent skill library for Codex, Claude Code, Antigravity, and related AI coding tools. It collects reusable `SKILL.md` automation practices, AI coding workflows, and prompt templates. The repository currently contains **44** reusable skills: **36** shared skills organized by capability domain and **8** project-specific skills archived by project for lookup, local sync, source tracking, and ongoing maintenance.
+Skill-hub is a public Chinese-first AI Agent skill library for Codex, Claude Code, Antigravity, and related AI coding tools. It collects reusable `SKILL.md` automation practices, AI coding workflows, and prompt templates. The repository currently contains **60** reusable skills: **52** shared skills organized by capability domain and **8** project-specific skills archived by project for lookup, local sync, source tracking, and ongoing maintenance.
 
 **Search intent:** Codex skills and Claude Code skills, Chinese AI Agent skill library, AI coding workflows, and prompt templates.
 
@@ -42,19 +42,19 @@ Shared skills live under `skills/`; project-specific skills live under `projects
 
 | Category | Count | Directory | What to look for |
 |---|---:|---|---|
-| <img src="assets/README/icons/overview.svg" width="20" alt=""> Agent Engineering | 8 | `skills/01-agent-engineering/` | Agent building, debugging, autonomy loops, skill creation, Sol Pro plan review, quality gates, skill lifecycle management, and Windows disk/project/memory maintenance. |
+| <img src="assets/README/icons/overview.svg" width="20" alt=""> Agent Engineering | 10 | `skills/01-agent-engineering/` | Agent building, debugging, autonomy loops, skill creation, Sol Pro plan review, quality gates, skill lifecycle management, and Windows disk/project/memory maintenance. |
 | <img src="assets/README/icons/format.svg" width="20" alt=""> Coding Languages | 1 | `skills/02-coding-languages/` | Language-level coding standards, design patterns, and testing conventions. |
 | <img src="assets/README/icons/package.svg" width="20" alt=""> Frameworks and Stacks | 3 | `skills/03-frameworks/` | Frontend design, framework-level implementation patterns, and stack constraints. |
 | <img src="assets/README/icons/index.svg" width="20" alt=""> Data and Search | 1 | `skills/06-data-search/` | Data scraping, search, deep research, PubMed, clinical trials, and report delivery. |
-| <img src="assets/README/icons/format.svg" width="20" alt=""> Media and Content | 15 | `skills/07-media-content/` | PPT, PDF, DOCX, XLSX, images, video, GitHub README visuals, WeChat articles, and presentation content. |
-| <img src="assets/README/icons/writing.svg" width="20" alt=""> Writing and Marketing | 1 | `skills/08-writing-marketing/` | Style imitation, marketing writing, GitHub SEO standards, and recurring evaluation. |
+| <img src="assets/README/icons/format.svg" width="20" alt=""> Media and Content | 25 | `skills/07-media-content/` | PPT, PDF, DOCX, XLSX, images, video, GitHub README visuals, WeChat articles, and presentation content. |
+| <img src="assets/README/icons/writing.svg" width="20" alt=""> Writing and Marketing | 5 | `skills/08-writing-marketing/` | Style imitation, marketing writing, GitHub SEO standards, and recurring evaluation. |
 | <img src="assets/README/icons/source-index.svg" width="20" alt=""> Business and Industry | 7 | `skills/10-business-industry/` | Healthcare, legal, finance, market sizing, citation verification, pharma social listening, and industry report workflows. |
 | <img src="assets/README/icons/directory.svg" width="20" alt=""> Project-Specific | 8 | `projects/` | Skills scoped to specific projects, such as email testing, Feishu, Alibaba Cloud, or invoice workflows. |
 
 ## <img src="assets/README/icons/directory.svg" width="20" alt=""> Directory Structure
 
 ```text
-skills/                        # 36 shared skills, 7 capability domains
+skills/                        # 52 shared skills, 7 capability domains
 |-- 01-agent-engineering/      # Agent building, debugging, autonomy loops, harnesses
 |-- 02-coding-languages/       # Programming languages
 |-- 03-frameworks/             # Frameworks and technology stacks

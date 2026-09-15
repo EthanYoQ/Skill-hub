@@ -40,41 +40,41 @@ class ProGuiRecorder:
         default_dir = os.getcwd()
         self.output_dir = os.path.abspath(output_dir or default_dir)
         os.makedirs(self.output_dir, exist_ok=True)
-
+        
         self.config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "recorder_config.json")
         self.audio_device = audio_device
         self.is_recording = False
         self.start_time = 0
         self.events = []
         self.process = None
-
+        
         # UI Setup
         self.root = tk.Tk()
         self.enable_zoom_record = tk.BooleanVar(value=True)
         self.root.title("剪映录屏助手")
         self.root.attributes("-topmost", True)
         self.root.configure(bg="#2c3e50")
-
+        
         # 加载记忆位置
         self.load_config()
-
+        
         # --- 初始完整界面 ---
         self.main_frame = tk.Frame(self.root, bg="#2c3e50")
         self.main_frame.pack(fill=tk.BOTH, expand=True)
 
         self.status_label = tk.Label(self.main_frame, text="准备就绪", fg="#ecf0f1", bg="#2c3e50", font=(_UI_FONT, 12, "bold"))
         self.status_label.pack(pady=15)
-
+        
         audio_status = "已开启" if audio_device else "已禁用"
-        self.info_label = tk.Label(self.main_frame, text=f"系统音频录制: {audio_status}\n保存至: 项目根目录/",
+        self.info_label = tk.Label(self.main_frame, text=f"系统音频录制: {audio_status}\n保存至: 项目根目录/", 
                                   fg="#bdc3c7", bg="#2c3e50", font=(_UI_FONT, 8))
         self.info_label.pack(pady=2)
-
-        self.start_btn = tk.Button(self.main_frame, text="🎬 开始录制", command=self.start_countdown,
+        
+        self.start_btn = tk.Button(self.main_frame, text="🎬 开始录制", command=self.start_countdown, 
                                   bg="#2ecc71", fg="white", font=(_UI_FONT, 10, "bold"), width=25, height=2)
         self.start_btn.pack(pady=5)
 
-        self.zoom_cb = tk.Checkbutton(self.main_frame, text="开启智能缩放记录 (鼠标/键盘)",
+        self.zoom_cb = tk.Checkbutton(self.main_frame, text="开启智能缩放记录 (鼠标/键盘)", 
                                      variable=self.enable_zoom_record,
                                      bg="#2c3e50", fg="#bdc3c7", selectcolor="#2c3e50",
                                      activebackground="#2c3e50", activeforeground="white",
@@ -85,20 +85,20 @@ class ProGuiRecorder:
         self.mini_frame = tk.Frame(self.root, bg="#e74c3c", cursor="hand2")
         self.record_indicator = tk.Label(self.mini_frame, text="●", fg="white", bg="#e74c3c", font=("Arial", 16))
         self.record_indicator.pack(expand=True)
-
+        
         # 绑定悬停和点击停止
         self.mini_frame.bind("<Button-1>", lambda e: self.stop_recording())
         self.record_indicator.bind("<Button-1>", lambda e: self.stop_recording())
-
+        
         # 允许拖拽小圆点
         self.mini_frame.bind("<B1-Motion>", self.drag_window)
         self.record_indicator.bind("<B1-Motion>", self.drag_window)
 
         # 初始隐藏 mini
         self.mini_frame.pack_forget()
-
+        
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
-
+        
         self.m_listener = None
         self.k_listener = None
         self.screen_width = self.root.winfo_screenwidth()
@@ -167,7 +167,7 @@ class ProGuiRecorder:
         self.is_recording = True
         self.start_time = time.time()
         self.events = []
-
+        
         # 切换到迷你圆形界面 (50x50)
         self.main_frame.pack_forget()
         self.mini_frame.pack(fill=tk.BOTH, expand=True)
@@ -179,23 +179,23 @@ class ProGuiRecorder:
             self.root.geometry(f"50x50+{parts[1]}+{parts[2]}")
         else:
             self.root.geometry("50x50")
-
+        
         self.m_listener = mouse.Listener(on_click=self.on_click, on_move=self.on_move)
         self.k_listener = keyboard.Listener(on_press=self.on_press)
         self.m_listener.start()
         self.k_listener.start()
-
+        
         threading.Thread(target=self.run_ffmpeg, daemon=True).start()
 
     def on_move(self, x, y):
         if not self.is_recording or not self.enable_zoom_record.get():
             return
-
+            
         now = time.time()
         if not hasattr(self, '_last_move_time'):
             self._last_move_time = 0
             self._last_move_pos = (x, y)
-
+        
         if (now - self._last_move_time) > 0.1: # 100ms
             last_x, last_y = self._last_move_pos
             if (x - last_x)**2 + (y - last_y)**2 > 25: # >5px move
@@ -237,10 +237,10 @@ class ProGuiRecorder:
                 cmd.extend(['-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '20'])
 
         cmd.append(self.output_path)
-
+        
         env = os.environ.copy()
         env["PYTHONIOENCODING"] = "utf-8"
-
+        
         self.log_file = os.path.join(self.output_dir, "ffmpeg_log.txt")
         with open(self.log_file, "w", encoding="utf-8") as f:
             self.process = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=f, stderr=subprocess.STDOUT, env=env)
@@ -249,20 +249,20 @@ class ProGuiRecorder:
     def stop_recording(self):
         if not self.is_recording: return
         self.is_recording = False
-
+        
         # 恢复界面
         self.root.overrideredirect(False)
         self.mini_frame.pack_forget()
         self.main_frame.pack(fill=tk.BOTH, expand=True)
         self.load_config() # 恢复之前的尺寸
         self.status_label.config(text="已保存", fg="#2ecc71")
-
+        
         # 重新启用开始按钮
         self.start_btn.config(state=tk.NORMAL)
-
+        
         if self.m_listener: self.m_listener.stop()
         if self.k_listener: self.k_listener.stop()
-
+        
         if self.process:
             try:
                 if self.process.poll() is None: # Still running
@@ -283,12 +283,12 @@ class ProGuiRecorder:
                 print(f"⚠️ FFmpeg 停止异常: {e}")
                 try: self.process.kill()
                 except: pass
-
+        
         try:
             with open(self.events_path, "w", encoding="utf-8") as f:
                 json.dump(self.events, f, indent=4)
         except: pass
-
+        
         if os.path.exists(self.output_path) and os.path.getsize(self.output_path) > 100:
             print(f"✅ 录制成功: {self.output_path}")
             # 弹出后续操作对话框
@@ -304,16 +304,16 @@ class ProGuiRecorder:
         dialog.geometry("400x250")
         dialog.configure(bg="#2c3e50")
         dialog.attributes("-topmost", True)
-
+        
         # 居中显示
         x = self.root.winfo_x()
         y = self.root.winfo_y()
         dialog.geometry(f"+{x}+{y}")
 
-        lbl = tk.Label(dialog, text="✅ 视频已保存！\n下一步做什么？",
+        lbl = tk.Label(dialog, text="✅ 视频已保存！\n下一步做什么？", 
                       fg="#ecf0f1", bg="#2c3e50", font=(_UI_FONT, 12, "bold"))
         lbl.pack(pady=20)
-
+        
         btn_frame = tk.Frame(dialog, bg="#2c3e50")
         btn_frame.pack(fill=tk.BOTH, expand=True)
 
@@ -322,10 +322,10 @@ class ProGuiRecorder:
             import datetime
             timestamp = datetime.datetime.now().strftime("%H%M%S")
             default_name = f"演示_{timestamp}"
-
+            
             name = tk.simpledialog.askstring("创建草稿", "请输入剪映项目名称:", initialvalue=default_name, parent=dialog)
             if not name: return
-
+            
             dialog.destroy()
             self.create_smart_draft(name)
 
@@ -336,10 +336,10 @@ class ProGuiRecorder:
 
         tk.Button(btn_frame, text="✨ 自动生成智能草稿", command=do_create_draft,
                  bg="#3498db", fg="white", font=(_UI_FONT, 10), width=20).pack(pady=5)
-
+                 
         tk.Button(btn_frame, text="📂 打开文件位置", command=open_folder,
                  bg="#95a5a6", fg="white", font=(_UI_FONT, 10), width=20).pack(pady=5)
-
+                 
         tk.Button(btn_frame, text="❌ 关闭", command=dialog.destroy,
                  bg="#e74c3c", fg="white", font=(_UI_FONT, 10), width=20).pack(pady=5)
 
@@ -349,36 +349,36 @@ class ProGuiRecorder:
             script_dir = os.path.dirname(os.path.abspath(__file__))
             # 假设结构: tools/recording/xxx.py -> scripts/jy_wrapper.py
             wrapper_path = os.path.abspath(os.path.join(script_dir, "..", "..", "scripts", "jy_wrapper.py"))
-
+            
             if not os.path.exists(wrapper_path):
                 messagebox.showerror("错误", f"找不到 jy_wrapper.py:\n{wrapper_path}")
                 return
 
             cmd = [
-                sys.executable, wrapper_path,
+                sys.executable, wrapper_path, 
                 "apply-zoom",
                 "--name", project_name,
                 "--video", self.output_path,
                 "--json", self.events_path,
                 "--scale", "150" # 默认缩放
             ]
-
+            
             # 显示运行中
             self.status_label.config(text="正在生成草稿...", fg="#3498db")
             self.root.update()
-
+            
             env = os.environ.copy()
             env["PYTHONIOENCODING"] = "utf-8"
-
+            
             result = subprocess.run(cmd, capture_output=True, text=True, encoding='utf-8', env=env)
-
+            
             if result.returncode == 0:
                 self.status_label.config(text="草稿创建成功！", fg="#2ecc71")
                 messagebox.showinfo("成功", f"剪映草稿 '{project_name}' 已创建！\n\n请打开剪映查看。")
             else:
                 self.status_label.config(text="创建失败", fg="#e74c3c")
                 messagebox.showerror("失败", f"创建出错:\n{result.stderr}")
-
+                
         except Exception as e:
             messagebox.showerror("异常", str(e))
 
@@ -394,7 +394,7 @@ if __name__ == "__main__":
     else:
         # Windows: 更新为您电脑上的真实设备名称
         AUDIO_ID = "@device_cm_{33D9A762-90C8-11D0-BD43-00A0C911CE86}\\wave_{E2766CC5-17BF-4974-AA81-E3108DEF5092}"
-
+    
     # 可以接受路径作为保存目录
     out_dir = sys.argv[1] if len(sys.argv) > 1 else None
     recorder = ProGuiRecorder(out_dir, audio_device=AUDIO_ID)

@@ -254,12 +254,12 @@ class TextShadow:
 
 class RichTextSpan:
     """一段文字范围的独立样式定义"""
-
+    
     start: int
     """文字起始索引"""
     end: int
     """文字结束索引 (不包含)"""
-
+    
     color: Optional[Tuple[float, float, float]]
     """文字颜色, RGB三元组, 取值范围为[0, 1]"""
     size: Optional[float]
@@ -290,7 +290,7 @@ class RichTextSpan:
         """
         self.start = start
         self.end = end
-
+        
         # 如果提供了 style 对象，先提取属性
         if style:
             self.color = style.color
@@ -304,7 +304,7 @@ class RichTextSpan:
             self.bold = bold
             self.italic = italic
             self.underline = underline
-
+            
         # 覆盖层：如果显式提供了关键字参数，则进一步覆盖
         if color is not None: self.color = color
         if size is not None: self.size = size

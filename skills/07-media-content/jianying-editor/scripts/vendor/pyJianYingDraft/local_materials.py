@@ -1,9 +1,42 @@
 import os
+import json
+import subprocess
 import uuid
-import pymediainfo
+try:
+    import pymediainfo
+except ImportError:
+    pymediainfo = None
 
 from typing import Optional, Literal
 from typing import Dict, Any
+
+
+def _probe_media(path: str) -> Dict[str, Any]:
+    """Probe media with ffprobe when pymediainfo/libmediainfo is unavailable."""
+    cmd = [
+        "ffprobe",
+        "-v",
+        "error",
+        "-show_entries",
+        "format=duration",
+        "-show_streams",
+        "-of",
+        "json",
+        path,
+    ]
+    res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=15)
+    if res.returncode != 0:
+        raise ValueError(res.stderr.strip() or f"ffprobe failed for {path}")
+    return json.loads(res.stdout or "{}")
+
+
+def _duration_us(value: Any, fallback: Optional[int] = None) -> int:
+    try:
+        if value is not None:
+            return int(float(value) * 1_000_000)
+    except (TypeError, ValueError):
+        pass
+    return int(fallback or 10_000_000)
 
 class CropSettings:
     """素材的裁剪设置, 各属性均在0-1之间, 注意素材的坐标原点在左上角"""
@@ -79,20 +112,46 @@ class VideoMaterial:
         self.material_id = uuid.uuid4().hex
         self.path = path
         self.crop_settings = crop_settings
-        self.local_material_id = ""
+        # 剪映 v5.9+ 需要非空的本地素材登记 id；用文件名 stem 保证与素材文件一一对应，
+        # 且与 _stage_local_asset 复制的副本文件名（md5(源路径)）保持一致。
+        self.local_material_id = os.path.splitext(os.path.basename(self.path))[0]
 
-        if not pymediainfo.MediaInfo.can_parse():
-            raise ValueError(f"不支持的视频素材类型 '{postfix}'")
+        if not pymediainfo or not pymediainfo.MediaInfo.can_parse():
+            probed = _probe_media(path)
+            streams = probed.get("streams", [])
+            video_stream = next((s for s in streams if s.get("codec_type") == "video"), None)
+            image_exts = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tif", ".tiff"}
+            if video_stream:
+                self.material_type = "video"
+                self.duration = _duration_us(
+                    video_stream.get("duration") or probed.get("format", {}).get("duration"),
+                    duration,
+                )
+                self.width = int(video_stream.get("width") or 1920)
+                self.height = int(video_stream.get("height") or 1080)
+                return
+            if postfix.lower() in image_exts:
+                self.material_type = "photo"
+                self.duration = duration or 10800000000
+                self.width = int((video_stream or {}).get("width") or 1920)
+                self.height = int((video_stream or {}).get("height") or 1080)
+                return
+            if duration is not None:
+                self.material_type = "video"
+                self.duration = duration
+                self.width, self.height = 1920, 1080
+                return
+            raise ValueError(f"输入的素材文件 {path} 没有视频轨道或图片轨道")
 
         try:
             info: pymediainfo.MediaInfo = \
                 pymediainfo.MediaInfo.parse(path, mediainfo_options={"File_TestContinuousFileNames": "0"})  # type: ignore
-
+            
             # 有视频轨道的视为视频素材
             if len(info.video_tracks):
                 self.material_type = "video"
                 parsed_duration = info.video_tracks[0].duration
-
+                
                 if parsed_duration:
                     self.duration = int(parsed_duration * 1e3)
                 else:
@@ -102,9 +161,9 @@ class VideoMaterial:
                     else:
                         # 既无法解析又没传参数，只能给个默认值防止崩
                         self.duration = 10 * 1000 * 1000 # 10s default
-
-                self.width, self.height = info.video_tracks[0].width, info.video_tracks[0].height
-
+                        
+                self.width, self.height = info.video_tracks[0].width, info.video_tracks[0].height 
+            
             # gif文件使用imageio库获取长度
             elif postfix.lower() == ".gif":
                 import imageio
@@ -123,7 +182,7 @@ class VideoMaterial:
             elif len(info.image_tracks):
                 self.material_type = "photo"
                 self.duration = 10800000000  # 相当于3h
-                self.width, self.height = info.image_tracks[0].width, info.image_tracks[0].height
+                self.width, self.height = info.image_tracks[0].width, info.image_tracks[0].height 
             else:
                  # Fallback for WebM or other formats if pymediainfo detect no tracks but file exists
                 if duration is not None:
@@ -208,9 +267,20 @@ class AudioMaterial:
         self.material_name = material_name if material_name else os.path.basename(path)
         self.material_id = uuid.uuid4().hex
         self.path = path
+        self.local_material_id = os.path.splitext(os.path.basename(self.path))[0]
 
-        if not pymediainfo.MediaInfo.can_parse():
-            raise ValueError("不支持的音频素材类型 %s" % os.path.splitext(path)[1])
+        if not pymediainfo or not pymediainfo.MediaInfo.can_parse():
+            probed = _probe_media(path)
+            streams = probed.get("streams", [])
+            if any(s.get("codec_type") == "video" for s in streams):
+                raise ValueError("音频素材不应包含视频轨道")
+            audio_stream = next((s for s in streams if s.get("codec_type") == "audio"), None)
+            if not audio_stream:
+                raise ValueError(f"给定的素材文件 {path} 没有音频轨道")
+            self.duration = _duration_us(
+                audio_stream.get("duration") or probed.get("format", {}).get("duration")
+            )
+            return
         info: pymediainfo.MediaInfo = pymediainfo.MediaInfo.parse(path)  # type: ignore
         if len(info.video_tracks):
             raise ValueError("音频素材不应包含视频轨道")
@@ -229,7 +299,7 @@ class AudioMaterial:
             "effect_id": "",
             "formula_id": "",
             "id": self.material_id,
-            "local_material_id": self.material_id,
+            "local_material_id": self.local_material_id,
             "music_id": self.material_id,
             "name": self.material_name,
             "path": self.path,

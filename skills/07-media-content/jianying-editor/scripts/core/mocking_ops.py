@@ -109,7 +109,7 @@ class MockingOpsMixin:
                             mat["music_id"] = patch_info["id"]
                             mat["type"] = "music"
                             has_modified = True
-
+            
             if has_modified:
                 with open(content_path, "w", encoding="utf-8") as f:
                     json.dump(data, f, ensure_ascii=False)

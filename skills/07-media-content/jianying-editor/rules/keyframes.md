@@ -27,8 +27,8 @@ from pyJianYingDraft import KeyframeProperty as KP, Keyframe
 # Note: start_time and duration must be known to calculate absolute keyframe times
 start_time = 1000000  # 1s (in microseconds)
 segment = project.add_media_safe(
-    os.path.expanduser("~/assets/image.png"),
-    start_time=start_time,
+    os.path.expanduser("~/assets/image.png"), 
+    start_time=start_time, 
     duration="4s"
 )
 
@@ -36,21 +36,21 @@ if segment:
     # 2. Define keyframe times (Absolute Timeline Time in microseconds)
     t_start = start_time
     t_end = start_time + 4000000 # 1s + 4s = 5s
-
+    
     # 3. Add Keyframes
-
+    
     # Example: Zoom In (Scale from 1.0 to 1.5)
     segment.add_keyframe(KP.uniform_scale, t_start, 1.0)
     segment.add_keyframe(KP.uniform_scale, t_end, 1.5)
-
+    
     # Example: Fade Out (Opacity from 1.0 to 0.0)
     # segment.add_keyframe(KP.alpha, t_start, 1.0) # Check actual property name support
-
+    
     # Example: Move X (Position)
     # Coordinates: 0.0 is center? (Verify with trial, usually normalized)
     segment.add_keyframe(KP.position_x, t_start, -0.5) # Left
     segment.add_keyframe(KP.position_x, t_end, 0.5)    # Right
-
+    
     # Example: Smooth Zoom with Bezier (Easing)
     # Using presets: Keyframe.EASE_IN, Keyframe.EASE_OUT, Keyframe.EASE_IN_OUT
     segment.add_keyframe(KP.uniform_scale, t_start, 1.0, **Keyframe.EASE_IN_OUT)

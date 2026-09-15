@@ -19,7 +19,7 @@
 
 **从这里开始：** [按名字浏览全部技能](./_meta/by-name.md) · [按能力域探索](./_meta/by-domain.md) · [查看机器可读索引](./_meta/skills-lock.json) · [了解来源与维护边界](./_meta/skill-upstreams.json) · [浏览完整外部工作流包](./docs/external-workflow-packs.md)
 
-Skill-hub 是一个面向 Codex、Claude Code、Antigravity 等 AI 编程工具的中文 Agent 技能库，收集可复用的 `SKILL.md` 自动化实践、AI 编程工作流和提示词模板。仓库当前包含 **44** 个可复用技能，其中 **36** 个共享技能按能力域组织，**8** 个项目私有技能按项目归档，便于检索、本地同步、来源追踪和持续维护。
+Skill-hub 是一个面向 Codex、Claude Code、Antigravity 等 AI 编程工具的中文 Agent 技能库，收集可复用的 `SKILL.md` 自动化实践、AI 编程工作流和提示词模板。仓库当前包含 **60** 个可复用技能，其中 **52** 个共享技能按能力域组织，**8** 个项目私有技能按项目归档，便于检索、本地同步、来源追踪和持续维护。
 
 **适合搜索：** Codex 技能与 Claude Code 技能、中文 Agent 技能库、AI 编程工作流与提示词模板。
 
@@ -47,19 +47,19 @@ Skill-hub 不是单一提示词合集，而是面向 Agent 使用的技能仓库
 
 | 类别 | 数量 | 目录 | 适合查什么 |
 |---|---:|---|---|
-| <img src="assets/README/icons/overview.svg" width="20" alt=""> Agent 工程 | 8 | `skills/01-agent-engineering/` | Agent 构建、调试、自治循环、技能创建、Sol Pro 方案审查、质量门、skill 生命周期，以及 Windows 磁盘/项目垃圾与内存健康维护。 |
+| <img src="assets/README/icons/overview.svg" width="20" alt=""> Agent 工程 | 10 | `skills/01-agent-engineering/` | Agent 构建、调试、自治循环、技能创建、Sol Pro 方案审查、质量门、skill 生命周期，以及 Windows 磁盘/项目垃圾与内存健康维护。 |
 | <img src="assets/README/icons/format.svg" width="20" alt=""> 编程语言 | 1 | `skills/02-coding-languages/` | 语言级编码标准、设计模式和测试规范。 |
 | <img src="assets/README/icons/package.svg" width="20" alt=""> 框架与技术栈 | 3 | `skills/03-frameworks/` | 前端设计、框架级实现模式和技术栈约束。 |
 | <img src="assets/README/icons/index.svg" width="20" alt=""> 数据与检索 | 1 | `skills/06-data-search/` | 数据抓取、搜索、深度研究、PubMed、临床试验和报告交付。 |
-| <img src="assets/README/icons/format.svg" width="20" alt=""> 媒体与内容制作 | 15 | `skills/07-media-content/` | PPT、PDF、DOCX、XLSX、图像、视频、GitHub README 视觉、公众号文章和演示内容。 |
-| <img src="assets/README/icons/writing.svg" width="20" alt=""> 写作与营销 | 1 | `skills/08-writing-marketing/` | 风格仿写、营销写作、GitHub SEO 标准与周期评估。 |
+| <img src="assets/README/icons/format.svg" width="20" alt=""> 媒体与内容制作 | 25 | `skills/07-media-content/` | PPT、PDF、DOCX、XLSX、图像、视频、GitHub README 视觉、公众号文章和演示内容。 |
+| <img src="assets/README/icons/writing.svg" width="20" alt=""> 写作与营销 | 5 | `skills/08-writing-marketing/` | 风格仿写、营销写作、GitHub SEO 标准与周期评估。 |
 | <img src="assets/README/icons/source-index.svg" width="20" alt=""> 行业与业务 | 7 | `skills/10-business-industry/` | 医疗、法律、金融、市场规模、引用校验、药企舆情研究和行业报告流程。 |
 | <img src="assets/README/icons/directory.svg" width="20" alt=""> 项目私有 | 8 | `projects/` | 只对特定项目生效的技能，例如邮箱测试、飞书、阿里云或发票项目流程。 |
 
 ## <img src="assets/README/icons/directory.svg" width="20" alt=""> 目录结构
 
 ```text
-skills/                        # 36 个共享技能，分 7 个能力域
+skills/                        # 52 个共享技能，分 7 个能力域
 |-- 01-agent-engineering/      # Agent 构建、调试、自治循环、harness
 |-- 02-coding-languages/       # 编程语言
 |-- 03-frameworks/             # 框架与技术栈

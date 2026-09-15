@@ -45,7 +45,7 @@ def get_duration_ffprobe(file_path):
 
 def sync_music_cache_robust():
     print(f"🔄 Starting Robust Sync from: {JY_CACHE_MUSIC}")
-
+    
     # 1. 读取 downLoadcfg 获取物理文件映射
     cfg_path = os.path.join(JY_CACHE_MUSIC, "downLoadcfg")
     if not os.path.exists(cfg_path):
@@ -82,7 +82,7 @@ def sync_music_cache_robust():
                     conn.close()
                 except Exception:
                     pass
-
+    
     # 3. 读取现有 CSV 索引以实现增量同步
     csv_path = os.path.join(DATA_DIR, "jy_cached_audio.csv")
     existing_ids = set()
@@ -109,13 +109,13 @@ def sync_music_cache_robust():
         mid_hex = item.get('hex')
         file_name = item.get('path')
         src_path = os.path.join(JY_CACHE_MUSIC, file_name)
-
+        
         if not os.path.exists(src_path):
             continue
-
+            
         # 尝试匹配元数据
         meta = db_map.get(mid_hex)
-
+        
         # 命名策略
         if meta:
             display_name = meta['name']
@@ -133,16 +133,16 @@ def sync_music_cache_robust():
         # 复制到 Skill 目录
         safe_name = "".join([c for c in display_name if c.isalnum() or c in (' ', '_', '-')]).strip()
         if not safe_name: safe_name = f"Music_{mid_hex[:6]}"
-
+        
         dest_filename = f"{safe_name}.mp3"
         dest_path = os.path.join(DEST_DIR, dest_filename)
-
+        
         try:
             shutil.copy2(src_path, dest_path)
-
+            
             # 尝试获取真实时长
             duration = get_duration_ffprobe(dest_path)
-
+            
             existing_items.append({
                 "identifier": display_name,
                 "author": author,
@@ -165,7 +165,7 @@ def sync_music_cache_robust():
         writer = csv.DictWriter(f, fieldnames=["identifier", "author", "duration", "path", "category"])
         writer.writeheader()
         writer.writerows(existing_items)
-
+    
     print(f"\n🎉 Sync Complete! +{new_count} new, {len(existing_items)} total assets.")
     print(f"📂 Assets dir: {DEST_DIR}")
     print(f"📋 Index: {csv_path}")

@@ -16,11 +16,11 @@ def add_media_safe(self, file_path, start_time=None, duration=None, track_name=N
     """
     Args:
         file_path (str): Absolute path to the asset file.
-        start_time (str, optional): Timeline position (e.g., "0s").
+        start_time (str, optional): Timeline position (e.g., "0s"). 
                                    If None, appends to the end of the track (Smart Append).
         duration (str, optional): Duration override (recommended: "5s").
         track_name (str, optional): Logical name of the track.
-
+    
     Returns:
         SegmentObject: The created segment instance.
     """

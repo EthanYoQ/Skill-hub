@@ -15,7 +15,7 @@ All operations are performed through the `JyProject` instance.
 
 ```python
 # 默认：横屏 (16:9)
-project = JyProject("Horizontal_Project")
+project = JyProject("Horizontal_Project") 
 
 # 竖屏 (9:16)：必须在初始时指定，否则会有黑边
 project = JyProject("Portrait_Project", width=1080, height=1920)
@@ -24,7 +24,7 @@ project = JyProject("Portrait_Project", width=1080, height=1920)
 
 ## Saving
 
-You **MUST** call `project.save()` at the end of your script.
+You **MUST** call `project.save()` at the end of your script. 
 This operation not only saves the JSON changes but also triggers a refresh in the Jianying UI (if applicable) or ensures the filesystem is synced.
 
 ```python
@@ -65,7 +65,7 @@ python <SKILL_ROOT>/scripts/auto_exporter.py "ProjectName" "custom_output.mp4" -
 ## Constraints
 
 - **Draft Recognition**: The wrapper automatically handles `DraftFolder` structure. Do not manually manipulate `draft_content.json` unless you know exactly what you are doing.
-- **Exporting Requirements**: Auto-exporting via `uiautomation` 仅支持 **Windows** + **Jianying v5.9 or lower**。macOS 上请手动导出或使用命令行工具。
+- **Exporting Requirements**: Auto-exporting via `uiautomation` 仅支持 **Windows**，剪映 5.9 或更低版本最稳。macOS 上请生成草稿后在剪映里手动导出。
 - **UI Refresh**: After the script runs, if Jianying is open, the user may need to exit and re-enter the draft to see changes.
 
 ## Quick Edit Execution Template (Standard)

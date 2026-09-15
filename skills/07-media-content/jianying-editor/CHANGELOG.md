@@ -1,4 +1,17 @@
 # Changelog
+ 
+## v1.7.0 - 2026-09-11
+- **Draft Self-containment & Media Missing Fix** (Contributed by @shaozheliu, #23):
+  - Fixed JianYing Pro 5.9+ "media missing" error caused by empty `local_material_id` and external transient file cleanup.
+  - Generates stable, non-empty `local_material_id` based on filename stem for `VideoMaterial` and `AudioMaterial`.
+  - Automatically stages imported assets into the draft's internal directory to ensure self-contained project bundles.
+  - Removed dummy cloud music fallbacks (`cloud_music_xxx.mp3`); aborts cleanly on download failure to prevent corrupted drafts.
+- **macOS Compatibility & Resilient Media Probing** (Contributed by @twodogegg, #20):
+  - Added primary detection for modern macOS JianYing draft root and `.agents` skill installations.
+  - Added `ffprobe` fallback probing when `pymediainfo` or `libmediainfo` is unavailable.
+  - Added video geometry and codec normalization for odd dimensions or incompatible streams.
+  - Added safe platform detection for auto exporter with clear unsupported notices on non-Windows environments.
+  - Expanded unit test coverage with 19 test cases.
 
 ## v1.6.0 - 2026-04-19
 - **Core Enhancements**:

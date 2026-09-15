@@ -9,7 +9,7 @@
 | [skills-lock.json](./skills-lock.json) | 机器可读映射表 | 脚本同步、自动化使用 |
 | [external-workflow-packs.json](./external-workflow-packs.json) | 外部完整工作流包目录 | 发现、安装和维护不应拆分的第三方工作流包 |
 
-当前共 44 个技能（36 个共享 + 8 个项目私有）。
+当前共 60 个技能（52 个共享 + 8 个项目私有）。
 
 ## 命名与分类约定
 
