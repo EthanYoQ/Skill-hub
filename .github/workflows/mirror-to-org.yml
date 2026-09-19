@@ -11,6 +11,13 @@ on:
   push:
     branches: [mine]
 
+# Serialize all writes to the single organization main branch.
+# The source branch may receive several commits in quick succession; concurrent
+# mirror jobs can otherwise race on refs/heads/main.
+concurrency:
+  group: skill-hub-org-mirror
+  cancel-in-progress: false
+
 jobs:
   mirror:
     # 防止组织仓库被镜像后收到 push 又重复触发（死循环防护）
@@ -99,7 +106,22 @@ jobs:
             exit 1
           fi
           git remote add org "https://x-access-token:${ORG_TOKEN}@github.com/Singularity-AI-Gamer/agent-skills.git"
-          git push org HEAD:main --force
+          pushed=0
+          for attempt in 1 2 3; do
+            echo "Push attempt ${attempt}/3"
+            if git push org HEAD:main --force; then
+              pushed=1
+              break
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "Remote ref changed or push was transiently rejected; retrying..."
+              sleep 2
+            fi
+          done
+          if [ "$pushed" -ne 1 ]; then
+            echo "::error::Mirror push failed after 3 attempts."
+            exit 1
+          fi
           echo "=== Mirror complete ==="
           echo "Mirrored $(git rev-parse --short HEAD) → Singularity-AI-Gamer/agent-skills:main"
           echo "Shared skills: $(find skills -name SKILL.md | wc -l)"
@@ -108,4 +130,4 @@ jobs:
       - name: Report failure
         if: failure()
         run: |
-          echo "::error::镜像到组织仓库失败。请检查 ORG_PUSH_TOKEN 是否已配置、是否过期、是否有组织仓库写入权限。"
+          echo "::error::镜像到组织仓库失败。请检查上方首个失败步骤；常见原因包括远端 ref 竞态、Token 或权限问题。"
