@@ -1,0 +1,62 @@
+{
+  "styles": {
+    "whiteboard": {
+      "name": "白板板书风格",
+      "description": "专业白板马克笔手写风格，蓝/红/黑三色marker，5种页面类型各用专属参考图",
+      "base_instruction": "按参考图出图，原图的白板和背景保留不变，内容文字配图按文案重新设计，中文必须是马克笔shufa笔触风格，配图手绘风格。Chinese text MUST use thick shufa-style ink brush marker calligraphy — bold chunky strokes, NOT printed font. 颜色规则：文字的颜色规则黑色：主标题、正文、蓝色：副标题、数据标注、补充信息、红色：强调词、结论句、圆圈高亮。配图的颜色规则按图片内容用红蓝马克笔适配。",
+      "type": "multi_ref",
+      "refs": {
+        "cover": "styles/whiteboard/pages/cover.jpg",
+        "text": "styles/whiteboard/pages/text.jpg",
+        "content": "styles/whiteboard/pages/content.jpg",
+        "chart": "styles/whiteboard/pages/chart.jpg",
+        "navigation": "styles/whiteboard/pages/navigation.jpg",
+        "closing": "styles/whiteboard/pages/closing.jpg"
+      },
+      "page_type_rules": {
+        "first": "cover",
+        "last": "closing",
+        "default": "content"
+      },
+      "page_type_guide": {
+        "cover": "首页：超大标题+图标+箭头，主题鲜明",
+        "text": "文字页：纯文字列表，简洁清晰，有警示/强调图标",
+        "content": "内容页：图标+思维导图+文字混合，适合分点说明",
+        "chart": "图表页：折线图/柱状图/数据可视化",
+        "navigation": "导航页：流程图/路线图，多节点箭头连接",
+        "closing": "尾页：结论+行动号召，靶心/目标图"
+      },
+      "handwriting_requirement": "CRITICAL: Generate in EXACTLY the same style as the reference photo. ALL Chinese text must be large bold hand-written marker pen brush stroke style — casual natural brush handwriting, NOT printed font. ALL illustrations must be single-line hand-drawn sketch style — thin marker stroke outlines, simple clean lines, hand-drawn feel like the reference image.",
+      "style_prompts": {
+        "cover": "按参考图出图，原图的白板和背景保留不变，内容文字配图按文案重新设计，中文必须是马克笔shufa笔触风格，配图手绘风格。Chinese text MUST use thick shufa-style ink brush marker calligraphy — bold chunky strokes, NOT printed font. 颜色规则：文字的颜色规则黑色：主标题、正文、蓝色：副标题、数据标注、补充信息、红色：强调词、结论句、圆圈高亮。配图的颜色规则按图片内容用红蓝马克笔适配。Layout: very large BLACK shufa title top. RED hand-drawn circle highlight on key word. Center: large single-line hand-drawn lobster mascot with hard hat, raising claws. Scattered single-line doodle icons: lightbulbs, gears, speech bubbles, RED exclamation marks, RED arrows. RED hand-written 'Start Here!' arrow. Bottom: BLUE shufa subtitle.",
+        "text": "按参考图出图，原图的白板和背景保留不变，内容文字配图按文案重新设计，中文必须是马克笔shufa笔触风格，配图手绘风格。Chinese text MUST use thick shufa-style ink brush marker calligraphy — bold chunky strokes, NOT printed font. 颜色规则：文字的颜色规则黑色：主标题、正文、蓝色：副标题、数据标注、补充信息、红色：强调词、结论句、圆圈高亮。配图的颜色规则按图片内容用红蓝马克笔适配。按这个风格出图，内容按文案来，中文要用shufa马克笔手写体风格，配图要手绘风格。Follow the exact style of the reference photo. Chinese text: thick shufa ink brush marker calligraphy, bold chunky strokes, NOT printed font. Illustrations: single-line hand-drawn doodle style. Real whiteboard photo, blurred office background. Layout: very large BLACK shufa title top. Below title: BLUE shufa subtitle. Left: single-line hand-drawn lobster or character illustration with scattered doodle icons. Right: numbered list 1-2-3 with shufa Chinese text, red hand-drawn oval circles around key phrases. Bottom: large bold RED shufa conclusion sentence with stars and arrows.",
+        "content": "按参考图出图，原图的白板和背景保留不变，内容文字配图按文案重新设计，中文必须是马克笔shufa笔触风格，配图手绘风格。Chinese text MUST use thick shufa-style ink brush marker calligraphy — bold chunky strokes, NOT printed font. 颜色规则：文字的颜色规则黑色：主标题、正文、蓝色：副标题、数据标注、补充信息、红色：强调词、结论句、圆圈高亮。配图的颜色规则按图片内容用红蓝马克笔适配。按这个风格出图，内容按文案来，中文要用shufa马克笔手写体风格，配图要手绘风格。Follow the exact style of the reference photo. Chinese text: thick shufa ink brush marker calligraphy, bold chunky strokes, NOT printed font. Illustrations: single-line hand-drawn doodle style. Real whiteboard photo, blurred office background. Layout: very large BLACK shufa title top spanning full width. Left: hand-drawn speech bubble with shufa Chinese text. Single-line sketch of person/scene. Center: single-line hand-drawn robot/AI character with connection lines to people icons. Right: 3-4 speech bubble boxes with shufa Chinese short phrases. Bottom full-width: large bold RED shufa conclusion sentence, key words in red.",
+        "chart": "按参考图出图，原图的白板和背景保留不变，内容文字配图按文案重新设计，中文必须是马克笔shufa笔触风格，配图手绘风格。Chinese text MUST use thick shufa-style ink brush marker calligraphy — bold chunky strokes, NOT printed font. 颜色规则：文字的颜色规则黑色：主标题、正文、蓝色：副标题、数据标注、补充信息、红色：强调词、结论句、圆圈高亮。配图的颜色规则按图片内容用红蓝马克笔适配。按这个风格出图，内容按文案来，中文要用shufa马克笔手写体风格，配图要手绘风格。Follow the exact style of the reference photo. Chinese text: thick shufa ink brush marker calligraphy, bold chunky strokes, NOT printed font. Illustrations: single-line hand-drawn doodle style. Real whiteboard photo, blurred office background. Layout: large BLACK shufa title top-left, BLUE shufa highlighted key words in title. 2x2 grid divided by lines: each cell has large BLUE shufa number/stat + single-line hand-drawn icon. Bottom half: red hand-drawn oval circles around key highlight numbers, single-line eye/video/people icons. Bottom: BLUE shufa conclusion with hand-drawn underline. hand-written 'Wow!' annotation.",
+        "navigation": "按参考图出图，原图的白板和背景保留不变，内容文字配图按文案重新设计，中文必须是马克笔shufa笔触风格，配图手绘风格。Chinese text MUST use thick shufa-style ink brush marker calligraphy — bold chunky strokes, NOT printed font. 颜色规则：文字的颜色规则黑色：主标题、正文、蓝色：副标题、数据标注、补充信息、红色：强调词、结论句、圆圈高亮。配图的颜色规则按图片内容用红蓝马克笔适配。按这个风格出图，内容按文案来，中文要用shufa马克笔手写体风格，配图要手绘风格。Follow the exact style of the reference photo. Chinese text: thick shufa ink brush marker calligraphy, bold chunky strokes, NOT printed font. Illustrations: single-line hand-drawn doodle style. Real whiteboard photo, blurred office background. Layout: large BLACK+RED shufa title top. Center: 3 red hand-drawn circles connected by thick red arrows, ascending growth arrow above. Inside each circle: single-line hand-drawn illustration (stick figure, lobster, group of lobsters). Below each circle: shufa Chinese label + English translation. Bottom: large BLUE shufa summary statement.",
+        "closing": "按参考图出图，原图的白板和背景保留不变，内容文字配图按文案重新设计，中文必须是马克笔shufa笔触风格，配图手绘风格。Chinese text MUST use thick shufa-style ink brush marker calligraphy — bold chunky strokes, NOT printed font. 颜色规则：文字的颜色规则黑色：主标题、正文、蓝色：副标题、数据标注、补充信息、红色：强调词、结论句、圆圈高亮。配图的颜色规则按图片内容用红蓝马克笔适配。按这个风格出图，内容按文案来，中文要用shufa马克笔手写体风格，配图要手绘风格。Follow the exact style of the reference photo. Chinese text: thick shufa ink brush marker calligraphy, bold chunky strokes, NOT printed font. Illustrations: single-line hand-drawn doodle style. Real whiteboard photo, blurred office background. Layout: very large BLACK shufa title top. Center: single-line hand-drawn lobster mascot or key visual. Scattered doodle icons, stars, arrows. Bottom: large bold RED shufa closing statement."
+      },
+      "generation_rules": "MANDATORY: Every page MUST pass @ref image. cover→cover.jpg ONLY, text→text.jpg ONLY, content→content.jpg ONLY, chart→chart.jpg ONLY, navigation→navigation.jpg ONLY, closing→closing.jpg ONLY. NEVER mix reference images across page types."
+    },
+    "fairytale": {
+      "name": "童话插画风格",
+      "description": "水彩童话风，粉紫色调，森林精灵动物，魔法光效",
+      "type": "multi_ref",
+      "refs": {
+        "cover": "styles/fairytale/cover_ref.jpg",
+        "content": "styles/fairytale/content_combined.jpg",
+        "closing": "styles/fairytale/closing_ref.jpg"
+      },
+      "page_type_rules": {
+        "first": "cover",
+        "last": "closing",
+        "default": "content"
+      },
+      "style_prompts": {
+        "cover": "same fairy tale watercolor style as reference, enchanted forest scene, glowing magical path, cute woodland animals, colorful mushrooms, warm pastel colors, sparkles and fireflies, large decorative title text centered",
+        "content": "same fairy tale watercolor style as reference, pastel gradient background, magical forest element on one side, decorative vine border frame on text area, cute woodland animals as accent, warm glowing light effects",
+        "closing": "same fairy tale watercolor style as reference, glowing forest clearing, magical object center stage, flowers and sparkles, warm golden light, title and subtitle text"
+      }
+    }
+  },
+  "default_style": "whiteboard"
+}

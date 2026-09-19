@@ -1,0 +1,41 @@
+{
+  "skill_name": "YQ Editorial Presentation Skill",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我下周要给我们公司销售总监做一份产品上市推广策略的 case sharing,内容是去年 Q4 我们新上市的一款心血管慢病药的渠道布局复盘,涉及 5 大核心区域、12 家三甲医院的覆盖数据、以及 3 季度的 sales rep 反馈洞察。希望页面看起来很专业、像 Pfizer/Anthropic 那种 warm editorial 风格,可以在浏览器演示。",
+      "expected_output": "应触发 YQ Editorial Presentation Skill 的 HTML 模式;产出横向全屏 deck shell(F11 100vw×100vh,ESC overview,键盘/滚轮/触屏导航),保留 v5 warm editorial tokens(米色底 + 赭石主色 + Fraunces+Inter+Mono 字体),按 chart-selection.md 选择至少 3 类表达家族。覆盖数据可用 market-bars/proof-bars,3 季度反馈应使用 timeline/insight cards,独立 KPI 用 stat-grid,不得全部转成同一种 proof bar。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "帮我做一个 PPT,关于我们 AI 团队过去 6 个月的工程进展,要给 IT VP 看。涉及 22 个 microservice 重构、3 道 quality gate 落地、5 个跨团队 stress test 通过率(96%/95%/77%/68%/22%)。要 .pptx 格式,客户机器没装额外字体,得保证打开能看。",
+      "expected_output": "应触发 YQ Editorial Presentation Skill 的 PPTX 模式;使用 generate_pptx.py 中的 EditorialDeck 类,选 industry='tech' 自动应用深海军蓝行业垂直主色,embed_fonts=False 用 Cambria/Calibri/Consolas 降级,生成 16:9 .pptx。22 个 microservice 与 3 道 gate 用 stat/phase-pill/relationship slide,5 个 stress test 通过率属于同一指标才用 proof_bars;不得把所有工程进展都画成横向条。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "把这份血液科 v5 desktop HTML 转成 PPT 版,内容数据完全一致,但格式要 .pptx 给医院领导用。",
+      "expected_output": "应触发 YQ Editorial Presentation Skill 的 PPTX 模式;读源 HTML 解析 11 sections 数据,通过 EditorialDeck.add_*_slide 系列方法逐 section 调用,industry='medical' 保留深红血色行业主色,可选嵌入字体(embed_fonts=True),save 为 .pptx。视觉与源 HTML 一致达 85-90%。",
+      "files": ["C:\\Users\\qiyon\\Desktop\\血液科市场调研_v5_desktop.html"]
+    },
+    {
+      "id": 4,
+      "prompt": "做一份给投资人的 demo deck,我们是一家做 AI agent 编排平台的早期公司,需要展示产品 architecture / 技术栈 / 客户验证 / roadmap。",
+      "expected_output": "应触发 YQ Editorial Presentation Skill;格式无指定 → 默认 HTML 模式(可主动询问要不要也出 PPT);industry='tech';包含 hero(stat) / architecture(phase-pill + delivery box) / customer validation(仅同一指标用 proof-bars) / roadmap(timeline) / product-architecture(matrix 或 pipeline) / cta sections,至少 3 类图表表达,不得把 roadmap 或 architecture 画成 proof bars。",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "你能帮我把一份长 markdown 报告做成幻灯片演示样式吗,我要分享给团队看。",
+      "expected_output": "应触发 YQ Editorial Presentation Skill;'幻灯片演示样式'模糊 → 倾向 HTML 横向全屏 deck,也可询问是否要 .pptx;按 markdown 内容拆分成 6-8 slides,每页标题 + 1-2 个核心组件。必须先判断数据关系再选 chart,至少 3 类表达家族(除非内容只有一种关系),不能默认全部条形图。",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "用这个 skill 把已有 HTML presentation 改成新版横向全屏 deck,保留全部内容不改文案,输出新版本 HTML。重点修复 F11 留白过大、页脚遮挡、偶发页面沉底、ESC overview。",
+      "expected_output": "应触发 YQ Editorial Presentation Skill 的 existing HTML rewrite 流程;读取 references/rewrite-existing-html.md 和 references/qa.md;保留原始 slide sections 内容,只替换 shell/CSS/JS;输出新 HTML。必须检查 slide 数一致、section 内容未丢、#deck 横向 fixed、无 scrollIntoView/纵向 scroll-snap、.wrap 不用 auto margin、1920×1080 和 1440×900 无滚动/重叠、主内容宽度和投影字号达标、ESC overview 展示全部 slide。",
+      "files": ["C:\\Vibe Coding Project\\AI Playground\\Antigaravity\\DTR_IAAT_Presentation_v3.html"]
+    }
+  ]
+}

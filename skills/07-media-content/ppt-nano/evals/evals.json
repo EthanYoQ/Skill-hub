@@ -1,0 +1,23 @@
+{
+  "skill_name": "ppt-nano",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我快速做一个 10 页的投资人 pitch deck，公司是一家 AI 驱动的供应链优化 SaaS，Pre-A 轮融资 500 万美元。",
+      "expected_output": "PPT 大纲：每页标题 + 核心内容要点，结构完整（问题/方案/市场/团队/财务）",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Create slides for my product demo: a no-code automation tool for HR teams. Need 8 slides max.",
+      "expected_output": "Slide deck outline with slide titles, key visual suggestions, and bullet points",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "把这份季度业务报告转成 PPT 格式，要适合向董事会汇报。",
+      "expected_output": "PPT 结构：执行摘要 + 关键指标 + 分析 + 下一步行动",
+      "files": []
+    }
+  ]
+}

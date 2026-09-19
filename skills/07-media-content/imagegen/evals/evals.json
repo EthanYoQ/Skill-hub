@@ -1,0 +1,23 @@
+{
+  "skill_name": "imagegen",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我生成一张公众号封面图：主题是「AI 改变医疗」，风格是专业科技感，尺寸 900×383，需要有标题文字位置。",
+      "expected_output": "图片生成 prompt + 尺寸规格 + 构图建议",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I need a hero image for my SaaS landing page. The product helps remote teams collaborate. Professional but friendly style.",
+      "expected_output": "Image generation with appropriate style guidance and composition for web hero",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Generate 3 variations of a product thumbnail for my mobile app — clean, modern, shows the app interface.",
+      "expected_output": "3 distinct image generation prompts with composition variations",
+      "files": []
+    }
+  ]
+}

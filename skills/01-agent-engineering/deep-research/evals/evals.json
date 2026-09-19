@@ -1,0 +1,23 @@
+{
+  "skill_name": "deep-research",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "做一份关于欧盟 AI 法案对中小型 SaaS 公司影响的深度研究报告，重点关注合规成本和时间线。",
+      "expected_output": "结构化研究报告：执行摘要 + 关键发现（含引用）+ 建议行动",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Research the competitive landscape for AI-powered legal document review tools. I need this for a board presentation.",
+      "expected_output": "Competitive analysis: market map, key players, differentiation, market sizing",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "帮我深度调研量子密钥分发（QKD）的商业化现状：主要玩家、技术成熟度、投资趋势。",
+      "expected_output": "深度报告：技术背景 + 竞争格局 + 市场数据 + 风险分析",
+      "files": []
+    }
+  ]
+}

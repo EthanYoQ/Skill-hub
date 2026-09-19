@@ -1,0 +1,34 @@
+§5.5 ALK 融合阳性 NSCLC 治疗
+本节给出 CSCO 2024 NSCLC 诊疗指南中 ALK 融合阳性非小细胞肺癌的系统性药物治疗推荐。
+
+§5.5.1 适用人群
+经组织学或细胞学确诊的非小细胞肺癌患者，免疫组化（IHC）、荧光原位杂交（FISH）或下一代测序（NGS）检测证实 ALK 融合阳性。
+不限于无症状脑转移亚群。
+
+§5.5.2 一线治疗推荐
+针对 ALK 融合阳性晚期 NSCLC，CSCO 2024 给出以下一线治疗 I 级推荐方案（按推荐顺序）：
+
+第 1 项 I 级推荐：洛拉替尼（Lorlatinib，商品名：博瑞纳 Lorbrena），三代 ALK-TKI，单药口服 100 mg qd。
+第 2 项 I 级推荐：阿来替尼（Alectinib，商品名：安圣莎 Alecensa），二代 ALK-TKI，单药口服 600 mg bid。
+第 3 项 I 级推荐：塞瑞替尼（Ceritinib，商品名：赞可达 Zykadia），二代 ALK-TKI，单药口服 450 mg qd 餐时服用。
+第 4 项 I 级推荐：恩沙替尼（Ensartinib，国产二代 ALK-TKI），单药口服 225 mg qd。
+第 5 项 I 级推荐：布加替尼（Brigatinib，商品名：安伯瑞 Alunbrig），二代 ALK-TKI，单药口服 90 mg qd ×7d → 180 mg qd。
+第 6 项 I 级推荐：克唑替尼（Crizotinib，商品名：赛可瑞 Xalkori），一代 ALK-TKI，单药口服 250 mg bid。
+第 7 项 I 级推荐：伊鲁阿克（Iruplinalkib，国产二代 ALK-TKI），单药口服 180 mg qd。
+第 8 项 I 级推荐：依奉阿克（Envonalkib，商品名：贝美纳，国产二代 ALK-TKI），单药口服 600 mg qd。
+
+注：上述 8 种 ALK-TKI 一线治疗均为 CSCO 2024 I 级推荐；脑转移亚群优选三代 ALK-TKI（洛拉替尼）或二代（阿来替尼、布加替尼）。
+
+§5.5.3 二线治疗推荐
+对一代 ALK-TKI（克唑替尼）耐药后患者：
+第 1 项 I 级推荐：洛拉替尼（Lorlatinib），三代 ALK-TKI。
+第 2 项 I 级推荐：阿来替尼（Alectinib），二代 ALK-TKI。
+第 3 项 I 级推荐：布加替尼（Brigatinib），二代 ALK-TKI。
+对二代 ALK-TKI 耐药后患者：II 级推荐洛拉替尼或基于活检结果选择含铂双药化疗。
+
+§5.5.4 三线治疗
+II 级推荐：培美曲塞 + 铂类（顺铂 / 卡铂）含铂双药化疗，或培美曲塞单药维持治疗。
+
+§5.5.5 不良反应管理
+洛拉替尼常见不良反应包括高脂血症、中枢神经系统症状（情绪改变、认知障碍）；推荐用药前评估基线血脂。
+阿来替尼常见不良反应包括便秘、肌酸激酶升高、肝酶升高；定期监测肝功能。

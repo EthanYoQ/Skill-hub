@@ -1,0 +1,19 @@
+{
+  "source_id": "NMPA-CN-ALK-TKI-marketing-status",
+  "fetched_from": "https://www.nmpa.gov.cn/datasearch/home-index.html",
+  "version": "2024-snapshot",
+  "disease_filter": {
+    "any_of": ["ALK", "NSCLC", "肺癌"]
+  },
+  "notes": "NMPA 公开数据库快照,记录 ALK+ NSCLC 8 种 ALK-TKI 上市状态。原文快照,非答案字典。",
+  "drug_status": [
+    {"drug": "克唑替尼", "drug_en": "Crizotinib", "approval": "2013-01", "indications": ["ALK 阳性 NSCLC"]},
+    {"drug": "塞瑞替尼", "drug_en": "Ceritinib", "approval": "2018-05", "indications": ["ALK 阳性 NSCLC"]},
+    {"drug": "阿来替尼", "drug_en": "Alectinib", "approval": "2018-08", "indications": ["ALK 阳性 NSCLC（一线 / 后线）"]},
+    {"drug": "恩沙替尼", "drug_en": "Ensartinib", "approval": "2020-11", "indications": ["ALK 阳性 NSCLC"]},
+    {"drug": "布加替尼", "drug_en": "Brigatinib", "approval": "2022-03", "indications": ["ALK 阳性 NSCLC"]},
+    {"drug": "洛拉替尼", "drug_en": "Lorlatinib", "approval": "2022-04", "indications": ["ALK 阳性 NSCLC"]},
+    {"drug": "伊鲁阿克", "drug_en": "Iruplinalkib", "approval": "2023-12", "indications": ["ALK 阳性 NSCLC"]},
+    {"drug": "依奉阿克", "drug_en": "Envonalkib", "approval": "2024-03", "indications": ["ALK 阳性 NSCLC"]}
+  ]
+}

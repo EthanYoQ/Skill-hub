@@ -1,0 +1,23 @@
+{
+  "skill_name": "decision-tree-with-lp-embedding",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我创建一个客户支持路由决策树：根据问题类型（账单/技术/退款/投诉）决定转接哪个团队，用 LP 节点区分模糊情况。",
+      "expected_output": "MECE 决策树 Mermaid 图：主路径 + LP 节点 + 最终路由结果",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Create a clinical triage decision tree for an ER: chest pain evaluation with LP embedding for ambiguous presentations.",
+      "expected_output": "Decision tree with clear binary splits, LP nodes for uncertain cases, and disposition outcomes",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "I need a loan approval decision tree for a fintech product, incorporating credit score, income, and debt-to-income ratio.",
+      "expected_output": "MECE loan decision tree with LP nodes for edge cases and clear approval/denial paths",
+      "files": []
+    }
+  ]
+}

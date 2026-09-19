@@ -1,0 +1,15 @@
+{
+  "source_id": "CSCO-2024-NSCLC",
+  "version": "2024",
+  "url": "https://www.csco.org.cn/cn/index.aspx",
+  "section_anchor_root": "§5.5",
+  "diseases": [
+    "ALK 融合阳性非小细胞肺癌",
+    "ALK融合阳性非小细胞肺癌",
+    "ALK+ NSCLC",
+    "非小细胞肺癌"
+  ],
+  "snapshot_origin": "CSCO 2024 NSCLC 诊疗指南公开发行版 §5.5 ALK 融合阳性 NSCLC 治疗章节原文",
+  "fetch_strategy": "remote-first → cache → archived-snapshot",
+  "notes": "原文快照,非答案字典。所有 treatment_table 通过 parse_treatment_table_from_raw_text 在运行时从此文本解析。"
+}
