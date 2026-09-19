@@ -1,0 +1,5 @@
+{
+  "purpose": "negative fixture that must be excluded from the attachment bundle",
+  "cookie": "<REDACTED_SESSION_VALUE>",
+  "token": "<YOUR_TEST_TOKEN>"
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "profile": "product-proof-split-v1",
+  "composition_source": "docs/readme-visuals/product-proof-split-v1.html",
+  "data_source": "docs/readme-visuals/hero-data.js",
+  "heroes": {
+    "zh": {
+      "readme": "README.md",
+      "output": "docs/images/product-hero-zh.png",
+      "ui_locale": "zh-CN",
+      "screenshots": [
+        {
+          "path": "docs/images/screens/overview-zh.png",
+          "role": "primary",
+          "capture_provenance": "computer-use-capture",
+          "complete_window": true,
+          "ui_locale": "zh-CN"
+        },
+        {
+          "path": "docs/images/screens/workflow-zh.png",
+          "role": "secondary",
+          "capture_provenance": "computer-use-capture",
+          "complete_window": true,
+          "ui_locale": "zh-CN"
+        },
+        {
+          "path": "docs/images/screens/result-zh.png",
+          "role": "secondary",
+          "capture_provenance": "computer-use-capture",
+          "complete_window": true,
+          "ui_locale": "zh-CN"
+        },
+        {
+          "path": "docs/images/screens/settings-zh.png",
+          "role": "secondary",
+          "capture_provenance": "computer-use-capture",
+          "complete_window": true,
+          "ui_locale": "zh-CN"
+        }
+      ]
+    }
+  }
+}

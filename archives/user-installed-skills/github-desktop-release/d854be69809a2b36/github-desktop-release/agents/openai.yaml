@@ -1,0 +1,6 @@
+interface:
+  display_name: "GitHub Desktop Release"
+  short_description: "Qualify Windows and publish desktop releases"
+  default_prompt: "Use $github-desktop-release to qualify Windows installers in GitHub Actions or publish already-qualified Windows/macOS artifacts from one frozen source SHA."
+policy:
+  allow_implicit_invocation: true

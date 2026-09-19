@@ -1,0 +1,10 @@
+asset,status,scope_or_reason
+GitHub repository README,ready,README.md plus both maintained English entry points
+Repository description,ready,English-first bilingual copy applied during implementation
+Hero image,ready,tracked repository asset at assets/README/skill-hub-hero.png
+Release,manual_task,not part of this README and About experiment
+Profile README,manual_task,owner-level asset outside this repository experiment
+Docs or GitHub Pages,skip,github_repo_only; no controllable site work requested
+Bing,manual_task,requires comparable web-search measurement after indexing window
+Baidu,manual_task,requires comparable web-search measurement after indexing window
+AI search,manual_task,requires a separately logged prompt and model protocol

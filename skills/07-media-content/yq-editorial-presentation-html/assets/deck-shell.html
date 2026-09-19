@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>Editorial Presentation</title>
+  <style>
+    :root {
+      --canvas: #FAF9F5;
+      --surface: #FFFFFF;
+      --ink: #141413;
+      --muted: #625B4F;
+      --primary: #CC785C;
+      --nav-surface: color-mix(in srgb, var(--surface) 72%, transparent);
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--canvas);color:var(--ink)}
+    body{font-family:var(--font-body,Inter,"PingFang SC","Microsoft YaHei",sans-serif)}
+    #deck{position:fixed;inset:0;display:flex;height:100vh;transition:transform .52s cubic-bezier(.22,.61,.36,1);will-change:transform}
+    .slide{position:relative;flex:0 0 100vw;width:100vw;height:100vh;overflow:hidden;padding:clamp(42px,6vh,68px) clamp(64px,5.5vw,116px) clamp(72px,9vh,108px);display:flex;flex-direction:column}
+    .slide-chrome,.slide-foot{display:flex;justify-content:space-between;align-items:center;font:600 clamp(10px,.7vw,13px)/1.2 var(--font-data,"JetBrains Mono",Consolas,monospace);color:var(--muted)}
+    .slide-foot{margin-top:auto;padding-top:16px}
+    .wrap,.frame{width:100%;max-width:min(1690px,88vw);margin:clamp(24px,3vh,44px) auto 0;flex:1;min-height:0}
+    .wrap.wide,.frame.wide{max-width:min(1760px,93vw)}
+    #nav{position:fixed;left:50%;bottom:24px;z-index:20;transform:translateX(-50%);display:flex;gap:8px;padding:8px 10px;border:1px solid color-mix(in srgb,var(--ink) 10%,transparent);background:var(--nav-surface);backdrop-filter:blur(12px)}
+    #nav:empty{display:none}
+    #nav button{width:9px;height:9px;padding:0;border:0;border-radius:50%;background:color-mix(in srgb,var(--muted) 45%,transparent);cursor:pointer}
+    #nav button.active{background:var(--primary);transform:scale(1.3)}
+    #overview{position:fixed;inset:0;z-index:100;display:none;overflow:auto;padding:4vh 4vw;background:color-mix(in srgb,var(--ink) 88%,transparent);backdrop-filter:blur(14px)}
+    .overview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2.2vh 1.4vw}
+    .overview-card{overflow:hidden;border:2px solid color-mix(in srgb,var(--surface) 18%,transparent);background:var(--canvas);cursor:pointer}
+    .overview-card.active{border-color:var(--primary)}
+    .overview-shot{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--canvas)}
+    .overview-shot .slide{position:absolute;inset:0;width:100vw;height:100vh;transform:scale(.225);transform-origin:top left;pointer-events:none}
+    .overview-label{padding:7px 10px;background:var(--ink);color:var(--surface);font:600 12px/1.2 var(--font-data,"JetBrains Mono",Consolas,monospace)}
+    @media(max-width:900px){.slide{padding:4vh 4vw 7vh}.overview-grid{grid-template-columns:repeat(2,1fr)}}
+  </style>
+</head>
+<body>
+  <main id="deck">
+    <!-- Insert generated <section class="slide"> elements from the validated manifest here. -->
+  </main>
+  <nav id="nav" aria-label="Slide navigation"></nav>
+  <div id="overview" aria-label="Slide overview"></div>
+  <script>
+    const deck=document.getElementById('deck');
+    const slides=[...deck.querySelectorAll(':scope > .slide')];
+    const nav=document.getElementById('nav');
+    const overview=document.getElementById('overview');
+    let idx=0,lock=false,overviewOn=false;
+    deck.style.width=(slides.length*100)+'vw';
+    slides.forEach((_,i)=>{const button=document.createElement('button');button.type='button';button.setAttribute('aria-label','Page '+(i+1));button.onclick=()=>go(i);nav.appendChild(button)});
+    function go(next){if(!slides.length||lock||overviewOn)return;idx=Math.max(0,Math.min(slides.length-1,next));deck.style.transform=`translateX(${-idx*100}vw)`;nav.querySelectorAll('button').forEach((button,i)=>button.classList.toggle('active',i===idx));lock=true;setTimeout(()=>lock=false,520)}
+    function buildOverview(){overview.innerHTML='';const grid=document.createElement('div');grid.className='overview-grid';slides.forEach((slide,i)=>{const card=document.createElement('button');card.type='button';card.className='overview-card'+(i===idx?' active':'');const shot=document.createElement('div');shot.className='overview-shot';shot.appendChild(slide.cloneNode(true));const label=document.createElement('div');label.className='overview-label';label.textContent=(i+1)+' / '+slides.length;card.append(shot,label);card.onclick=()=>{toggleOverview();go(i)};grid.appendChild(card)});overview.appendChild(grid)}
+    function toggleOverview(){if(!slides.length)return;overviewOn=!overviewOn;if(overviewOn){buildOverview();overview.style.display='block'}else{overview.style.display='none'}}
+    addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();toggleOverview();return}if(overviewOn)return;if(['ArrowRight','PageDown',' ','ArrowDown'].includes(event.key)){event.preventDefault();go(idx+1)}if(['ArrowLeft','PageUp','ArrowUp'].includes(event.key)){event.preventDefault();go(idx-1)}if(event.key==='Home')go(0);if(event.key==='End')go(slides.length-1)});
+    let wheelAccumulator=0,wheelTimer=null;addEventListener('wheel',event=>{wheelAccumulator+=event.deltaY+event.deltaX;if(Math.abs(wheelAccumulator)>50){go(idx+(wheelAccumulator>0?1:-1));wheelAccumulator=0}clearTimeout(wheelTimer);wheelTimer=setTimeout(()=>wheelAccumulator=0,150)},{passive:true});
+    let touchX=0,touchY=0;addEventListener('touchstart',event=>{touchX=event.touches[0].clientX;touchY=event.touches[0].clientY},{passive:true});addEventListener('touchend',event=>{const dx=event.changedTouches[0].clientX-touchX,dy=event.changedTouches[0].clientY-touchY;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy))go(idx+(dx<0?1:-1))},{passive:true});
+    if(slides.length)go(0);
+  </script>
+</body>
+</html>

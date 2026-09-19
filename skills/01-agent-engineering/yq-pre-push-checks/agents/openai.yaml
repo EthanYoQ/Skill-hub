@@ -1,0 +1,4 @@
+interface:
+  display_name: "YQ Pre-Push Checks"
+  short_description: "Select credible checks for the outgoing change"
+  default_prompt: "Use $yq-pre-push-checks to validate this branch before I push or mark it ready."

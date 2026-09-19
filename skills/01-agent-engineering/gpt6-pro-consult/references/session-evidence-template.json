@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.4",
+  "task_run_id": "<unique-current-task-run-id>",
+  "executed_by": "main-codex-task",
+  "case_id": "<optional-eval-case-id>",
+  "candidate_sha256": "<optional-frozen-candidate-sha256>",
+  "browser": {
+    "type": "iab",
+    "browser_id": "<browser-session-id>",
+    "tab_id": "<controlled-tab-id>",
+    "tab_url": "<chatgpt-conversation-url>",
+    "captured_at": "<iso-8601>"
+  },
+  "model_gate": {
+    "binding_ref": {
+      "browser_id": "<same-browser-session-id>",
+      "tab_id": "<same-controlled-tab-id>",
+      "tab_url": "<same-chatgpt-conversation-url>"
+    },
+    "captured_at": "<iso-8601>",
+    "gpt_6_pro_checked": true,
+    "observed_signals": [
+      "composer control 6 Pro",
+      "model picker 最新 [selected]"
+    ]
+  },
+  "late_clean_gate": {
+    "binding_ref": {
+      "browser_id": "<same-browser-session-id>",
+      "tab_id": "<same-controlled-tab-id>",
+      "tab_url": "<same-chatgpt-conversation-url>"
+    },
+    "captured_at": "<iso-8601-after-model-menu-before-current-input>",
+    "checked_after_model_menu": true,
+    "composer_empty": true,
+    "composer_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "project_context": false,
+    "pending_upload_count": 0,
+    "unexpected_attachments": []
+  },
+  "packet": {
+    "sha256": "<64-lowercase-hex>",
+    "distinctive_prefix": "<unique-prefix>",
+    "sentinel": "GPT6_PRO_RESULT_<unique-suffix>",
+    "visible_attachments": []
+  },
+  "dispatch": {
+    "binding_ref": {
+      "browser_id": "<same-browser-session-id>",
+      "tab_id": "<same-controlled-tab-id>",
+      "tab_url": "<same-chatgpt-conversation-url>"
+    },
+    "captured_at": "<iso-8601>",
+    "state": "SENT",
+    "send_click_count": 1,
+    "submit_signal": "<user-turn|composer-cleared|active-generation>"
+  },
+  "response": {
+    "binding_ref": {
+      "browser_id": "<same-browser-session-id>",
+      "tab_id": "<same-controlled-tab-id>",
+      "tab_url": "<same-chatgpt-conversation-url>"
+    },
+    "captured_at": "<iso-8601>",
+    "generation_complete": true,
+    "assistant_turn_sha256": "<64-lowercase-hex>",
+    "assistant_sentinel_verified": true
+  },
+  "route_exclusions": {
+    "chrome_extension_used": false,
+    "chrome_cli_used": false,
+    "opencli_used": false,
+    "external_playwright_used": false
+  },
+  "cleanup": {
+    "captured_at": "<iso-8601-after-release>",
+    "release_method": "iab.tabs.finalize|tab.close",
+    "release_completed": true,
+    "release_was_last_browser_action": true,
+    "retained_tab_status": "none",
+    "pre_release_project_context": false,
+    "pre_release_draft_present": false,
+    "pre_release_pending_upload_count": 0,
+    "pre_release_unexpected_attachments": []
+  },
+  "binding_verified": true,
+  "status": "completed"
+}

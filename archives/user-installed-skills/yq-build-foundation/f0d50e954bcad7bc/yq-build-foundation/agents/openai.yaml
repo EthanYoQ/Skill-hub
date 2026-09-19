@@ -1,0 +1,4 @@
+interface:
+  display_name: "yq-build-foundation"
+  short_description: "架构设计前搜索开源底座，输出五档决策与改造蓝图"
+  default_prompt: "Use $yq-build-foundation to find mature open-source foundations for the product I want to build."

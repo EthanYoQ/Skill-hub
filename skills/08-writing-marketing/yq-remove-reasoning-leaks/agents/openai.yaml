@@ -1,0 +1,4 @@
+interface:
+  display_name: "YQ Remove Reasoning Leaks"
+  short_description: "Remove review transcripts and reasoning residue"
+  default_prompt: "Use $yq-remove-reasoning-leaks to audit this technical prose for unresolved authoring or review transcript residue."

@@ -1,0 +1,21 @@
+{
+  "volume": {"growth_gib": 170, "free_gib": 112},
+  "docker": {
+    "vhdx_length_gib": 240,
+    "vhdx_allocated_gib": 238,
+    "logical_total_gib": 21,
+    "volumes": [
+      {"name": "prod-db", "mounted": false, "size_gib": 4.2, "hint": "database"},
+      {"name": "restore-2026", "mounted": false, "size_gib": 3.1, "hint": "restore"},
+      {"name": "evidence", "mounted": false, "size_gib": 0.8, "hint": "evidence"},
+      {"name": "anon-9f", "mounted": false, "size_gib": 2.0, "hint": "unknown"}
+    ]
+  },
+  "codex_sessions_gib": 11,
+  "worktrees": [
+    {"id": "wt-1", "registered": true, "clean": true, "merged_remote_default": true, "gib": 3.0},
+    {"id": "wt-2", "registered": true, "clean": true, "merged_remote_default": true, "gib": 2.5},
+    {"id": "wt-3", "registered": true, "clean": false, "merged_remote_default": false, "gib": 4.0}
+  ],
+  "cc_switch": {"database_gib": 3.0, "log_heavy": true, "backup_count": 12}
+}

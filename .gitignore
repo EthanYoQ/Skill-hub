@@ -1,0 +1,44 @@
+# Secrets — never commit
+.env
+.env.*
+*.env
+credentials*
+*.key
+*.pem
+*.p12
+*.pfx
+*_secret*
+*_token*
+*.auth
+config.local.*
+
+# 第三方服务的本地 metadata（可能含签名 URL / AccessKey ID，严禁入库）
+*-metadata.json
+.*-metadata.json
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Local-only state
+.backups/
+.codegraph/
+.skills-cache/
+.workbuddy/
+*.log
+node_modules/
+__pycache__/
+*.pyc
+
+# Staging meta that shouldn't leave my machine
+_local/
+scratch/
+
+# Private project material; keep it in Skill-hub-private
+/projects/

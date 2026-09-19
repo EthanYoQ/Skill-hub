@@ -1,0 +1,4 @@
+[
+  {"pid": 1001, "name": "python", "command_line": "python C:/fixture/project/dev_server.py", "inside_workspace": true},
+  {"pid": 1002, "name": "python", "command_line": "python C:/other-project/worker.py", "inside_workspace": false}
+]

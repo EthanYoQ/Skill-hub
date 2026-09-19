@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub README Visuals"
+  short_description: "Create verified product visuals for GitHub README pages."
+  default_prompt: "Use $github-readme-visuals to add an original product hero image and interface screenshots to this repository README."

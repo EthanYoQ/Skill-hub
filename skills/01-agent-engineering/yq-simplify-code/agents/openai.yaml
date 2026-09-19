@@ -1,0 +1,4 @@
+interface:
+  display_name: "YQ Simplify Code"
+  short_description: "Find safe ways to simplify code, tests, and gates"
+  default_prompt: "Use $yq-simplify-code to audit this codebase for well-proven simplification candidates."

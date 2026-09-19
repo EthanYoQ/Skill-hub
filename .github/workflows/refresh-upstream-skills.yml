@@ -1,0 +1,86 @@
+name: Refresh upstream skills
+
+on:
+  schedule:
+    # Every Monday at 10:23 Asia/Shanghai (02:23 UTC).
+    - cron: "23 2 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: upstream-skill-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    if: github.repository == 'EthanYoQ/Skill-hub'
+    runs-on: windows-latest
+    steps:
+      - name: Checkout mine
+        uses: actions/checkout@v5
+        with:
+          ref: mine
+          fetch-depth: 0
+
+      - name: Audit and update verified mirrors
+        id: refresh
+        shell: pwsh
+        run: |
+          $reportPath = Join-Path $env:RUNNER_TEMP "skill-upstream-refresh-report.json"
+          ./scripts/refresh-upstream-skills.ps1 -Apply -WorkDir (Join-Path $env:RUNNER_TEMP "skill-upstream-refresh") -ReportPath $reportPath
+          $report = Get-Content -LiteralPath $reportPath -Raw | ConvertFrom-Json
+          "updates=$($report.appliedMirrorSkills.Count -gt 0)" >> $env:GITHUB_OUTPUT
+          "report_path=$reportPath" >> $env:GITHUB_OUTPUT
+
+          "## Upstream Skill refresh" >> $env:GITHUB_STEP_SUMMARY
+          "" >> $env:GITHUB_STEP_SUMMARY
+          "- Updated mirror Skills: $($report.appliedMirrorSkills.Count)" >> $env:GITHUB_STEP_SUMMARY
+          "- Mapped Skills requiring human merge review: $($report.mappedReviewRequired.Count)" >> $env:GITHUB_STEP_SUMMARY
+          if ($report.appliedMirrorSkills.Count -gt 0) {
+            "- Updated: $($report.appliedMirrorSkills -join ', ')" >> $env:GITHUB_STEP_SUMMARY
+          }
+          if ($report.mappedReviewRequired.Count -gt 0) {
+            "- Review only: $(($report.mappedReviewRequired.name) -join ', ')" >> $env:GITHUB_STEP_SUMMARY
+          }
+
+      - name: Rebuild indexes and README counts
+        if: steps.refresh.outputs.updates == 'True'
+        shell: pwsh
+        run: |
+          ./scripts/build-indexes.ps1
+          python scripts/update-readme-counts.py
+
+      - name: Validate generated repository state
+        if: steps.refresh.outputs.updates == 'True'
+        shell: pwsh
+        run: |
+          Get-Content -LiteralPath _meta/skill-upstreams.json -Raw | ConvertFrom-Json | Out-Null
+          Get-Content -LiteralPath _meta/skills-lock.json -Raw | ConvertFrom-Json | Out-Null
+          ./skills/01-agent-engineering/skill-lifecycle-manager/scripts/check_upstreams.ps1 -SelfTest -RepoRoot . -WorkDir (Join-Path $env:RUNNER_TEMP "skill-upstream-selftest") | Out-Null
+          if (-not (git status --short)) { throw "Refresh reported updates but produced no repository diff." }
+
+      - name: Create or update refresh pull request
+        if: steps.refresh.outputs.updates == 'True'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $branch = "automation/upstream-skill-refresh"
+          git config user.name "skill-hub-updater"
+          git config user.email "actions@github.com"
+          git checkout -B $branch
+          git add -- .github/workflows/refresh-upstream-skills.yml README.md README_EN.md README.en.md _meta scripts skills projects
+          git commit -m "chore(skills): refresh verified upstream mirrors"
+          git ls-remote --exit-code --heads origin $branch | Out-Null
+          if ($LASTEXITCODE -eq 0) {
+            git fetch origin "+refs/heads/${branch}:refs/remotes/origin/${branch}"
+          }
+          git push --force-with-lease origin "HEAD:$branch"
+
+          $existing = gh pr list --base mine --head $branch --state open --json number --jq '.[0].number'
+          if (-not $existing) {
+            gh pr create --base mine --head $branch --title "chore(skills): refresh verified upstream mirrors" --body "Automated weekly refresh of Skills marked open-source/mirror in _meta/skill-upstreams.json. Mapped Skills are audit-only and are never overwritten by this workflow. Review the Skill instruction changes before merging."
+          }

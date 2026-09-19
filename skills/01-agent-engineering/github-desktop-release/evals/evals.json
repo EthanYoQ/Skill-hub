@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "prompt": "修改 Electron preload 和 IPC 白名单，并在本地运行测试。",
+      "expected": { "invoke": false, "reason": "local Electron implementation without GitHub Actions release work" }
+    },
+    {
+      "prompt": "用 GitHub Actions 为这个 Electron 项目构建 Windows NSIS 和 macOS DMG，并从同一 SHA 发布 Release。",
+      "expected": { "invoke": true, "alsoInvoke": ["electron-development"], "branches": ["windows", "promotion", "readback"], "macosOwner": "electron-development" }
+    },
+    {
+      "prompt": "Windows NSIS 配置、Electron、原生依赖和升级路径都没变；只发布普通应用代码修复。请用 GitHub Actions 构建 Windows 安装包。",
+      "expected": { "invoke": true, "branches": ["preflight", "windows"], "qualificationTier": "standard", "mustKeep": ["real-install", "quiet-window", "uninstall"], "mustNotRequireByDefault": ["upgrade-data", "native-abi"] }
+    },
+    {
+      "prompt": "升级 Electron 和一个 Windows 原生 Node 模块后，云端构建并发布 Windows 安装包。",
+      "expected": { "invoke": true, "branches": ["preflight", "windows", "promotion", "readback"], "qualificationTier": "deep", "mustRequire": ["native-abi", "upgrade-data"] }
+    },
+    {
+      "prompt": "三个平台都要发布，但 Intel macOS 的 runner 标签和原生模块还没有验证；不要重复浪费 Windows 构建时间。",
+      "expected": { "invoke": true, "branches": ["preflight"], "preflightAllPlatformsBeforeFullWindows": true, "macosOwner": "electron-development", "publishAllowed": false }
+    },
+    {
+      "prompt": "同一 SHA 的 Windows CI 已在同一工具链执行了项目要求的 Windows 测试；现在运行安装包资格验证。",
+      "expected": { "invoke": true, "qualificationTier": "standard", "mayReuse": ["same-sha-windows-source-validation-receipt"], "mustNotDo": ["duplicate-proven-source-suite"], "mustKeep": ["installer-acceptance"] }
+    },
+    {
+      "prompt": "GitHub Actions 的 Windows qualification 已成功，但 promotion 在 Linux 上比较 pnpm-lock.yaml raw hash 失败，判断是否需要重建。",
+      "expected": { "invoke": true, "classification": "gate-false-positive", "rebuildByDefault": false }
+    },
+    {
+      "prompt": "帮我在 GitLab CI 构建 Windows 安装包。",
+      "expected": { "invoke": false, "reason": "non-GitHub CI" }
+    },
+    {
+      "prompt": "Actions 是绿色的，确认 GitHub Release 是否真的公开并包含正确资产。",
+      "expected": { "invoke": true, "branches": ["authoritative-readback"] }
+    },
+    {
+      "prompt": "第三次重跑 GitHub Actions Windows 云端门禁，前两次失败原因仍不清楚。",
+      "expected": { "invoke": true, "mustStop": true, "reason": "two consecutive failures in one stage" }
+    },
+    {
+      "prompt": "把已有 Windows qualification artifact 原字节 promotion 到 GitHub Release。",
+      "expected": { "invoke": true, "branches": ["promotion", "readback"], "rebuildByDefault": false }
+    },
+    {
+      "prompt": "GitHub Actions 发布 Tauri Windows MSI。",
+      "expected": { "invoke": true, "branches": ["windows", "promotion", "readback"] }
+    },
+    {
+      "prompt": "排查 macOS ad-hoc 签名为什么在 DMG qualification 阶段失败。",
+      "expected": { "invoke": false, "owner": "electron-development", "reason": "macOS build and qualification diagnostics are outside this Skill" }
+    },
+    {
+      "prompt": "已 qualification 的 macOS artifact 被 GitHub promotion 门禁拒绝，判断是否需要重建。",
+      "expected": { "invoke": true, "branches": ["promotion-failure-classification"], "rebuildByDefault": false }
+    },
+    {
+      "prompt": "本地 electron-builder 打 Windows 目录包，不上云。",
+      "expected": { "invoke": false, "reason": "local Electron packaging belongs to electron-development" }
+    },
+    {
+      "prompt": "实现 electron-updater 检查更新 UI。",
+      "expected": { "invoke": false, "reason": "Electron application implementation belongs to electron-development" }
+    },
+    {
+      "prompt": "GitHub Actions 构建 Docker 镜像并发布到 GHCR。",
+      "expected": { "invoke": false, "reason": "container delivery is outside desktop installer releases" }
+    },
+    {
+      "prompt": "README 增加最新版安装包下载链接。",
+      "expected": { "invoke": false, "reason": "README-only change" }
+    },
+    {
+      "prompt": "只修改 electron-builder.yml 的 NSIS target，然后在本地验证。",
+      "expected": { "invoke": false, "reason": "local Electron packaging configuration belongs to electron-development until GitHub qualification or publication is requested" }
+    },
+    {
+      "prompt": "修改 Electron 的 NSIS 配置，并更新 GitHub Actions 做 Windows qualification 后发布 Release。",
+      "expected": { "invoke": true, "alsoInvoke": ["electron-development"], "branches": ["windows", "promotion", "readback"] }
+    },
+    {
+      "prompt": "只用 GitHub Actions 从同一 SHA 构建并发布 macOS DMG。",
+      "expected": { "invoke": true, "alsoInvoke": ["electron-development"], "branches": ["promotion", "readback"], "macosOwner": "electron-development" }
+    },
+    {
+      "prompt": "GitHub Actions 构建并发布 PyInstaller Windows EXE 安装器。",
+      "expected": { "invoke": true, "branches": ["windows", "promotion", "readback"] }
+    },
+    {
+      "prompt": "GitHub Actions 构建并发布 .NET MSIX 安装包。",
+      "expected": { "invoke": true, "branches": ["windows", "promotion", "readback"] }
+    },
+    {
+      "prompt": "GitHub Release 的 draft 已存在且部分资产已上传，安全恢复 promotion 并权威读回。",
+      "expected": { "invoke": true, "branches": ["safe-resume", "promotion", "readback"] }
+    },
+    {
+      "prompt": "只改了应用页面；Windows 与两种 Mac 架构的安装、native、smoke、evidence 和发布工作流都没有变化，上次同工具链刚通过。怎样缩短这次云端构建？",
+      "expected": { "invoke": true, "strategy": "parallel-formal-matrix", "sourceGateRuns": 1, "mustKeep": ["platform-specific-qualification", "same-sha", "exact-bytes"] }
+    },
+    {
+      "prompt": "这次改了 packaged runner、evidence ledger 和 GitHub Actions workflow，要发布 Windows 与两种 Mac 架构。",
+      "expected": { "invoke": true, "strategy": "staged-canary", "mustDoBeforeFullMatrix": ["shared-source-gate", "package-like-runner-smoke", "evidence-replay"], "macosOwner": "electron-development" }
+    },
+    {
+      "prompt": "第一次正式构建在 package smoke 失败；修复后 SHA 变了，但旧 SHA 的另外两个架构还在跑。现在直接重跑吗？",
+      "expected": { "invoke": true, "mustDo": ["cancel-superseded-sha-runs", "forward-audit-remaining-stages", "select-risk-based-gate"], "mustNotReuse": ["old-sha-qualification-artifacts"] }
+    },
+    {
+      "prompt": "三个 qualification artifact 都已同 SHA 通过。本地 promotion 下载了几百 MB 后才发现没有 unzip，要不要重建？",
+      "expected": { "invoke": true, "classification": "promotion", "rebuildByDefault": false, "mustDoBeforeRetry": ["zero-side-effect-local-preflight"], "preflightChecks": ["gh-account-and-access", "archive-tools", "node-and-package-manager", "disk", "output-path", "profile"] }
+    },
+    {
+      "prompt": "Windows runner 在两个 ledger 子进程之间发生轻微时钟回拨，命令实际按顺序成功，但 verifier 说时间顺序无效。",
+      "expected": { "invoke": true, "classification": "gate-false-positive", "mustUse": ["monotonic-sequence", "timestamp-clamp", "clock-rollback-fixture"], "mustNotDo": ["rebuild-installer", "disable-order-validation"] }
+    },
+    {
+      "prompt": "Windows 测试比较 RUNNER~1 和 runneradmin 路径字符串失败；两个路径可能指向同一文件。",
+      "expected": { "invoke": true, "mustUse": ["stable-file-identity", "trusted-root-containment"], "mustNotUseAsProof": ["raw-path-string", "realpath-only"] }
+    },
+    {
+      "prompt": "异步安装监控测试在较慢 runner 上偶发超过一秒。请把 timeout 调成十秒并重新跑完整构建。",
+      "expected": { "invoke": true, "mustUse": ["deterministic-event-or-deferred-sync", "timeout-as-outer-bound", "bounded-canary"], "mustNotDo": ["arbitrary-timeout-increase", "immediate-full-rerun"] }
+    },
+    {
+      "prompt": "只修改了本地 promotion verifier，已资格化的三平台字节、receipt 和 acceptance 语义都没变。是否需要平台 canary？",
+      "expected": { "invoke": true, "strategy": "promotion-replay", "rebuildByDefault": false, "mustDo": ["real-receipt-final-consumer-replay", "local-promotion-preflight"] }
+    },
+    {
+      "prompt": "Electron/NSIS 项目只改应用业务代码，installer 和 runtime 边界没变。因为它是 Electron/NSIS，是否自动使用 Deep？",
+      "expected": { "invoke": true, "qualificationTier": "standard", "mustNotInfer": ["deep-tier-from-adapter-type"] }
+    },
+    {
+      "prompt": "代表性 Windows canary 为了验证风险必须构建安装包，如何避免绿色后再构建同一个 Windows 安装包？",
+      "expected": { "invoke": true, "mayUse": ["predeclared-formal-representative-qualification"], "mustRequire": ["complete-frozen-contract", "exact-evidence-artifact"], "mustNotDo": ["retroactive-promotion-of-partial-canary"] }
+    }
+  ]
+}

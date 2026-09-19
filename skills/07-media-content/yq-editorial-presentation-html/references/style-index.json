@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "selection_contract": {
+    "required_inputs": ["purpose", "audience", "formality", "density_mode"],
+    "optional_inputs": ["mood", "scheme", "locked_profile"],
+    "rule": "Shortlist from metadata, then load only the selected profile. Do not load every full recipe into the same generation context."
+  },
+  "profiles": [
+    {
+      "id": "warm-paper-terracotta",
+      "mood": ["warm", "human", "confident"],
+      "tone": ["editorial", "narrative"],
+      "formality": ["medium", "medium-high"],
+      "density": ["speaker-led", "balanced"],
+      "scheme": "light",
+      "formats": ["html", "pptx"],
+      "best_for": ["case sharing", "brand story", "medical narrative"],
+      "avoid_for": ["dense audit appendix", "security incident"],
+      "composition_grammar": "soft-asymmetric",
+      "typography": {"display": "Fraunces", "body": "Inter", "data": "JetBrains Mono"},
+      "palette": {
+        "canvas": "#FAF9F5",
+        "surface": "#FFFFFF",
+        "contrast_surface": "#F3EEE3",
+        "ink": "#141413",
+        "muted": "#625B4F",
+        "primary": "#CC785C",
+        "secondary": "#2E5C8A",
+        "signal": "#B8903C",
+        "positive": "#5C8D5C",
+        "negative": "#C2594A"
+      },
+      "cadence": ["canvas", "canvas", "contrast_surface", "canvas", "statement", "canvas"]
+    },
+    {
+      "id": "ink-cobalt-editorial",
+      "mood": ["precise", "decisive", "technical"],
+      "tone": ["editorial", "analytical"],
+      "formality": ["medium-high", "high"],
+      "density": ["balanced", "reading-first"],
+      "scheme": "mixed",
+      "formats": ["html", "pptx"],
+      "best_for": ["technology strategy", "financial briefing", "architecture review"],
+      "avoid_for": ["soft lifestyle story"],
+      "composition_grammar": "ink-grid",
+      "typography": {"display": "Source Serif 4", "body": "IBM Plex Sans", "data": "IBM Plex Mono"},
+      "palette": {
+        "canvas": "#F7F6F2",
+        "surface": "#FFFFFF",
+        "contrast_surface": "#17243A",
+        "ink": "#152033",
+        "muted": "#566174",
+        "primary": "#2463A7",
+        "secondary": "#D06F52",
+        "signal": "#D6A53B",
+        "positive": "#397A62",
+        "negative": "#B94B55"
+      },
+      "cadence": ["canvas", "canvas", "contrast_surface", "canvas", "canvas", "statement"]
+    },
+    {
+      "id": "sage-oxblood-research",
+      "mood": ["measured", "evidence-led", "calm"],
+      "tone": ["editorial", "research"],
+      "formality": ["high"],
+      "density": ["balanced", "reading-first"],
+      "scheme": "light",
+      "formats": ["html", "pptx"],
+      "best_for": ["medical evidence", "academic review", "policy analysis"],
+      "avoid_for": ["high-energy product launch"],
+      "composition_grammar": "marginalia-ledger",
+      "typography": {"display": "Libre Baskerville", "body": "Source Sans 3", "data": "IBM Plex Mono"},
+      "palette": {
+        "canvas": "#F3F5F0",
+        "surface": "#FFFFFF",
+        "contrast_surface": "#DDE5D9",
+        "ink": "#20231F",
+        "muted": "#596259",
+        "primary": "#7D2838",
+        "secondary": "#39746A",
+        "signal": "#A77B2F",
+        "positive": "#39745A",
+        "negative": "#A53F4E"
+      },
+      "cadence": ["canvas", "contrast_surface", "canvas", "canvas", "statement", "canvas"]
+    },
+    {
+      "id": "charcoal-citrus-briefing",
+      "mood": ["urgent", "executive", "high-contrast"],
+      "tone": ["briefing", "operational"],
+      "formality": ["medium-high", "high"],
+      "density": ["speaker-led", "balanced"],
+      "scheme": "dark",
+      "formats": ["html"],
+      "best_for": ["operating review", "product launch", "decision meeting"],
+      "avoid_for": ["long-form evidence appendix"],
+      "composition_grammar": "hard-offset",
+      "typography": {"display": "Instrument Serif", "body": "Inter", "data": "JetBrains Mono"},
+      "palette": {
+        "canvas": "#171A1C",
+        "surface": "#24292D",
+        "contrast_surface": "#EEF0EC",
+        "ink": "#F4F3EE",
+        "muted": "#B6BBB8",
+        "primary": "#D7E34A",
+        "secondary": "#65B7C8",
+        "signal": "#F1B857",
+        "positive": "#65B986",
+        "negative": "#ED6A63"
+      },
+      "cadence": ["canvas", "surface", "contrast_surface", "canvas", "statement", "surface"]
+    },
+    {
+      "id": "paper-teal-scarlet",
+      "mood": ["clear", "contemporary", "energetic"],
+      "tone": ["editorial", "commercial"],
+      "formality": ["medium", "medium-high"],
+      "density": ["speaker-led", "balanced"],
+      "scheme": "light",
+      "formats": ["html", "pptx"],
+      "best_for": ["go-to-market", "customer story", "portfolio review"],
+      "avoid_for": ["solemn clinical evidence"],
+      "composition_grammar": "mosaic-split",
+      "typography": {"display": "DM Serif Display", "body": "Manrope", "data": "IBM Plex Mono"},
+      "palette": {
+        "canvas": "#F8F7F2",
+        "surface": "#FFFFFF",
+        "contrast_surface": "#DCEAE7",
+        "ink": "#172522",
+        "muted": "#566A65",
+        "primary": "#087E78",
+        "secondary": "#D84E45",
+        "signal": "#C79524",
+        "positive": "#3E8A66",
+        "negative": "#C83F45"
+      },
+      "cadence": ["canvas", "canvas", "contrast_surface", "canvas", "statement", "canvas"]
+    }
+  ]
+}

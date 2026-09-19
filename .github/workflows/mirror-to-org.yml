@@ -1,0 +1,111 @@
+name: Mirror to org repo
+
+# 将个人仓库 mine 分支选择性镜像到组织仓库 Singularity-AI-Gamer/agent-skills。
+# 个人仓库保留全部 skill；组织仓库只镜像 .github/org-exclude.txt 列表之外的 skill。
+# 新增 skill 默认同步到组织仓库；不想同步的两种方式：
+#   ① 在 SKILL.md frontmatter 加 org-sync: false（傻瓜式，推荐）
+#   ② 加路径到 .github/org-exclude.txt（批量排除已有 skill）
+# 日常只在个人仓库编辑，push 到 mine 后自动同步，组织仓库零维护。
+
+on:
+  push:
+    branches: [mine]
+
+jobs:
+  mirror:
+    # 防止组织仓库被镜像后收到 push 又重复触发（死循环防护）
+    if: github.repository == 'EthanYoQ/Skill-hub'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout personal repo
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Configure git
+        run: |
+          git config user.name "skill-hub-mirror"
+          git config user.email "actions@github.com"
+          git config --global credential.helper ""
+
+      - name: Remove excluded skills for org repo
+        run: |
+          echo "=== Removing skills listed in .github/org-exclude.txt ==="
+          removed=0
+          while IFS= read -r line; do
+            [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]] && continue
+            line=$(echo "$line" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+            if [ -d "$line" ]; then
+              rm -rf "$line"
+              echo "  removed: $line"
+              removed=$((removed + 1))
+            else
+              echo "  skip (not found): $line"
+            fi
+          done < .github/org-exclude.txt
+          echo "=== Removed $removed paths ==="
+          echo "Remaining shared skills: $(find skills -name SKILL.md 2>/dev/null | wc -l)"
+          echo "Remaining project skills: $(find projects -name SKILL.md 2>/dev/null | wc -l)"
+
+      - name: "Remove skills marked org-sync: false"
+        run: |
+          echo "=== Removing skills with org-sync: false in SKILL.md frontmatter ==="
+          excluded=0
+          for f in $(find skills -name SKILL.md); do
+            org_sync=$(awk '/^---$/{n++; next} n==1 && /^org-sync:[[:space:]]*false/{found=1} END{print found+0}' "$f")
+            if [ "$org_sync" = "1" ]; then
+              dir=$(dirname "$f")
+              rm -rf "$dir"
+              echo "  excluded by frontmatter: $dir"
+              excluded=$((excluded + 1))
+            fi
+          done
+          echo "=== Excluded $excluded skills by frontmatter ==="
+
+      - name: Mount complete external workflow packages
+        run: |
+          # Keep the package intact as a gitlink. It is deliberately excluded from
+          # skills/ and from the flat Skill-hub synchronization/indexing contract.
+          git submodule add --force https://github.com/Singularity-AI-Gamer/skills.git external/mattpocock-skills
+          git -C external/mattpocock-skills checkout ed37663cc5fbef691ddfecd080dff42f7e7e350d
+          git add .gitmodules external/mattpocock-skills
+          echo "Mounted external/mattpocock-skills at $(git -C external/mattpocock-skills rev-parse --short HEAD)"
+
+      - name: Set organization README hero
+        run: |
+          cp assets/README/agent-skills-hero.png assets/README/skill-hub-hero.png
+
+      - name: Rebuild indexes for org repo
+        run: |
+          pwsh -File scripts/build-indexes.ps1
+
+      - name: Update README counts
+        run: |
+          python3 scripts/update-readme-counts.py
+
+      - name: Commit org-only changes
+        run: |
+          git add -A
+          git commit -m "org mirror: remove excluded skills + rebuild indexes + update README" --allow-empty
+          echo "=== Org mirror commit ready: $(git rev-parse --short HEAD) ==="
+
+      - name: Mirror to org repo
+        env:
+          ORG_TOKEN: ${{ secrets.ORG_PUSH_TOKEN }}
+        run: |
+          if [ -z "$ORG_TOKEN" ]; then
+            echo "::error::ORG_PUSH_TOKEN secret is empty or not set"
+            exit 1
+          fi
+          git remote add org "https://x-access-token:${ORG_TOKEN}@github.com/Singularity-AI-Gamer/agent-skills.git"
+          git push org HEAD:main --force
+          echo "=== Mirror complete ==="
+          echo "Mirrored $(git rev-parse --short HEAD) → Singularity-AI-Gamer/agent-skills:main"
+          echo "Shared skills: $(find skills -name SKILL.md | wc -l)"
+          echo "Project skills: $(find projects -name SKILL.md 2>/dev/null | wc -l)"
+
+      - name: Report failure
+        if: failure()
+        run: |
+          echo "::error::镜像到组织仓库失败。请检查 ORG_PUSH_TOKEN 是否已配置、是否过期、是否有组织仓库写入权限。"

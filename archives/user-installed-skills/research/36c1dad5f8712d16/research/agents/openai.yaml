@@ -1,0 +1,5 @@
+interface:
+  display_name: "Research"
+  short_description: "Research from high-trust sources"
+policy:
+  allow_implicit_invocation: false

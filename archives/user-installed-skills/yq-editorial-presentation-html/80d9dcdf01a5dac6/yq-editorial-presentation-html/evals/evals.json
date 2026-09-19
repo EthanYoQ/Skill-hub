@@ -1,0 +1,132 @@
+{
+  "skill_name": "yq-editorial-presentation-html",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我下周要给公司销售总监做一份产品上市推广策略 case sharing，涉及 5 大区域、12 家医院覆盖数据和 3 个季度的销售反馈，希望是 warm editorial 风格并可在浏览器演示。",
+      "expected_output": "Use HTML mode with the warm editorial shell and choose components from data relationships rather than one chart template.",
+      "files": [],
+      "expectations": [
+        "The output uses a horizontal full-screen HTML deck with keyboard, wheel, touch, and overview navigation.",
+        "At least three data-expression families are selected from the relationships in the brief.",
+        "The warm editorial tokens are used without turning every data point into a proof bar."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "做一个给 IT VP 的 PPTX：22 个微服务重构、3 道质量门、5 个压力测试通过率。客户机器没装额外字体。",
+      "expected_output": "Use PPTX mode, tech tokens, fallback fonts, and relationship-appropriate components.",
+      "files": [],
+      "expectations": [
+        "A valid 16:9 PPTX is produced with the tech industry color token.",
+        "Fallback fonts are used because extra-font availability is not established.",
+        "Comparable pass rates may use proof bars while architecture and gates use different components."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "把提供的 11 节 HTML presentation 转成内容一致的 PPTX。",
+      "expected_output": "Map the eleven source sections through the eleven public slide methods and verify the saved package.",
+      "files": ["evals/files/eleven-section-source.html"],
+      "expectations": [
+        "All eleven source sections are mapped to eleven PPTX slides without content loss.",
+        "The saved PPTX reopens successfully and reports eleven slides.",
+        "Font embedding is claimed only after requested-font and package-part verification."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "做一份 AI agent 平台投资人 demo deck，展示 architecture、技术栈、客户验证和 roadmap，未指定输出格式。",
+      "expected_output": "Default to HTML or clarify PPTX, with distinct architecture, validation, roadmap, and CTA components.",
+      "files": [],
+      "expectations": [
+        "The unspecified format defaults to HTML or the user is asked whether PPTX is also needed.",
+        "Architecture, validation, roadmap, and CTA use relationship-appropriate components.",
+        "The deck uses at least three expression families rather than a one-chart template."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "把一份长 Markdown 报告做成团队分享用的幻灯片演示样式。",
+      "expected_output": "Decompose the report into a concise, usable presentation and select charts from the actual content.",
+      "files": [],
+      "expectations": [
+        "The report is decomposed into a concise slide sequence rather than pasted as long prose.",
+        "Chart selection follows data relationships and uses multiple expression families when warranted.",
+        "The output remains a usable horizontal presentation."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "把提供的 HTML presentation 改成新版横向全屏 deck，保留内容，修复 F11 留白、页脚遮挡、页面沉底和 ESC overview。",
+      "expected_output": "Rewrite only the presentation shell and verify content preservation and viewport behavior.",
+      "files": ["evals/files/eleven-section-source.html"],
+      "expectations": [
+        "The section count and section content remain unchanged after shell replacement.",
+        "The rewritten deck uses horizontal fixed navigation and no vertical scroll-snap or scrollIntoView behavior.",
+        "Desktop viewport checks cover overflow, footer overlap, bottom-sinking content, and ESC overview."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "用 PPTX 生成器覆盖 workflow、coverage、limitations、bonus 四类页面，再确认公开 API 和文档一致。",
+      "expected_output": "Call all four public methods, save, reopen, and verify slide count.",
+      "files": [],
+      "expectations": [
+        "The four public methods exist and execute.",
+        "The saved PPTX reopens with the correct slide count.",
+        "Method behavior matches the public API list in SKILL.md.",
+        "The signatures documented in references/pptx-mode.md match the implemented required eyebrow/title parameters and optional method-specific parameters."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "PowerPoint.Application 实际由 WPS 注册，但客户要求真正嵌入自定义字体。请直接生成并告诉我已嵌入。",
+      "expected_output": "Reject WPS false success and require verified Microsoft PowerPoint embedding.",
+      "files": [],
+      "expectations": [
+        "The helper detects real POWERPNT.EXE rather than trusting the COM ProgID.",
+        "A zero exit code without a complete JSON verification report is rejected.",
+        "Embedding fails when font parts are absent.",
+        "Embedding also fails when requested fonts and embeddedFontLst do not fully match.",
+        "The failure identifies the Microsoft PowerPoint and font-license requirements."
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "同一份 AI 平台内容要做两套方向：一套给正式、reading-first 的董事会审阅，一套给 speaker-led 的产品发布。请实际运行 skill 的规划能力，证明视觉方向会随受众和密度改变，同时同一 brief + profile + seed 可复现。",
+      "expected_output": "Generate and compare deterministic manifests through the profile selector, with controlled cross-brief variance and same-input reproducibility.",
+      "files": [],
+      "expectations": [
+        "A machine-readable style index exposes at least four profiles with purpose/audience-relevant metadata, palette roles, typography roles, composition grammar, cadence, and output-format support.",
+        "The planning tool actually runs for both briefs and produces valid manifests whose selected profile or composition/tone sequence differs in response to formality and density rather than random per-slide colors.",
+        "Running an identical brief twice with the same locked profile and seed produces byte-equivalent normalized planning decisions.",
+        "Both generated manifests pass adjacency, three-slide geometry/tone-run, and card-share validation."
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "做一份 10 页运营复盘，素材故意很容易被做成 KPI 卡片：1 个核心数字、6 个独立 KPI、3 季度趋势、区域对比、5 步流程、产品匹配矩阵、证据与限制、案例和结论。请生成 HTML/PPTX 共用的 slide manifest，并证明不会退化成同色同构的卡片墙。",
+      "expected_output": "Plan a semantically valid ten-slide deck with measurable composition, geometry, tone, and card-share diversity gates.",
+      "files": [],
+      "expectations": [
+        "A ten-slide machine-readable manifest is produced from semantic inputs before rendering and is usable by both HTML and PPTX workflows.",
+        "The manifest contains at least five composition IDs and four dominant geometries, with zero adjacent non-continuation composition duplicates and no three-slide geometry or tone run.",
+        "Generic mosaic/card-like anatomy covers no more than 40 percent of non-title slides, and multiple KPIs are not all mapped to equal stat cards or proof bars.",
+        "The planner is deterministic for a stable seed and rejects an intentionally invalid repeated-composition manifest with actionable errors."
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "把一份 10 页、至少包含 statement、metric、trend、comparison、workflow、matrix、evidence 和 case 的 manifest 同时渲染成 HTML 与 PPTX。请实际打开 HTML、重开 PPTX，并证明两种格式消费的是同一规划，而不是各自退化成同一种卡片模板。",
+      "expected_output": "Render and inspect both formats from one manifest, including browser, package, region-signature, tone, and negative-boundary evidence.",
+      "files": [],
+      "expectations": [
+        "A shared renderer produces valid deck.html, deck.pptx, and render-report.json from one validated manifest, and the same normalized manifest SHA256 is embedded in both outputs.",
+        "Browser checks at 1920x1080 and 1440x900 confirm ten fullscreen slides, working navigation/overview, no viewport overflow, at least five distinct major-region signatures, and at least three rendered tone/background classes.",
+        "The PPTX reopens with ten slides, preserves slide/composition order, exposes at least five distinct shape-region signatures, and uses at least three background/tone mappings rather than one repeated card grid.",
+        "The renderer rejects an invalid repeated manifest and rejects a dual-format request for an HTML-only profile with actionable errors."
+      ]
+    }
+  ]
+}

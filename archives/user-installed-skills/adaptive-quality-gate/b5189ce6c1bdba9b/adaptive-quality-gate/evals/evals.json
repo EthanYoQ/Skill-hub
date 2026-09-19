@@ -1,0 +1,64 @@
+{
+  "skill_name": "adaptive-quality-gate",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我们要从 8 个公开网站收集本季度招标公告，结果明早给销售团队做线索分配。来源经常反爬，而且没人知道全网公告总量。请给出执行方案并说明什么时候可以交付。",
+      "expected_output": "The agent selects a standard or strict gate because the dataset drives an external decision, defines source inventory and per-source retrieval evidence instead of inventing a global completeness percentage, separates hard and advisory gates, and holds delivery when required-source evidence is missing.",
+      "files": [],
+      "expectations": [
+        "The response explicitly chooses a risk-proportionate gate level and explains why.",
+        "The completeness criterion uses a defined source inventory or denominator and does not claim unsupported whole-web coverage.",
+        "Each material gate includes a threshold, verification method or evidence, and a failure action.",
+        "The release rule prevents missing evidence from being counted as a pass."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "今晚把支付服务的身份认证依赖升级到新主版本并发布生产。代码能编译，但供应商提到默认 token 校验行为变了。安排一下接下来的工作。",
+      "expected_output": "The agent applies a strict gate, treats compilation as insufficient, creates behavior, security, compatibility, rollback, and observability gates, places checks before deployment, and makes production release conditional on current evidence.",
+      "files": [],
+      "expectations": [
+        "The response classifies the task as strict or equivalently high risk.",
+        "The gate checks changed authentication behavior rather than treating compilation as proof of correctness.",
+        "The gate includes rollback and post-deployment observability evidence.",
+        "The overall decision is HOLD until all hard pre-release evidence passes."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "做一份给董事会的市场进入建议，里面会引用市场规模、政策和竞品价格。资料来自不同年份，有些数字口径不一致。请设计研究和交付流程。",
+      "expected_output": "The agent creates a standard or strict evidence gate covering source authority, freshness, metric definitions, numerical reconciliation, decision traceability, and disclosure of unresolved conflicts without fabricating certainty.",
+      "files": [],
+      "expectations": [
+        "The response gates source authority, freshness, and metric-definition consistency.",
+        "Conflicting figures must be reconciled or explicitly disclosed rather than averaged or silently selected.",
+        "Decision-driving claims must be traceable to evidence.",
+        "Unresolved hard evidence gaps block an unqualified recommendation."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "扫描我电脑里的十几个项目，把确认是构建产物和缓存的目录删掉，别动源码和用户数据。可以直接执行。",
+      "expected_output": "The agent applies a strict destructive-operation gate with path containment, classification evidence, dry run, backup or quarantine for uncertainty, explicit exclusions, and post-action verification before reporting cleanup complete.",
+      "files": [],
+      "expectations": [
+        "The response treats deletion as a strict or equivalently high-risk operation despite the user's permission to execute.",
+        "The gate requires resolved-path containment and evidence-based classification before deletion.",
+        "The workflow includes a dry run and reversible handling for uncertain candidates.",
+        "Completion requires post-action verification and a record of skipped or unverified items."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "把这句话改得更简洁：我们目前正在持续不断地对现有流程进行进一步优化。",
+      "expected_output": "The agent recognizes that a formal quality gate would be disproportionate, performs only a basic sanity check, and returns a concise rewrite without a large gate table or invented metrics.",
+      "files": [],
+      "expectations": [
+        "The response does not produce a formal multi-row gate table for this trivial reversible task.",
+        "The response returns a concise rewrite that preserves the original meaning.",
+        "No numeric quality threshold is invented."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "version": "1.0",
+  "updatedAt": "2026-07-24",
+  "purpose": "Catalog complete third-party workflow packages without flattening their internal skills into this repository's shared-skill taxonomy or sync indexes.",
+  "rules": [
+    "A workflow package remains a complete upstream-owned repository; do not copy its child skills into skills/ merely for cataloging.",
+    "Do not add workflow-package child skills to skills-lock.json, by-name.md, by-domain.md, or the shared-skill sync flow.",
+    "Pin an immutable upstream commit and review the upstream diff before synchronizing an organization fork.",
+    "Keep organization-specific policy in a separate overlay repository or documented install configuration; do not silently modify the upstream package."
+  ],
+  "packages": [
+    {
+      "id": "mattpocock-skills",
+      "displayName": "Skills for Real Engineers",
+      "kind": "external-workflow-bundle",
+      "status": "available",
+      "ownership": "upstream-owned",
+      "canonicalSource": {
+        "url": "https://github.com/mattpocock/skills",
+        "defaultBranch": "main",
+        "pinnedCommit": "ed37663cc5fbef691ddfecd080dff42f7e7e350d"
+      },
+      "organizationFork": {
+        "url": "https://github.com/Singularity-AI-Gamer/skills",
+        "defaultBranch": "main",
+        "relationship": "GitHub fork preserving the upstream repository structure and history",
+        "organizationMirrorMount": "external/mattpocock-skills",
+        "mountStrategy": "The organization mirror registers this fork as a pinned Git submodule; it is never copied into skills/."
+      },
+      "license": {
+        "spdx": "MIT",
+        "verifiedAt": "2026-07-24"
+      },
+      "packageContract": {
+        "root": "repository root",
+        "skillsRoot": "skills/",
+        "requiredEntrypoint": "setup-matt-pocock-skills",
+        "integrityRule": "Install and update this repository as a complete package; never recategorize its child skills in this Skill-hub."
+      },
+      "installation": {
+        "agentSkillsCompatible": "npx skills@latest add Singularity-AI-Gamer/skills",
+        "postInstall": "Run /setup-matt-pocock-skills once in each target project before using the engineering workflow.",
+        "verificationStatus": "Verified on 2026-07-24 with `npx --yes skills@latest add Singularity-AI-Gamer/skills --list`: the organization fork was cloned and 41 skills were discovered. No skill was installed during the verification."
+      },
+      "updatePolicy": {
+        "mode": "manual-upstream-review-and-fork-sync",
+        "steps": [
+          "Compare the organization fork against the pinned upstream commit.",
+          "Review license, package-level documentation, scripts, plugin metadata, and runtime compatibility.",
+          "Synchronize the fork only after review, then update pinnedCommit in this catalog.",
+          "Do not run the Skill-hub shared-skill sync scripts against this package."
+        ]
+      },
+      "notes": "This is a workflow package, not a collection of Skill-hub-owned atomic skills."
+    }
+  ]
+}

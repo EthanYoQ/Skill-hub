@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warm Editorial Fullscreen Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg-0:#FAF9F5;--bg-1:#F3EEE3;--bg-2:#EBE5D8;--bg-surface:#FFFFFF;
+  --text-0:#141413;--text-1:#2C2A26;--text-2:#5B544A;--text-3:#625B4F;
+  --accent:#CC785C;--accent-hot:#E8A888;--accent-deep:#A45946;--accent-wash:rgba(204,120,92,.08);
+  --brand-blue:#2E5C8A;--brand-purple:#6B4E8F;--brand-gold:#B8903C;
+  --brand-green:#5C8D5C;--brand-red:#C2594A;--brand-pink:#C77A9A;
+  --hema-crimson:#8C2B3A;--pfizer-blue:#0095D5;--pfizer-blue-deep:#00558C;
+  --border-soft:#E3DCCC;--border:#D0C8B5;--border-strong:#A69D88;
+  --glass-bg:rgba(255,255,255,.55);--glass-bd:rgba(20,20,19,.08);
+  --glow-accent:0 0 40px rgba(204,120,92,.25);--glow-gold:0 0 40px rgba(184,144,60,.22);
+  --shadow-card:0 1px 2px rgba(20,20,19,.04),0 8px 24px rgba(20,20,19,.04);
+  --shadow-card-hover:0 2px 4px rgba(20,20,19,.06),0 16px 40px rgba(204,120,92,.12);
+  --font-sans:'Inter',-apple-system,BlinkMacSystemFont,'PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif;
+  --font-serif:'Fraunces','Source Han Serif SC',Georgia,serif;
+  --font-mono:'JetBrains Mono',Consolas,monospace;
+}
+html,body{width:100%;height:100%;overflow:hidden}
+body{
+  font-family:var(--font-sans);
+  background:
+    radial-gradient(1200px 600px at 85% 15%,rgba(204,120,92,.08),transparent 55%),
+    radial-gradient(900px 500px at 10% 80%,rgba(140,43,58,.05),transparent 60%),
+    var(--bg-0);
+  color:var(--text-1);line-height:1.6;font-feature-settings:"cv11","ss01","tnum";
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.08  0 0 0 0 0.07  0 0 0 0 0.05  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+#deck{position:fixed;inset:0;display:flex;flex-wrap:nowrap;height:100vh;width:10000vw;z-index:2;transition:transform .72s cubic-bezier(.77,0,.175,1);will-change:transform}
+.slide{position:relative;width:100vw;height:100vh;flex:0 0 100vw;display:flex;flex-direction:column;overflow:hidden;padding:clamp(42px,6vh,68px) clamp(64px,5.5vw,116px) clamp(72px,9vh,108px)}
+.slide.tone-paper{background:rgba(250,249,245,.94)}
+.slide.tone-warm{background:linear-gradient(135deg,rgba(243,238,227,.96),rgba(250,249,245,.94))}
+.slide.tone-soft{background:radial-gradient(ellipse 60% 45% at 80% 18%,rgba(204,120,92,.08),transparent 62%),var(--bg-0)}
+.slide.tone-hero{background:radial-gradient(ellipse 80% 60% at 50% 20%,rgba(204,120,92,.10),transparent 60%),radial-gradient(ellipse 60% 40% at 80% 80%,rgba(140,43,58,.06),transparent 60%),var(--bg-0)}
+.slide.tone-hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(20,20,19,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(20,20,19,.03) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,black 40%,transparent 90%);pointer-events:none}
+.wrap,.frame{position:relative;z-index:1;width:100%;max-width:min(1690px,88vw);margin:clamp(24px,3vh,44px) auto 0;flex:1;min-height:0}
+.frame{display:flex;flex-direction:column;overflow:hidden}
+.wrap.wide,.frame.wide{max-width:min(1760px,93vw)}
+.slide-chrome,.slide-foot{position:relative;z-index:3;display:flex;justify-content:space-between;gap:2vw;font-family:var(--font-mono);font-size:clamp(11px,.78vw,15px);letter-spacing:1.8px;text-transform:uppercase;color:var(--text-3)}
+.slide-foot{margin-top:auto;padding-top:1.6vh;border-top:1px solid var(--border-soft)}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;padding:7px 16px;background:var(--glass-bg);border:1px solid var(--border-soft);border-radius:100px;font-family:var(--font-mono);font-size:clamp(11px,.78vw,15px);letter-spacing:2px;text-transform:uppercase;color:var(--accent-deep);font-weight:700;backdrop-filter:blur(12px);margin-bottom:2.2vh}
+.eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px rgba(204,120,92,.5)}
+.hero-title,.section-title{font-family:var(--font-serif);font-weight:600;color:var(--text-0);letter-spacing:-1.2px}
+.hero-title{font-size:clamp(110px,7.6vw,146px);line-height:1.02;margin-bottom:2.4vh;max-width:1380px}
+.section-title{font-size:clamp(78px,5.2vw,106px);line-height:1.08;margin:1vh 0 1.6vh;max-width:1420px}
+.gradient-text{background:linear-gradient(135deg,#1E3A5F 0%,#CC785C 55%,#B8903C 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.gradient-crimson{background:linear-gradient(135deg,var(--hema-crimson),var(--accent-deep));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.subtitle{font-family:var(--font-serif);font-size:clamp(25px,1.75vw,36px);color:var(--text-2);max-width:1160px;line-height:1.45;margin-bottom:3vh}.subtitle strong{color:var(--text-0)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:28px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:3vh}
+.stat-card{background:var(--bg-surface);border:1px solid var(--border-soft);border-radius:14px;padding:28px 30px;box-shadow:var(--shadow-card)}
+.stat-k{font-family:var(--font-mono);font-size:clamp(11px,.78vw,15px);letter-spacing:2px;text-transform:uppercase;color:var(--accent-deep);font-weight:700;margin-bottom:12px}
+.stat-v{font-family:var(--font-serif);font-size:clamp(68px,6vw,124px);font-weight:700;line-height:1;letter-spacing:-1.2px;color:var(--text-0)}
+.stat-v span{font-size:.48em;color:var(--accent);margin-left:3px}.stat-d{font-size:clamp(17px,1.05vw,22px);color:var(--text-2);line-height:1.55;margin-top:12px}
+.decision-window{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:3vh;position:relative}
+.decision-window::before{content:"";position:absolute;left:8%;right:8%;top:44px;height:2px;background:linear-gradient(90deg,var(--brand-green),var(--brand-gold),var(--brand-red));z-index:0}
+.time-node{position:relative;z-index:1;background:var(--bg-surface);border:1px solid var(--border-soft);border-radius:14px;padding:24px 22px;box-shadow:var(--shadow-card)}
+.time-node b{display:block;font-family:var(--font-serif);font-size:clamp(30px,2.1vw,44px);line-height:1;color:var(--text-0);margin-bottom:10px}.time-node span{font-size:clamp(17px,1.05vw,22px);color:var(--text-2);line-height:1.5}
+.time-node.active{border-color:var(--brand-green)}.time-node.risk{border-color:var(--brand-gold)}.time-node.late{border-color:var(--brand-red)}
+.gene-drug-map{display:grid;grid-template-columns:1fr 1.35fr 1fr;gap:6px;margin-top:3vh}
+.matrix-head{font-family:var(--font-mono);font-size:clamp(11px,.78vw,15px);letter-spacing:2px;text-transform:uppercase;color:var(--text-3);padding:10px 12px;border-bottom:2px solid var(--border-soft)}
+.matrix-cell{background:var(--bg-surface);border:1px solid var(--border-soft);border-radius:8px;padding:18px 20px;font-size:clamp(17px,1.05vw,22px);color:var(--text-1);line-height:1.5}.matrix-cell.gene{font-family:var(--font-mono);font-weight:700;color:var(--brand-purple)}.matrix-cell.drug{font-family:var(--font-serif);font-weight:700;color:var(--accent-deep);font-size:clamp(24px,1.55vw,32px)}
+.funnel-wrap,.pyramid-wrap{background:var(--bg-surface);border:1px solid var(--border-soft);border-radius:16px;padding:34px;box-shadow:var(--shadow-card)}
+.funnel-wrap h3,.pyramid-wrap h3{font-family:var(--font-serif);font-size:clamp(24px,1.55vw,32px);color:var(--accent-deep);margin-bottom:22px;font-weight:600}
+.funnel-stage{margin-bottom:4px;padding:14px 18px;color:var(--text-0);font-weight:600;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,#F7EFE7,#FBF6EF);border-left:3px solid var(--accent-hot);clip-path:polygon(0 0,100% 0,calc(100% - 18px) 100%,18px 100%);font-size:clamp(17px,1.05vw,22px)}
+.funnel-stage:nth-child(3){background:linear-gradient(90deg,#F2E2D3,#F7ECDE);width:94%;margin-left:3%}.funnel-stage:nth-child(4){background:linear-gradient(90deg,#ECCBB2,#F0D7BC);width:84%;margin-left:8%}.funnel-stage:nth-child(5){background:linear-gradient(90deg,#D99975,#DFA987);color:#fff;width:74%;margin-left:13%}.funnel-stage:nth-child(6){background:linear-gradient(90deg,#A45946,#B86E5A);color:#fff;width:64%;margin-left:18%}
+.funnel-stage .count{font-family:var(--font-serif);font-size:clamp(24px,1.55vw,32px);font-weight:600}
+.pyramid-row{display:flex;align-items:center;margin:0 auto 8px;padding:16px 18px;border-radius:8px;font-size:clamp(17px,1.05vw,22px);font-weight:700}.pyramid-row .tier-count{font-family:var(--font-serif);font-size:clamp(22px,1.45vw,30px);margin-left:auto}.pyramid-row.t1{width:62%;background:var(--brand-green);color:#fff}.pyramid-row.t2{width:74%;background:var(--brand-blue);color:#fff}.pyramid-row.t3{width:86%;background:var(--accent);color:#fff}.pyramid-row.t4{width:96%;background:var(--bg-2);color:var(--text-1);border:1px solid var(--border)}
+.market-bars{margin-top:3vh;background:var(--bg-surface);border:1px solid var(--border-soft);border-radius:18px;padding:30px 28px;box-shadow:var(--shadow-card)}
+.bars-axis{display:grid;grid-template-columns:140px repeat(6,1fr);gap:6px;margin-bottom:10px}.axis-label{font-size:clamp(10px,.72vw,14px);color:var(--text-3);letter-spacing:1px;font-weight:700;text-transform:uppercase;text-align:center;border-bottom:2px solid var(--border-soft);padding:4px 0}.axis-label:first-child{border-bottom:0;color:transparent}
+.bar-row{display:grid;grid-template-columns:140px 1fr;gap:14px;align-items:center;margin:14px 0}.bar-meta{text-align:right;padding-right:6px;line-height:1.25}.bar-meta .pct{font-family:var(--font-serif);font-size:clamp(28px,2.1vw,44px);font-weight:700;color:var(--text-0);display:block}.bar-meta .label{font-size:clamp(10px,.72vw,14px);letter-spacing:.5px;color:var(--text-3)}
+.bar-track{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;height:82px}.bar-cell{background:var(--bg-1);border:1px solid var(--border-soft);border-radius:6px;padding:8px 6px;display:flex;flex-direction:column;gap:4px}.bar-cell.empty{background:repeating-linear-gradient(45deg,transparent,transparent 4px,var(--bg-1) 4px,var(--bg-1) 8px);border-style:dashed;opacity:.35}.bar-cell.event{background:linear-gradient(135deg,rgba(194,89,74,.15),rgba(194,89,74,.05));border-color:var(--brand-red)}.bar-cell.s-prevent{background:linear-gradient(135deg,rgba(46,92,138,.18),rgba(46,92,138,.06));border-color:rgba(46,92,138,.35)}.bar-cell.s-empiric,.bar-cell.s-dd{background:linear-gradient(135deg,rgba(184,144,60,.16),rgba(184,144,60,.05));border-color:rgba(184,144,60,.3)}.bar-cell.s-target{background:linear-gradient(135deg,rgba(204,120,92,.20),rgba(204,120,92,.06));border-color:rgba(204,120,92,.4)}.bar-cell.s-maint{background:linear-gradient(135deg,rgba(92,141,92,.16),rgba(92,141,92,.05));border-color:rgba(92,141,92,.3)}
+.stage-icon{font-size:clamp(13px,.9vw,17px);font-weight:700;color:var(--text-0);letter-spacing:.3px;line-height:1.2}.stage-pct{font-size:clamp(10px,.68vw,13px);color:var(--text-3);font-family:var(--font-mono);margin-top:auto}
+.compact .hero-title,.compact .section-title{font-size:clamp(46px,3.8vw,76px)}
+.compact .subtitle,.compact p,.compact li,.compact .matrix-cell,.compact .time-node span,.compact .stat-d{font-size:clamp(15px,.95vw,19px);line-height:1.58}
+.compact h3,.compact h4,.compact .matrix-cell.drug{font-size:clamp(18px,1.25vw,24px)}
+#nav{position:fixed;left:50%;bottom:2.4vh;transform:translateX(-50%);z-index:30;display:flex;gap:8px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.52);backdrop-filter:blur(18px);border:1px solid var(--glass-bd)}
+#nav button{width:8px;height:8px;border:0;border-radius:50%;background:var(--border-strong);opacity:.55;cursor:pointer;transition:all .25s}#nav button.active{width:24px;border-radius:999px;background:var(--accent);opacity:1}
+#hint{position:fixed;right:3vw;bottom:2.8vh;z-index:30;font-family:var(--font-mono);font-size:clamp(10px,.68vw,13px);letter-spacing:1.6px;text-transform:uppercase;color:var(--text-3)}
+#overview{position:fixed;inset:0;z-index:100;background:rgba(20,20,19,.88);backdrop-filter:blur(14px);display:none;overflow:auto;padding:4vh 4vw}.overview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2.2vh 1.4vw}.overview-card{cursor:pointer;background:var(--bg-0);border:2px solid rgba(255,255,255,.16);border-radius:8px;overflow:hidden}.overview-card.active{border-color:var(--accent-hot)}.overview-shot{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--bg-0)}.overview-shot .slide{position:absolute;inset:0;transform:scale(.225);transform-origin:top left;width:100vw;height:100vh;pointer-events:none}.overview-label{font-family:var(--font-mono);font-size:clamp(10px,.68vw,13px);letter-spacing:1.4px;color:var(--bg-0);padding:7px 10px;background:rgba(20,20,19,.88)}
+@media(max-width:900px){.slide{padding:4vh 4vw 7vh}.grid-2,.grid-3,.grid-4,.stat-grid,.decision-window{grid-template-columns:1fr 1fr}.gene-drug-map{grid-template-columns:1fr}.market-bars{padding:18px}.overview-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div id="deck">
+  <section class="slide tone-hero">
+    <div class="slide-chrome"><span>Warm Editorial · Fullscreen Deck</span><span>01 / 05</span></div>
+    <div class="wrap" style="align-self:center;margin-top:9vh">
+      <div class="eyebrow">AI Market Intelligence</div>
+      <h1 class="hero-title">一句话起跑,<br><span class="gradient-text">多种图表表达。</span></h1>
+      <p class="subtitle">保留血液科 v5 的米色底、赭石主色、深红医疗色和 Pfizer 蓝。图表先判断关系,再选择 stat、timeline、matrix、funnel 或 bar。</p>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-k">Market</div><div class="stat-v">38<span>亿</span></div><div class="stat-d">单点关键数字,用 stat-card。</div></div>
+        <div class="stat-card"><div class="stat-k">Modules</div><div class="stat-v">7</div><div class="stat-d">独立 KPI,不画条形图。</div></div>
+        <div class="stat-card"><div class="stat-k">Charts</div><div class="stat-v">22</div><div class="stat-d">多个指标可用 stat-grid。</div></div>
+        <div class="stat-card"><div class="stat-k">Refs</div><div class="stat-v">43</div><div class="stat-d">证据数量保持可追溯。</div></div>
+      </div>
+    </div>
+    <footer class="slide-foot"><span>Chart family: stat-grid</span><span>F11 ready · ESC overview</span></footer>
+  </section>
+
+  <section class="slide tone-soft">
+    <div class="slide-chrome"><span>Decision Window · Timeline</span><span>02 / 05</span></div>
+    <div class="wrap" style="margin-top:7vh">
+      <div class="eyebrow">Time Relationship</div>
+      <h2 class="section-title">时间窗口用 timeline,<br><span class="gradient-crimson">不要画成普通 bar。</span></h2>
+      <p class="subtitle">当数据表达的是先后顺序、诊疗窗口或等待成本,核心问题是"什么时候发生",不是"谁更长"。</p>
+      <div class="decision-window">
+        <div class="time-node active"><b>0-4h</b><span>识别高危患者,提出初始治疗假设。</span></div>
+        <div class="time-node"><b>4-12h</b><span>快速诊断返回机制线索。</span></div>
+        <div class="time-node risk"><b>24h+</b><span>决策窗口开始快速收窄。</span></div>
+        <div class="time-node late"><b>48-72h</b><span>传统药敏结果才逐步完整。</span></div>
+      </div>
+    </div>
+    <footer class="slide-foot"><span>Chart family: decision-window</span><span>Not a bar chart</span></footer>
+  </section>
+
+  <section class="slide tone-paper">
+    <div class="slide-chrome"><span>Mechanism · Matrix</span><span>03 / 05</span></div>
+    <div class="wrap" style="margin-top:7vh">
+      <div class="eyebrow">Mechanism Mapping</div>
+      <h2 class="section-title">机制匹配用 matrix,<br><span class="gradient-text">不要画成条形图。</span></h2>
+      <p class="subtitle">病原体、基因型、作用机制、产品之间是匹配关系,不是大小排序。</p>
+      <div class="gene-drug-map">
+        <div class="matrix-head">Mechanism</div><div class="matrix-head">Trigger</div><div class="matrix-head">Product Path</div>
+        <div class="matrix-cell gene">KPC / OXA-48</div><div class="matrix-cell">CRE + 丝氨酸酶线索,结合当地药敏。</div><div class="matrix-cell drug">思福妥</div>
+        <div class="matrix-cell gene">NDM / VIM / IMP</div><div class="matrix-cell">金属酶阳性或高度怀疑。</div><div class="matrix-cell drug">思福诺</div>
+        <div class="matrix-cell gene">CRAB / OXA</div><div class="matrix-cell">鲍曼不动杆菌 HABP/VABP 场景。</div><div class="matrix-cell drug">Xacduro</div>
+      </div>
+    </div>
+    <footer class="slide-foot"><span>Chart family: gene-drug-map</span><span>Mechanism matching</span></footer>
+  </section>
+
+  <section class="slide tone-warm">
+    <div class="slide-chrome"><span>Evidence · Funnel & Pyramid</span><span>04 / 05</span></div>
+    <div class="wrap" style="margin-top:6vh">
+      <div class="eyebrow">Evidence Relationship</div>
+      <h2 class="section-title">证据链分两种:<br><span class="gradient-crimson">筛选递减与强弱分层。</span></h2>
+      <div class="grid-2" style="margin-top:3vh">
+        <div class="funnel-wrap funnel">
+          <h3>文献检索漏斗</h3>
+          <div class="funnel-stage"><span>PubMed 触达</span><span class="count">数千</span></div>
+          <div class="funnel-stage"><span>标题/摘要筛选</span><span class="count">~500</span></div>
+          <div class="funnel-stage"><span>全文+时间窗</span><span class="count">~120</span></div>
+          <div class="funnel-stage"><span>入库</span><span class="count">47</span></div>
+          <div class="funnel-stage"><span>纳入 A/B/C</span><span class="count">43</span></div>
+        </div>
+        <div class="pyramid-wrap pyramid">
+          <h3>证据等级金字塔</h3>
+          <div class="pyramid-row t1"><span>最高级</span><span class="tier-count">18</span></div>
+          <div class="pyramid-row t2"><span>重要级</span><span class="tier-count">17</span></div>
+          <div class="pyramid-row t3"><span>参考级</span><span class="tier-count">7</span></div>
+          <div class="pyramid-row t4"><span>估算/外部</span><span class="tier-count">按需</span></div>
+        </div>
+      </div>
+    </div>
+    <footer class="slide-foot"><span>Chart families: funnel + pyramid</span><span>Evidence, not proof-bars</span></footer>
+  </section>
+
+  <section class="slide tone-paper">
+    <div class="slide-chrome"><span>Journey · Market Bars</span><span>05 / 05</span></div>
+    <div class="wrap" style="margin-top:6vh">
+      <div class="eyebrow">Patient Journey Coverage</div>
+      <h2 class="section-title">阶段覆盖可以用 market-bars,<br><span class="gradient-text">但只在旅程场景使用。</span></h2>
+      <div class="market-bars">
+        <div class="bars-axis">
+          <div class="axis-label">阶段</div><div class="axis-label">预防</div><div class="axis-label">突破</div><div class="axis-label">经验性</div><div class="axis-label">诊断驱动</div><div class="axis-label">目标治疗</div><div class="axis-label">维持</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-meta"><span class="pct">Line A</span><span class="label">有预防路径</span></div>
+          <div class="bar-track">
+            <div class="bar-cell s-prevent"><span class="stage-icon">预防</span><span class="stage-pct">baseline</span></div>
+            <div class="bar-cell event"><span class="stage-icon">突破</span><span class="stage-pct">event</span></div>
+            <div class="bar-cell s-empiric"><span class="stage-icon">经验性</span></div>
+            <div class="bar-cell s-dd"><span class="stage-icon">诊断驱动</span></div>
+            <div class="bar-cell s-target"><span class="stage-icon">目标治疗</span></div>
+            <div class="bar-cell s-maint"><span class="stage-icon">维持</span></div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-meta"><span class="pct">Line B</span><span class="label">无预防路径</span></div>
+          <div class="bar-track">
+            <div class="bar-cell empty"><span class="stage-icon">-</span></div>
+            <div class="bar-cell empty"><span class="stage-icon">-</span></div>
+            <div class="bar-cell s-empiric"><span class="stage-icon">经验性</span></div>
+            <div class="bar-cell s-dd"><span class="stage-icon">诊断驱动</span></div>
+            <div class="bar-cell s-target"><span class="stage-icon">目标治疗</span></div>
+            <div class="bar-cell s-maint"><span class="stage-icon">维持</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="slide-foot"><span>Chart family: market-bars</span><span>Use only for journey coverage</span></footer>
+  </section>
+</div>
+<div id="nav"></div>
+<div id="hint">← → 翻页 · ESC 索引</div>
+<div id="overview"></div>
+<script>
+const deck=document.getElementById('deck');
+const slides=[...document.querySelectorAll('.slide')];
+const nav=document.getElementById('nav');
+const overview=document.getElementById('overview');
+let idx=0,total=slides.length,lock=false,overviewOn=false;
+deck.style.width=(total*100)+'vw';
+slides.forEach((_,i)=>{const b=document.createElement('button');b.setAttribute('aria-label','Page '+(i+1));b.onclick=()=>go(i);nav.appendChild(b)});
+function go(n){if(lock||overviewOn)return;idx=Math.max(0,Math.min(total-1,n));deck.style.transform=`translateX(${-idx*100}vw)`;nav.querySelectorAll('button').forEach((b,i)=>b.classList.toggle('active',i===idx));lock=true;setTimeout(()=>lock=false,520)}
+function buildOverview(){overview.innerHTML='';const grid=document.createElement('div');grid.className='overview-grid';slides.forEach((s,i)=>{const card=document.createElement('div');card.className='overview-card'+(i===idx?' active':'');const shot=document.createElement('div');shot.className='overview-shot';shot.appendChild(s.cloneNode(true));const label=document.createElement('div');label.className='overview-label';label.textContent=(i+1)+' / '+total;card.appendChild(shot);card.appendChild(label);card.onclick=()=>{toggleOverview();go(i)};grid.appendChild(card)});overview.appendChild(grid)}
+function toggleOverview(){overviewOn=!overviewOn;if(overviewOn){buildOverview();overview.style.display='block'}else{overview.style.display='none'}}
+addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();toggleOverview();return}if(overviewOn)return;if(['ArrowRight','PageDown',' ','ArrowDown'].includes(e.key)){e.preventDefault();go(idx+1)}if(['ArrowLeft','PageUp','ArrowUp'].includes(e.key)){e.preventDefault();go(idx-1)}if(e.key==='Home')go(0);if(e.key==='End')go(total-1)});
+let wheelAcc=0,wheelTO=null;addEventListener('wheel',e=>{wheelAcc+=e.deltaY+e.deltaX;if(Math.abs(wheelAcc)>50){go(idx+(wheelAcc>0?1:-1));wheelAcc=0}clearTimeout(wheelTO);wheelTO=setTimeout(()=>wheelAcc=0,150)},{passive:true});
+let tx=0,ty=0;addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy))go(idx+(dx<0?1:-1))},{passive:true});
+go(0);
+</script>
+</body>
+</html>

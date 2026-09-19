@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Cleanup Audit"
+  short_description: "Audit and safely clean repo clutter"
+  default_prompt: "Use $project-cleanup-audit to audit this repository, classify cleanup candidates, and apply only confirmed safe cleanup."

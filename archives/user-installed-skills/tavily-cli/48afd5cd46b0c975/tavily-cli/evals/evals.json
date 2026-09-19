@@ -1,0 +1,104 @@
+{
+  "skill_name": "tavily-cli",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "查找最近一周公开网页上关于固态电池量产进展的文章，先给我来源列表和摘要。",
+      "expected_output": "The router selects Tavily Search for quick ordinary public-web discovery without a known URL.",
+      "files": [],
+      "expectations": [
+        "The task routes to Tavily Search because no target URL is known.",
+        "Tavily Research is not selected for this initial source-list request.",
+        "Agent Reach is not selected unless platform-native sources are added to scope."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "把这两个公开网页提取成干净 Markdown，并只保留与定价相关的段落：https://example.com/a https://example.org/b",
+      "expected_output": "The router selects Tavily Extract for known public URLs and query-focused content extraction.",
+      "files": [],
+      "expectations": [
+        "The task routes to Tavily Extract because the target URLs are known.",
+        "Tavily Search and Map are not run before the supplied pages are extracted.",
+        "Agent Reach is not selected because the URLs are ordinary public webpages."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "分析 https://docs.example.com 的站点结构，列出所有 security 和 authentication 相关 URL，不抓正文。",
+      "expected_output": "The router selects Tavily Map for URL-only discovery under a known public site root.",
+      "files": [],
+      "expectations": [
+        "The task routes to Tavily Map.",
+        "Tavily Crawl is not selected because page content is explicitly out of scope.",
+        "The route uses path or semantic filtering without extracting page bodies."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "把这个公开文档站 /guides/ 下面的页面批量抓取并保存成 Markdown，最多三层。",
+      "expected_output": "The router selects Tavily Crawl for content from many pages under one known public site section.",
+      "files": [],
+      "expectations": [
+        "The task routes to Tavily Crawl because bulk page content is requested.",
+        "Tavily Map alone is insufficient because URLs without content would not satisfy the request.",
+        "The route applies the requested path and depth constraints."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "基于公开网页做一份欧洲 AI 法规与美国政策的详细比较，要求多来源引用。",
+      "expected_output": "The router selects Tavily Research for public-web-only, multi-source cited synthesis.",
+      "files": [],
+      "expectations": [
+        "The task routes to Tavily Research because a detailed cited synthesis is requested.",
+        "Tavily Search alone is not treated as the final research workflow.",
+        "Agent Reach is not required unless named platforms or platform-native evidence enter scope."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "搜索一百条公开网页结果，在进入上下文前按域名去重、过滤低相关项，并只输出匹配我字段定义的数据。",
+      "expected_output": "The router selects Tavily Dynamic Search because custom filtering and context isolation are material.",
+      "files": [],
+      "expectations": [
+        "The task routes to Tavily Dynamic Search rather than ordinary Tavily Search.",
+        "Raw bulk search results are filtered before entering model context.",
+        "The route preserves custom deduplication and field-selection requirements."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "在 Python RAG 服务中集成 Tavily API，需要异步搜索、重试、域名过滤和可观测性设计。",
+      "expected_output": "The router selects Tavily Best Practices because the user is implementing a software integration.",
+      "files": [],
+      "expectations": [
+        "The task routes to Tavily Best Practices rather than executing an end-user search.",
+        "The response discusses SDK/API integration and production reliability.",
+        "No web collection is performed unless needed to validate the implementation."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "看看 X、Reddit 和 LinkedIn 上对远程办公的最新讨论，需要原帖和评论。",
+      "expected_output": "The task defers to Agent Reach because it requires named platforms and platform-native content.",
+      "files": [],
+      "expectations": [
+        "The task routes to Agent Reach rather than any Tavily leaf skill.",
+        "Platform-native posts and comments are retrieved with platform-aware backends.",
+        "Tavily is used only for ordinary webpages added later to the scope."
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "收集 Reddit 上的用户反馈，同时抓取三个厂商的公开文档页面，最后把两类证据分开整理。",
+      "expected_output": "The task uses Agent Reach for Reddit and the appropriate Tavily leaf skill for ordinary documentation pages.",
+      "files": [],
+      "expectations": [
+        "Agent Reach owns Reddit collection.",
+        "Tavily Extract or Crawl owns the public documentation pages according to page count and URL availability.",
+        "The response preserves separate provenance for platform and public-web evidence."
+      ]
+    }
+  ]
+}

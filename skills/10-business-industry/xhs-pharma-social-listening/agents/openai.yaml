@@ -1,0 +1,4 @@
+interface:
+  display_name: "XHS Pharma Social Listening"
+  short_description: "小红书药企员工痛点采集分析"
+  default_prompt: "Use $xhs-pharma-social-listening. Delegate Xiaohongshu collection to a collector subagent when available, then produce a scored pharma employee pain-point report."

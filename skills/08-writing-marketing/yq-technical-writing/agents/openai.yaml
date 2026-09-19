@@ -1,0 +1,4 @@
+interface:
+  display_name: "YQ Technical Writing"
+  short_description: "Write concise technical prose without losing contracts"
+  default_prompt: "Use $yq-technical-writing to audit this repository scope for complete and concise technical prose."
