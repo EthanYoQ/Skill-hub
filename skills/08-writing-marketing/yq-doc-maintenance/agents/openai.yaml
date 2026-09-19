@@ -1,0 +1,4 @@
+interface:
+  display_name: "YQ Doc Maintenance"
+  short_description: "Fix stale, conflicting, and scattered project docs"
+  default_prompt: "Use $yq-doc-maintenance to audit this repository's documentation and propose an owner-first cleanup."

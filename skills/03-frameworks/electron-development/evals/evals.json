@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "prompt": "用 GitHub Actions 为 Electron 项目构建 macOS ARM64 DMG，并挂载后做 packaged smoke。",
+      "expected": { "invoke": true, "branches": ["macos-build", "mounted-smoke", "qualification"] }
+    },
+    {
+      "prompt": "用 GitHub Actions 构建 Windows NSIS，并验证安装、升级和卸载。",
+      "expected": { "invoke": false, "owner": "github-desktop-release", "reason": "Windows GitHub Actions qualification is outside this Skill" }
+    },
+    {
+      "prompt": "从同一 SHA 云端构建 Windows NSIS 和 macOS DMG，随后发布 GitHub Release。",
+      "expected": { "invoke": true, "alsoInvoke": ["github-desktop-release"], "branches": ["macos-build", "macos-qualification"], "windowsAndReleaseOwner": "github-desktop-release" }
+    },
+    {
+      "prompt": "macOS DMG 已 qualification 成功，把 Win/mac 产物 promotion 到公开 Release 并权威回读。",
+      "expected": { "invoke": false, "owner": "github-desktop-release", "reason": "promotion and publication are outside this Skill" }
+    },
+    {
+      "prompt": "修改 preload IPC 白名单并在本地运行 Electron 测试。",
+      "expected": { "invoke": true, "branches": ["electron-implementation", "local-test"] }
+    },
+    {
+      "prompt": "这次改了 macOS packaged smoke、helper IPC 和打包 runner，先用 GH Actions 构建 ARM64 与 Intel 安装包。",
+      "expected": { "invoke": true, "branches": ["macos-build", "risk-canary", "isolated-package-smoke", "helper-contract", "bundle-inspection"] }
+    },
+    {
+      "prompt": "只改了 Electron 渲染层文案，发布工作流和打包基础设施近期同一 workflow 都是绿的，构建 macOS 双架构。",
+      "expected": { "invoke": true, "branches": ["macos-build", "parallel-architecture-qualification"] }
+    },
+    {
+      "prompt": "macOS Intel 在同一个测试阶段已经连续失败两次，再跑一次看看。",
+      "expected": { "invoke": true, "branches": ["stop-third-run", "isolate-root-cause", "forward-audit"] }
+    },
+    {
+      "prompt": "修复 macOS 打包错误后产生了新 commit，旧 SHA 的 ARM64 仍在跑、Intel 已成功。",
+      "expected": { "invoke": true, "branches": ["cancel-stale-runs", "invalidate-old-artifacts", "forward-audit", "requalify-both-architectures"] }
+    },
+    {
+      "prompt": "这个内部 Electron 工具只发布 macOS ARM64，不需要 Intel 版本。",
+      "expected": { "invoke": true, "branches": ["macos-build", "requested-architectures-only"], "mustNotDo": ["add-unrequested-x64-build"] }
+    },
+    {
+      "prompt": "高风险 macOS canary 必须实际构建并挂载 DMG；怎样避免它通过后又重复构建同一架构？",
+      "expected": { "invoke": true, "branches": ["predeclared-formal-representative-qualification"], "mustRequire": ["complete-frozen-contract", "exact-evidence-artifact"], "mustNotDo": ["retroactive-promotion-of-partial-canary"] }
+    }
+  ]
+}

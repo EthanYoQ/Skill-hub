@@ -1,0 +1,6 @@
+interface:
+  display_name: "Electron Development"
+  short_description: "Build Electron apps and macOS cloud installers"
+  default_prompt: "Use $electron-development to implement or debug an Electron app, package it locally, or build and qualify its macOS installer in GitHub Actions."
+policy:
+  allow_implicit_invocation: true

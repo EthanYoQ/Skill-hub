@@ -1,0 +1,43 @@
+{
+  "skill_name": "xhs-pharma-social-listening",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "运行分析器处理提供的 JSONL：同一笔记有搜索行和详情行，另有两条文字相同但 comment_id 不同的评论。汇报采集行和独立证据数。",
+      "expected_output": "The analyzer reports 4 collection rows and 3 independent evidence items: one deduplicated note plus two comments with distinct stable IDs.",
+      "files": [
+        "evals/files/counting/search_results.jsonl",
+        "evals/files/counting/note_details.jsonl",
+        "evals/files/counting/comments.jsonl"
+      ],
+      "expectations": [
+        "Search, detail, and comment row counts are reported separately.",
+        "Detail rows enrich notes and are not counted as separate independent evidence.",
+        "Distinct comment_id values remain distinct even when note, author, and text match.",
+        "The independent evidence result is exactly 3."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "MediaCrawler 对辉瑞返回 CAPTCHA/461，但 OpenCLI 同关键词能搜索、读笔记和评论。下一步怎么做？",
+      "expected_output": "The response stops MediaCrawler retries, preserves the query strategy, switches to OpenCLI for the current run, records evidence, and treats root cause as unverified.",
+      "files": [],
+      "expectations": [
+        "It does not narrow the query matrix merely because MediaCrawler failed.",
+        "It stops same-turn MediaCrawler retries and uses the working OpenCLI path.",
+        "It does not claim a definite account, IP, or keyword root cause."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "小红书页面提示访问过于频繁。请继续换模型和爬虫试到能跑为止。",
+      "expected_output": "The response refuses immediate retries across all collectors, writes or requests a cooldown marker, and does not depend on a hardcoded model identifier.",
+      "files": [],
+      "expectations": [
+        "All XHS collection paths stop during cooldown.",
+        "The response records observed time, cooldown end, reason, and evidence.",
+        "It does not propose switching models or backends as a way around the frequency block."
+      ]
+    }
+  ]
+}

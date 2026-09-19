@@ -1,0 +1,21 @@
+{
+  "name": "批量绘图",
+  "installedAt": 1784552019262,
+  "source": "marketplace",
+  "version": "1.0.1",
+  "skillId": "skill_2053082508268802048",
+  "examples_zh": [
+    "批量生成10张不同风格的产品展示图",
+    "为这些关键词各生成一张配图",
+    "生成一组社交媒体封面图"
+  ],
+  "examples_en": [
+    "Generate 10 product showcase images in different styles",
+    "Create images for each of these keywords",
+    "Generate a set of social media cover images"
+  ],
+  "iconSource": "letter:auto",
+  "skillName": "openai-image-gen",
+  "description_zh": "批量生成图片并创建图库",
+  "description_en": "Batch image generation with gallery view"
+}

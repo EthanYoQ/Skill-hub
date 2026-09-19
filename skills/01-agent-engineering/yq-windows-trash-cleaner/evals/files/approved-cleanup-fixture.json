@@ -1,0 +1,11 @@
+{
+  "fixture_root": "C:\\isolated-fixture",
+  "approved_ids": ["cache-001", "worktree-002"],
+  "items": [
+    {"id": "cache-001", "action": "literal-cache-directory", "target": "C:\\isolated-fixture\\repo\\target", "bytes": 1048576, "rebuild": "build.cmd"},
+    {"id": "worktree-002", "action": "git-worktree-remove", "target": "C:\\isolated-fixture\\worktrees\\002", "bytes": 2097152, "registered": true, "clean": true, "merged_remote_default": true},
+    {"id": "volume-003", "action": "docker-volume-remove", "target": "prod-db", "bytes": 4194304},
+    {"id": "sessions-004", "action": "session-delete", "target": "C:\\isolated-fixture\\sessions", "bytes": 8388608},
+    {"id": "database-005", "action": "database-retention", "target": "C:\\isolated-fixture\\cc-switch.db", "bytes": 3145728}
+  ]
+}

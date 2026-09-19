@@ -1,0 +1,6 @@
+interface:
+  display_name: "GPT-6 Pro Consult"
+  short_description: "GPT-6 Pro 的实质性设计与架构咨询"
+  default_prompt: "Use $gpt6-pro-consult to review this consequential software design or architecture decision with GPT-6 Pro in the Codex in-app Browser and reconcile the advice with local evidence."
+policy:
+  allow_implicit_invocation: true

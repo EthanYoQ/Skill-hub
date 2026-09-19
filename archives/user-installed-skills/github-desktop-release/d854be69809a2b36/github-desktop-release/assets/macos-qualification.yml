@@ -1,0 +1,288 @@
+name: Qualify macOS desktop release
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: Full immutable source SHA to qualify
+        required: true
+        type: string
+      release_version:
+        description: Frozen application version
+        required: true
+        type: string
+      release_tag:
+        description: Frozen target tag; qualification must not create it
+        required: true
+        type: string
+      profile_path:
+        description: Repository-relative frozen release profile path
+        required: true
+        default: .release/release-profile.json
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: qualify-macos-${{ inputs.expected_sha }}-${{ inputs.release_version }}
+  cancel-in-progress: false
+
+jobs:
+  qualify:
+    runs-on: macos-14
+    permissions:
+      contents: read
+    outputs:
+      evidence_artifact_id: ${{ steps.upload-qualified.outputs.artifact-id }}
+      evidence_artifact_digest: ${{ steps.upload-qualified.outputs.artifact-digest }}
+      evidence_artifact_url: ${{ steps.upload-qualified.outputs.artifact-url }}
+    steps:
+      - name: Checkout frozen source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ inputs.expected_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Freeze common contract and profile binding
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+          RELEASE_VERSION: ${{ inputs.release_version }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+          PROFILE_PATH: ${{ inputs.profile_path }}
+        run: |
+          set -euo pipefail
+          [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ -n "$RELEASE_VERSION" && -n "$RELEASE_TAG" && -n "$PROFILE_PATH" ]]
+          [[ "$PROFILE_PATH" != /* && "$PROFILE_PATH" != *\\* && "$PROFILE_PATH" != *:* ]]
+          IFS='/' read -r -a profile_segments <<< "$PROFILE_PATH"
+          for segment in "${profile_segments[@]}"; do
+            [[ -n "$segment" && "$segment" != "." && "$segment" != ".." && "$segment" != *. && "$segment" != *' ' ]]
+          done
+          test -f "$PROFILE_PATH"
+          git ls-files --error-unmatch -- "$PROFILE_PATH" >/dev/null
+          actual_sha="$(git rev-parse HEAD)"
+          [[ "$actual_sha" == "$EXPECTED_SHA" ]]
+          mkdir -p release-evidence
+          export QUALIFICATION_PROFILE_ABSOLUTE="$GITHUB_WORKSPACE/$PROFILE_PATH"
+          export QUALIFICATION_PROFILE_RELATIVE="$PROFILE_PATH"
+          export QUALIFICATION_CONTRACT_PATH="$GITHUB_WORKSPACE/release-evidence/release-contract.json"
+          node <<'NODE'
+          const crypto = require('node:crypto');
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const realWorkspace = fs.realpathSync(process.env.GITHUB_WORKSPACE);
+          const realProfile = fs.realpathSync(process.env.QUALIFICATION_PROFILE_ABSOLUTE);
+          const profileRelation = path.relative(realWorkspace, realProfile);
+          if (!profileRelation || profileRelation === '..' || profileRelation.startsWith(`..${path.sep}`) || path.isAbsolute(profileRelation)) throw new Error('release profile resolves outside workspace');
+          const raw = fs.readFileSync(process.env.QUALIFICATION_PROFILE_ABSOLUTE);
+          if (raw.subarray(0, 3).equals(Buffer.from([0xef, 0xbb, 0xbf]))) throw new Error('release profile must be UTF-8 without BOM');
+          const profile = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(raw));
+          if (profile.schemaVersion !== 1 || profile.provider !== 'github-actions' || profile.platforms?.macos?.artifactName !== 'qualified-macos') throw new Error('macOS release profile identity/artifactName is invalid');
+          const profileRawBytesSha256 = crypto.createHash('sha256').update(raw).digest('hex');
+          const contract = { schemaVersion: 2, stage: 'qualification', repository: process.env.GITHUB_REPOSITORY, frozen: { commit: process.env.EXPECTED_SHA.toLowerCase(), tag: process.env.RELEASE_TAG, version: process.env.RELEASE_VERSION, profilePath: process.env.QUALIFICATION_PROFILE_RELATIVE, profileRawBytesSha256 } };
+          fs.writeFileSync(process.env.QUALIFICATION_CONTRACT_PATH, `${JSON.stringify(contract, null, 2)}\n`, 'utf8');
+          const contractRawBytesSha256 = crypto.createHash('sha256').update(fs.readFileSync(process.env.QUALIFICATION_CONTRACT_PATH)).digest('hex');
+          const ledger = { schemaVersion: 2, platform: 'macos', workflow: process.env.GITHUB_WORKFLOW, runId: process.env.GITHUB_RUN_ID, runAttempt: process.env.GITHUB_RUN_ATTEMPT, repository: process.env.GITHUB_REPOSITORY, actor: process.env.GITHUB_ACTOR, event: process.env.GITHUB_EVENT_NAME, startedAtUtc: new Date().toISOString(), qualifiedCommit: process.env.EXPECTED_SHA.toLowerCase(), releaseTag: process.env.RELEASE_TAG, releaseVersion: process.env.RELEASE_VERSION, releaseCreated: false, contractRawBytesSha256, profileRawBytesSha256 };
+          fs.writeFileSync('release-evidence/run-ledger.json', `${JSON.stringify(ledger, null, 2)}\n`, 'utf8');
+          NODE
+
+      - name: Configure and verify the frozen macOS toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -x .release/scripts/configure-macos-toolchain.sh
+          .release/scripts/configure-macos-toolchain.sh
+          test -x .release/scripts/verify-frozen-environment.sh
+          .release/scripts/verify-frozen-environment.sh macos
+
+      - name: Install locked dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -x .release/scripts/install-locked.sh
+          .release/scripts/install-locked.sh macos
+
+      - name: Build the frozen macOS packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -x .release/scripts/build-desktop.sh
+          .release/scripts/build-desktop.sh macos
+
+      - name: Execute real macOS package acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -x .release/scripts/accept-macos-package.sh
+          .release/scripts/accept-macos-package.sh release-evidence/acceptance
+          test -f .release/out/macos-assets.json
+
+      - name: Finalize promotion-compatible exact bundle
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+          RELEASE_VERSION: ${{ inputs.release_version }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+          PROFILE_PATH: ${{ inputs.profile_path }}
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const crypto = require('node:crypto');
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const root = path.resolve('release-evidence');
+          const bundleRoot = path.join(root, 'release-bundle');
+          const sha256 = (bytes) => crypto.createHash('sha256').update(bytes).digest('hex');
+          const readStrictJson = (file) => {
+            const raw = fs.readFileSync(file);
+            if (raw.subarray(0, 3).equals(Buffer.from([0xef, 0xbb, 0xbf]))) throw new Error(`${file} must not contain a BOM`);
+            return { raw, value: JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(raw)) };
+          };
+          const safeRelative = (candidate) => {
+            if (typeof candidate !== 'string' || !candidate || candidate.includes('\\') || candidate.includes('\0') || path.posix.isAbsolute(candidate)) throw new Error(`unsafe relative path: ${candidate}`);
+            const parts = candidate.split('/');
+            if (parts.some((part) => !part || part === '.' || part === '..' || part.endsWith('.') || part.endsWith(' '))) throw new Error(`unsafe relative path: ${candidate}`);
+            return parts.join('/');
+          };
+          const sourceInsideWorkspace = (candidate) => {
+            const relative = safeRelative(candidate);
+            let cursor = process.env.GITHUB_WORKSPACE;
+            for (const segment of relative.split('/')) {
+              cursor = path.join(cursor, segment);
+              if (fs.lstatSync(cursor).isSymbolicLink()) throw new Error(`asset source contains symlink: ${relative}`);
+            }
+            const realWorkspace = fs.realpathSync(process.env.GITHUB_WORKSPACE);
+            const realSource = fs.realpathSync(cursor);
+            const relation = path.relative(realWorkspace, realSource);
+            if (!relation || relation === '..' || relation.startsWith(`..${path.sep}`) || path.isAbsolute(relation)) throw new Error(`asset source escapes workspace: ${relative}`);
+            return realSource;
+          };
+          const record = (file, relativePath, role) => {
+            const bytes = fs.readFileSync(file);
+            return { path: safeRelative(relativePath), role, sizeBytes: bytes.length, rawBytesSha256: sha256(bytes), hashMode: 'raw-bytes-sha256' };
+          };
+
+          const profileFile = path.resolve(process.env.GITHUB_WORKSPACE, process.env.PROFILE_PATH);
+          const profileInput = readStrictJson(profileFile);
+          const profile = profileInput.value;
+          if (profile.schemaVersion !== 1 || profile.provider !== 'github-actions' || profile.platforms?.macos?.artifactName !== 'qualified-macos') throw new Error('macOS release profile identity/artifactName is invalid');
+          const profileHash = sha256(profileInput.raw);
+          const contractFile = path.join(root, 'release-contract.json');
+          const contractInput = readStrictJson(contractFile);
+          const contract = contractInput.value;
+          const contractHash = sha256(contractInput.raw);
+          if (contract.schemaVersion !== 2 || contract.frozen?.commit !== process.env.EXPECTED_SHA || contract.frozen?.tag !== process.env.RELEASE_TAG || contract.frozen?.version !== process.env.RELEASE_VERSION || contract.frozen?.profilePath !== process.env.PROFILE_PATH || contract.frozen?.profileRawBytesSha256 !== profileHash) throw new Error('release contract/profile/input binding mismatch');
+
+          const assetMap = readStrictJson('.release/out/macos-assets.json').value;
+          if (!Array.isArray(assetMap) || assetMap.length === 0) throw new Error('macos-assets.json must be a non-empty array');
+          const expectedNames = profile.releaseAssets.filter((asset) => asset.platform === 'macos').map((asset) => asset.name.replaceAll('{version}', process.env.RELEASE_VERSION)).sort();
+          const actualNames = assetMap.map((asset) => safeRelative(asset.name)).sort();
+          if (expectedNames.some((name) => name.includes('/')) || JSON.stringify(expectedNames) !== JSON.stringify(actualNames)) throw new Error('macOS asset map must exactly match profile releaseAssets');
+          fs.rmSync(bundleRoot, { recursive: true, force: true });
+          fs.mkdirSync(bundleRoot, { recursive: true });
+          const artifacts = assetMap.map((asset) => {
+            const name = safeRelative(asset.name);
+            if (name.includes('/')) throw new Error('release asset name must be flat');
+            const source = sourceInsideWorkspace(asset.sourcePath);
+            const destination = path.join(bundleRoot, name);
+            fs.copyFileSync(source, destination);
+            return record(destination, `release-bundle/${name}`, typeof asset.role === 'string' && asset.role ? asset.role : 'installer');
+          });
+
+          const receiptPaths = profile.platforms.macos.acceptanceReceipts.map(safeRelative);
+          if (receiptPaths.length === 0 || receiptPaths.some((receiptPath) => !receiptPath.startsWith('acceptance/') || !receiptPath.endsWith('.json'))) throw new Error('profile macOS acceptanceReceipts must be non-empty JSON paths under acceptance/');
+          const receiptKeys = receiptPaths.map((receiptPath) => receiptPath.toLowerCase());
+          if (new Set(receiptKeys).size !== receiptKeys.length) throw new Error('profile macOS acceptanceReceipts collide case-insensitively');
+          const signingReceiptPaths = receiptPaths.filter((receiptPath) => /(^|\/)signing\.json$/u.test(receiptPath));
+          if (signingReceiptPaths.length !== 1) throw new Error('profile macOS acceptanceReceipts must contain exactly one signing.json receipt');
+          const signingReceiptPath = signingReceiptPaths[0];
+          const actualAcceptanceJson = [];
+          const collectAcceptanceJson = (directory) => fs.readdirSync(directory, { withFileTypes: true }).forEach((entry) => {
+            const full = path.join(directory, entry.name);
+            if (entry.isSymbolicLink()) throw new Error('acceptance evidence contains a symlink');
+            if (entry.isDirectory()) collectAcceptanceJson(full);
+            else if (entry.isFile() && entry.name.toLowerCase().endsWith('.json')) actualAcceptanceJson.push(path.relative(root, full).split(path.sep).join('/'));
+          });
+          const acceptanceRoot = path.join(root, 'acceptance');
+          if (!fs.existsSync(acceptanceRoot) || !fs.statSync(acceptanceRoot).isDirectory()) throw new Error('acceptance evidence directory is missing');
+          if (fs.lstatSync(acceptanceRoot).isSymbolicLink()) throw new Error('acceptance evidence root cannot be a symlink');
+          collectAcceptanceJson(acceptanceRoot);
+          if (JSON.stringify([...receiptPaths].sort()) !== JSON.stringify(actualAcceptanceJson.sort())) throw new Error('acceptance JSON set must exactly equal profile acceptanceReceipts');
+          let signing = null;
+          const acceptanceRecords = receiptPaths.map((relativePath) => {
+            const file = path.join(root, ...relativePath.split('/'));
+            const receipt = readStrictJson(file).value;
+            if (receipt.accepted !== true || !Array.isArray(receipt.observations) || receipt.observations.length === 0) throw new Error(`acceptance receipt failed: ${relativePath}`);
+            if (relativePath === signingReceiptPath) {
+              for (const field of ['status', 'validationResult', 'unsignedDistributionImpact']) if (typeof receipt[field] !== 'string' || !receipt[field].trim()) throw new Error(`signing receipt missing ${field}`);
+              if (!['signed', 'unsigned'].includes(receipt.status)) throw new Error('signing status must be signed or unsigned');
+              signing = { status: receipt.status, validationResult: receipt.validationResult, unsignedDistributionImpact: receipt.unsignedDistributionImpact, evidencePath: relativePath };
+            }
+            return record(file, relativePath, 'acceptance-evidence');
+          });
+          if (!signing) throw new Error('profile acceptanceReceipts must include signing.json');
+
+          const ledgerFile = path.join(root, 'run-ledger.json');
+          const ledger = readStrictJson(ledgerFile).value;
+          if (Number(ledger.runId) !== Number(process.env.GITHUB_RUN_ID) || Number(ledger.runAttempt) !== Number(process.env.GITHUB_RUN_ATTEMPT) || ledger.qualifiedCommit !== process.env.EXPECTED_SHA || ledger.contractRawBytesSha256 !== contractHash || ledger.profileRawBytesSha256 !== profileHash || ledger.releaseCreated !== false) throw new Error('run ledger identity/binding mismatch');
+          ledger.completedAtUtc = new Date().toISOString();
+          ledger.signing = { status: signing.status, validationResult: signing.validationResult, unsignedDistributionImpact: signing.unsignedDistributionImpact, evidencePath: signing.evidencePath };
+          fs.writeFileSync(ledgerFile, `${JSON.stringify(ledger, null, 2)}\n`, 'utf8');
+
+          const evidence = [
+            record(contractFile, 'release-contract.json', 'release-contract'),
+            record(ledgerFile, 'run-ledger.json', 'run-ledger'),
+            ...acceptanceRecords,
+          ];
+          const manifest = { schemaVersion: 2, gateLevel: 'RUNTIME_VERIFIED', releaseCreated: false, commit: process.env.EXPECTED_SHA, contractRawBytesSha256: contractHash, profileRawBytesSha256: profileHash, artifacts, evidence, signing };
+          const manifestFile = path.join(root, 'manifest.json');
+          fs.writeFileSync(manifestFile, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+          const checksumFiles = [...artifacts, ...evidence].map((item) => item.path).concat('manifest.json').sort();
+          const checksumText = checksumFiles.map((relativePath) => `${sha256(fs.readFileSync(path.join(root, ...relativePath.split('/'))))}  ${relativePath}`).join('\n') + '\n';
+          fs.writeFileSync(path.join(root, 'SHA256SUMS.txt'), checksumText, 'utf8');
+          const actualFiles = [];
+          const walk = (directory) => fs.readdirSync(directory, { withFileTypes: true }).forEach((entry) => {
+            const full = path.join(directory, entry.name);
+            if (entry.isSymbolicLink()) throw new Error('release evidence contains a symlink');
+            if (entry.isDirectory()) walk(full);
+            else actualFiles.push(path.relative(root, full).split(path.sep).join('/'));
+          });
+          walk(root);
+          const expectedFiles = checksumFiles.concat('SHA256SUMS.txt').sort();
+          if (JSON.stringify(actualFiles.sort()) !== JSON.stringify(expectedFiles)) throw new Error('qualification artifact file set is not exact');
+          NODE
+
+      - name: Upload qualified macOS artifact
+        if: success()
+        id: upload-qualified
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: qualified-macos
+          path: release-evidence
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
+
+      - name: Collect sanitized failure diagnostics
+        if: failure()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release-diagnostics
+          test -f .release/diagnostics-allowlist-macos.txt
+          while IFS= read -r candidate; do
+            [[ -z "$candidate" || "$candidate" == \#* ]] && continue
+            [[ "$candidate" == /* || "$candidate" == *".."* || "$candidate" == *"*"* ]] && exit 1
+            test -f "$candidate" && cp "$candidate" release-diagnostics/
+          done < .release/diagnostics-allowlist-macos.txt
+
+      - name: Upload sanitized macOS diagnostics
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: macos-qualification-diagnostics-${{ github.run_id }}
+          path: release-diagnostics
+          if-no-files-found: error
+          retention-days: 3

@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/github-desktop-release/release-profile.schema.json",
+  "title": "GitHub desktop release profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "provider", "platforms", "releaseAssets", "promotion", "artifactSelection", "releaseChannel", "retryPolicy", "hashPolicy"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "provider": { "const": "github-actions" },
+    "platforms": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "windows": { "$ref": "#/$defs/platform" },
+        "macos": { "$ref": "#/$defs/platform" }
+      }
+    },
+    "releaseAssets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "platform", "role"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "platform": { "enum": ["windows", "macos"] },
+          "role": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "promotion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workflow", "finalState"],
+      "properties": {
+        "workflow": { "type": "string", "minLength": 1 },
+        "finalState": { "enum": ["draft", "published"] }
+      }
+    },
+    "artifactSelection": { "const": "workflow-run-attempt-artifact-id" },
+    "releaseChannel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["draft", "prerelease", "expectedLatest"],
+      "properties": {
+        "draft": { "type": "boolean" },
+        "prerelease": { "type": "boolean" },
+        "expectedLatest": { "type": "boolean" }
+      }
+    },
+    "retryPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maxConsecutiveFailuresPerStage"],
+      "properties": {
+        "maxConsecutiveFailuresPerStage": { "const": 2 }
+      }
+    },
+    "hashPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["binary", "text"],
+      "properties": {
+        "binary": { "const": "raw-sha256" },
+        "text": { "const": "raw-plus-newline-canonical-sha256" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "promotion": { "properties": { "finalState": { "const": "draft" } }, "required": ["finalState"] } },
+        "required": ["promotion"]
+      },
+      "then": { "properties": { "releaseChannel": { "properties": { "draft": { "const": true } }, "required": ["draft"] } } }
+    },
+    {
+      "if": {
+        "properties": { "promotion": { "properties": { "finalState": { "const": "published" } }, "required": ["finalState"] } },
+        "required": ["promotion"]
+      },
+      "then": { "properties": { "releaseChannel": { "properties": { "draft": { "const": false } }, "required": ["draft"] } } }
+    },
+    {
+      "if": {
+        "properties": { "releaseChannel": { "properties": { "draft": { "const": true } }, "required": ["draft"] } },
+        "required": ["releaseChannel"]
+      },
+      "then": { "properties": { "releaseChannel": { "properties": { "expectedLatest": { "const": false } }, "required": ["expectedLatest"] } } }
+    },
+    {
+      "if": {
+        "properties": { "releaseChannel": { "properties": { "prerelease": { "const": true } }, "required": ["prerelease"] } },
+        "required": ["releaseChannel"]
+      },
+      "then": { "properties": { "releaseChannel": { "properties": { "expectedLatest": { "const": false } }, "required": ["expectedLatest"] } } }
+    }
+  ],
+  "$defs": {
+    "platform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["qualificationWorkflow", "artifactName", "architectures", "retentionDays", "acceptanceReceipts", "signingPolicy"],
+      "properties": {
+        "qualificationWorkflow": { "type": "string", "minLength": 1 },
+        "artifactName": { "type": "string", "minLength": 1 },
+        "architectures": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$" }
+        },
+        "retentionDays": { "type": "integer", "minimum": 1, "maximum": 90 },
+        "acceptanceReceipts": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "signingPolicy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "disclosureRequired"],
+          "properties": {
+            "mode": { "enum": ["required", "allow-unsigned-with-disclosure"] },
+            "disclosureRequired": { "const": true }
+          }
+        }
+      }
+    }
+  }
+}

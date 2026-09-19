@@ -1,0 +1,19 @@
+{
+  "name": "AI绘图",
+  "installedAt": 1784552019888,
+  "source": "marketplace",
+  "version": "1.0.1",
+  "skillId": "skill_2053082421296758784",
+  "examples_zh": [
+    "生成一张赛博朋克风格的城市夜景图",
+    "用AI画一只可爱的卡通猫咪",
+    "生成一张适合用作头像的人物插画"
+  ],
+  "examples_en": [
+    "Generate a cyberpunk city night scene",
+    "Draw a cute cartoon cat with AI",
+    "Create an avatar-style character illustration"
+  ],
+  "iconSource": "letter:auto",
+  "skillName": "nano-banana-pro"
+}

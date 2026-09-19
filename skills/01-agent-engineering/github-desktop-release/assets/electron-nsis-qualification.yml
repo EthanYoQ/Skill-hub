@@ -1,0 +1,604 @@
+# Template: adapt the REQUIRED commands and exact asset paths to one project.
+# Qualification never creates tags or GitHub Releases.
+name: Windows installer qualification
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: Full immutable commit SHA to qualify
+        required: true
+        type: string
+      release_tag:
+        description: Intended tag only; qualification must not create it
+        required: true
+        type: string
+      release_version:
+        description: Version embedded in the installer and frozen contract
+        required: true
+        type: string
+      artifact_paths:
+        description: Exact semicolon-separated, checkout-relative release asset paths
+        required: true
+        type: string
+      profile_path:
+        description: Repository-relative frozen release profile path
+        required: true
+        default: .release/release-profile.json
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-installer-qualification-${{ inputs.expected_sha }}-${{ inputs.release_version }}
+  cancel-in-progress: false
+
+jobs:
+  qualify:
+    runs-on: windows-2022
+    timeout-minutes: 75
+    outputs:
+      evidence_artifact_id: ${{ steps.upload-qualified.outputs.artifact-id }}
+      evidence_artifact_digest: ${{ steps.upload-qualified.outputs.artifact-digest }}
+      evidence_artifact_url: ${{ steps.upload-qualified.outputs.artifact-url }}
+    steps:
+      - name: Check out the frozen commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ inputs.expected_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify immutable inputs and checkout identity
+        shell: pwsh
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+          RELEASE_VERSION: ${{ inputs.release_version }}
+          ARTIFACT_PATHS: ${{ inputs.artifact_paths }}
+          PROFILE_PATH: ${{ inputs.profile_path }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:EXPECTED_SHA -notmatch '^[0-9a-fA-F]{40}$') {
+            throw 'expected_sha must be a full 40-character SHA.'
+          }
+          if ([string]::IsNullOrWhiteSpace($env:RELEASE_TAG) -or [string]::IsNullOrWhiteSpace($env:RELEASE_VERSION)) {
+            throw 'release_tag and release_version must be non-empty.'
+          }
+          if ([string]::IsNullOrWhiteSpace($env:ARTIFACT_PATHS)) {
+            throw 'artifact_paths must name at least one exact release asset.'
+          }
+          if ([string]::IsNullOrWhiteSpace($env:PROFILE_PATH)) { throw 'profile_path must be non-empty.' }
+          $actual = (& git rev-parse HEAD).Trim().ToLowerInvariant()
+          if ($actual -ne $env:EXPECTED_SHA.ToLowerInvariant()) {
+            throw "Checkout commit mismatch: expected $env:EXPECTED_SHA, got $actual"
+          }
+
+      - name: Freeze qualification contract before execution
+        id: freeze-contract
+        shell: pwsh
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+          RELEASE_VERSION: ${{ inputs.release_version }}
+          ARTIFACT_PATHS: ${{ inputs.artifact_paths }}
+          PROFILE_PATH: ${{ inputs.profile_path }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $evidenceRoot = Join-Path $env:RUNNER_TEMP 'windows-release-evidence'
+          $contractPath = Join-Path $evidenceRoot 'release-contract.json'
+          $ledgerPath = Join-Path $evidenceRoot 'run-ledger.json'
+          $planPath = Join-Path $evidenceRoot 'qualification-plan.json'
+          $toolchainContractPath = Join-Path $env:GITHUB_WORKSPACE '.github\windows-release-toolchain.json'
+          New-Item -ItemType Directory -Path $evidenceRoot -Force | Out-Null
+
+          function Write-Utf8Json([string]$Path, $Value) {
+            $directory = [System.IO.Path]::GetDirectoryName($Path)
+            New-Item -ItemType Directory -Path $directory -Force | Out-Null
+            [System.IO.File]::WriteAllText($Path, (($Value | ConvertTo-Json -Depth 32) + [Environment]::NewLine), (New-Object System.Text.UTF8Encoding($false)))
+          }
+
+          function Resolve-ContractArtifactPath([string]$Workspace, [string]$Candidate) {
+            if ([string]::IsNullOrWhiteSpace($Candidate)) { throw 'Artifact path cannot be empty.' }
+            if ($Candidate.IndexOf([char]0) -ge 0 -or $Candidate.Contains(':')) { throw "Artifact path contains an ADS or drive separator: $Candidate" }
+            if ([System.IO.Path]::IsPathRooted($Candidate)) { throw "Artifact path must be checkout-relative: $Candidate" }
+            if ($Candidate -match '[\\/]{2}') { throw "Artifact path cannot contain empty separator segments: $Candidate" }
+            $segments = @($Candidate -split '[\\/]', -1)
+            if ($segments.Count -eq 0) { throw "Artifact path cannot be empty: $Candidate" }
+            foreach ($segment in $segments) {
+              if ([string]::IsNullOrWhiteSpace($segment) -or $segment -eq '.' -or $segment -eq '..') {
+                throw "Artifact path has an empty or traversal segment: $Candidate"
+              }
+              if ($segment.EndsWith('.') -or $segment.EndsWith(' ')) {
+                throw "Artifact path has a Windows-colliding trailing dot or space: $Candidate"
+              }
+            }
+            $workspaceFull = [System.IO.Path]::GetFullPath($Workspace).TrimEnd([System.IO.Path]::DirectorySeparatorChar)
+            $workspacePrefix = $workspaceFull + [System.IO.Path]::DirectorySeparatorChar
+            $candidateFull = [System.IO.Path]::GetFullPath((Join-Path $workspaceFull ($segments -join [System.IO.Path]::DirectorySeparatorChar)))
+            if (-not $candidateFull.StartsWith($workspacePrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+              throw "Artifact path escapes the checkout: $Candidate"
+            }
+            return $candidateFull.Substring($workspacePrefix.Length).Replace('\', '/')
+          }
+
+          function Get-CanonicalArtifactInputPaths([string]$Workspace, [string]$ArtifactPaths) {
+            if ([string]::IsNullOrWhiteSpace($ArtifactPaths)) {
+              throw 'artifact_paths must contain at least one exact path.'
+            }
+            $canonicalPaths = New-Object System.Collections.Generic.List[string]
+            $seenPaths = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+            foreach ($rawPath in @($ArtifactPaths.Split(';'))) {
+              if ([string]::IsNullOrWhiteSpace($rawPath)) {
+                throw 'artifact_paths cannot contain empty or whitespace-only entries.'
+              }
+              if ($rawPath -match '[\r\n]') {
+                throw 'artifact_paths cannot contain line breaks.'
+              }
+              $canonicalPath = Resolve-ContractArtifactPath -Workspace $Workspace -Candidate $rawPath
+              if (-not $seenPaths.Add($canonicalPath)) {
+                throw "Artifact path case-insensitively collides with another contract asset: $rawPath"
+              }
+              $canonicalPaths.Add($canonicalPath)
+            }
+            return $canonicalPaths.ToArray()
+          }
+
+          if (-not (Test-Path -LiteralPath $toolchainContractPath -PathType Leaf)) {
+            throw "REQUIRED: add a committed .github/windows-release-toolchain.json before enabling qualification."
+          }
+          $toolchainConfig = Get-Content -LiteralPath $toolchainContractPath -Raw | ConvertFrom-Json
+          foreach ($name in @('runnerLabel', 'imageOS', 'nodeVersion', 'packageManagerCommand', 'packageManagerVersion')) {
+            if ([string]::IsNullOrWhiteSpace([string]$toolchainConfig.$name)) {
+              throw "Toolchain contract is missing required field: $name"
+            }
+          }
+          if ($toolchainConfig.runnerLabel -ne 'windows-2022' -or $toolchainConfig.imageOS -ne $env:ImageOS) {
+            throw 'Actual runner does not match the committed qualification toolchain contract.'
+          }
+          if ([string]::IsNullOrWhiteSpace($env:ImageVersion)) {
+            throw 'Runner image version must be available before qualification.'
+          }
+
+          $canonicalArtifactPaths = Get-CanonicalArtifactInputPaths -Workspace $env:GITHUB_WORKSPACE -ArtifactPaths $env:ARTIFACT_PATHS
+
+          $canonicalProfilePath = Resolve-ContractArtifactPath -Workspace $env:GITHUB_WORKSPACE -Candidate $env:PROFILE_PATH
+          $profilePath = Join-Path $env:GITHUB_WORKSPACE $canonicalProfilePath.Replace('/', '\')
+          if (-not (Test-Path -LiteralPath $profilePath -PathType Leaf)) { throw "Frozen release profile is missing: $canonicalProfilePath" }
+          $profileCursor = $env:GITHUB_WORKSPACE
+          foreach ($segment in @($canonicalProfilePath -split '/')) {
+            $profileCursor = Join-Path $profileCursor $segment
+            $profileItem = Get-Item -LiteralPath $profileCursor -ErrorAction Stop
+            if (($profileItem.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0) { throw "release profile path contains a reparse point: $canonicalProfilePath" }
+          }
+          & git ls-files --error-unmatch -- $canonicalProfilePath | Out-Null
+          if ($LASTEXITCODE -ne 0) { throw 'release profile must be committed at the qualified SHA.' }
+          $profileBytes = [System.IO.File]::ReadAllBytes($profilePath)
+          if ($profileBytes.Length -ge 3 -and $profileBytes[0] -eq 0xef -and $profileBytes[1] -eq 0xbb -and $profileBytes[2] -eq 0xbf) { throw 'release profile must be UTF-8 without BOM.' }
+          $profile = Get-Content -LiteralPath $profilePath -Raw | ConvertFrom-Json
+          if ($profile.schemaVersion -ne 1 -or $profile.provider -ne 'github-actions') { throw 'release profile identity is invalid.' }
+          if ($profile.platforms.windows.artifactName -ne 'qualified-windows') { throw 'profile platforms.windows.artifactName must equal qualified-windows.' }
+          $expectedAssetNames = @($profile.releaseAssets | Where-Object { $_.platform -eq 'windows' } | ForEach-Object { ([string]$_.name).Replace('{version}', $env:RELEASE_VERSION) })
+          $actualAssetNames = @($canonicalArtifactPaths | ForEach-Object { [System.IO.Path]::GetFileName($_) })
+          if ($expectedAssetNames.Count -eq 0 -or (Compare-Object -CaseSensitive -ReferenceObject @($expectedAssetNames | Sort-Object -CaseSensitive) -DifferenceObject @($actualAssetNames | Sort-Object -CaseSensitive))) {
+            throw 'artifact_paths basenames must exactly equal the resolved Windows releaseAssets in the profile.'
+          }
+
+          $acceptanceFiles = @($profile.platforms.windows.acceptanceReceipts)
+          if ($acceptanceFiles.Count -eq 0) { throw 'profile platforms.windows.acceptanceReceipts must be non-empty.' }
+          $seenReceipts = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+          foreach ($receiptPath in $acceptanceFiles) {
+            if ([string]::IsNullOrWhiteSpace([string]$receiptPath) -or [string]$receiptPath -notmatch '^acceptance/(?:[^/]+/)*[^/]+\.json$' -or [string]$receiptPath -match '[*?\[\]\\:]') { throw "Unsafe profile acceptance receipt path: $receiptPath" }
+            foreach ($segment in @(([string]$receiptPath).Split('/'))) {
+              if ([string]::IsNullOrWhiteSpace($segment) -or $segment -in @('.', '..') -or $segment.EndsWith('.') -or $segment.EndsWith(' ')) { throw "Unsafe profile acceptance receipt path segment: $receiptPath" }
+            }
+            if (-not $seenReceipts.Add([string]$receiptPath)) { throw "Profile acceptance receipt path collides case-insensitively: $receiptPath" }
+          }
+          $signingReceiptPaths = @($acceptanceFiles | Where-Object { [string]$_ -match '(^|/)signing\.json$' })
+          if ($signingReceiptPaths.Count -ne 1) { throw 'profile acceptanceReceipts must contain exactly one signing.json receipt.' }
+          $env:QUALIFICATION_PROFILE_ABSOLUTE = $profilePath
+          $env:QUALIFICATION_PROFILE_RELATIVE = $canonicalProfilePath
+          $env:QUALIFICATION_CONTRACT_PATH = $contractPath
+          @'
+          const crypto = require('node:crypto');
+          const fs = require('node:fs');
+          const raw = fs.readFileSync(process.env.QUALIFICATION_PROFILE_ABSOLUTE);
+          const profileRawBytesSha256 = crypto.createHash('sha256').update(raw).digest('hex');
+          const contract = { schemaVersion: 2, stage: 'qualification', repository: process.env.GITHUB_REPOSITORY, frozen: { commit: process.env.EXPECTED_SHA.toLowerCase(), tag: process.env.RELEASE_TAG, version: process.env.RELEASE_VERSION, profilePath: process.env.QUALIFICATION_PROFILE_RELATIVE, profileRawBytesSha256 } };
+          fs.writeFileSync(process.env.QUALIFICATION_CONTRACT_PATH, `${JSON.stringify(contract, null, 2)}\n`, 'utf8');
+          '@ | node
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to write the common release contract.' }
+          $contractHash = (Get-FileHash -LiteralPath $contractPath -Algorithm SHA256).Hash.ToLowerInvariant()
+          $profileHash = (Get-FileHash -LiteralPath $profilePath -Algorithm SHA256).Hash.ToLowerInvariant()
+          $artifactPlan = @($canonicalArtifactPaths | ForEach-Object { [ordered]@{ sourcePath = $_; name = [System.IO.Path]::GetFileName($_) } })
+          $plan = [ordered]@{ schemaVersion = 1; platform = 'windows'; artifactSet = $artifactPlan; acceptance = [ordered]@{ evidenceFiles = $acceptanceFiles; signingEvidencePath = [string]$signingReceiptPaths[0] } }
+          $ledger = [ordered]@{
+            schemaVersion = 2
+            workflow = $env:GITHUB_WORKFLOW
+            runId = $env:GITHUB_RUN_ID
+            runAttempt = $env:GITHUB_RUN_ATTEMPT
+            repository = $env:GITHUB_REPOSITORY
+            actor = $env:GITHUB_ACTOR
+            event = $env:GITHUB_EVENT_NAME
+            startedAtUtc = [DateTime]::UtcNow.ToString('o')
+            qualifiedCommit = $env:EXPECTED_SHA.ToLowerInvariant()
+            releaseTag = $env:RELEASE_TAG
+            releaseVersion = $env:RELEASE_VERSION
+            releaseCreated = $false
+            contractRawBytesSha256 = $contractHash
+            profileRawBytesSha256 = $profileHash
+          }
+          Write-Utf8Json -Path $planPath -Value $plan
+          Write-Utf8Json -Path $ledgerPath -Value $ledger
+          "WCR_EVIDENCE_ROOT=$evidenceRoot" | Out-File -LiteralPath $env:GITHUB_ENV -Encoding utf8 -Append
+          "WCR_CONTRACT_SHA256=$contractHash" | Out-File -LiteralPath $env:GITHUB_ENV -Encoding utf8 -Append
+          "WCR_PROFILE_SHA256=$profileHash" | Out-File -LiteralPath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Configure the project toolchain declared by the frozen contract
+        shell: pwsh
+        run: |
+          throw 'REQUIRED: configure exactly the committed app toolchain before enabling qualification.'
+
+      - name: Verify frozen contract and actual execution environment
+        shell: pwsh
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $contractPath = Join-Path $env:WCR_EVIDENCE_ROOT 'release-contract.json'
+          $verificationPath = Join-Path $env:WCR_EVIDENCE_ROOT 'runtime-verification.json'
+          if (-not (Test-Path -LiteralPath $contractPath -PathType Leaf)) { throw 'Frozen release contract is missing.' }
+          $actualContractHash = (Get-FileHash -LiteralPath $contractPath -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualContractHash -ne $env:WCR_CONTRACT_SHA256) { throw 'Frozen release contract was modified after creation.' }
+          $contract = Get-Content -LiteralPath $contractPath -Raw | ConvertFrom-Json
+          $actualCommit = (& git rev-parse HEAD).Trim().ToLowerInvariant()
+          if ($actualCommit -ne $contract.frozen.commit -or $actualCommit -ne $env:EXPECTED_SHA.ToLowerInvariant()) {
+            throw 'Actual checkout does not match the frozen contract.'
+          }
+          $profilePath = Join-Path $env:GITHUB_WORKSPACE ([string]$contract.frozen.profilePath).Replace('/', '\')
+          if ((Get-FileHash -LiteralPath $profilePath -Algorithm SHA256).Hash.ToLowerInvariant() -ne $env:WCR_PROFILE_SHA256) { throw 'Frozen release profile was modified after contract creation.' }
+          if ([string]$contract.frozen.profileRawBytesSha256 -ne $env:WCR_PROFILE_SHA256) { throw 'Contract/profile raw-byte binding mismatch.' }
+          $toolchainConfig = Get-Content -LiteralPath (Join-Path $env:GITHUB_WORKSPACE '.github\windows-release-toolchain.json') -Raw | ConvertFrom-Json
+          if ($toolchainConfig.runnerLabel -ne 'windows-2022' -or $toolchainConfig.imageOS -ne $env:ImageOS -or [string]::IsNullOrWhiteSpace($env:ImageVersion)) { throw 'Actual runner image does not match the committed toolchain policy.' }
+          $nodeCommand = Get-Command node -ErrorAction SilentlyContinue
+          if ($null -eq $nodeCommand) { throw 'Configured app Node runtime is unavailable.' }
+          $actualNode = (& node --version).Trim().TrimStart([char[]]@('v'))
+          if ($actualNode -ne [string]$toolchainConfig.nodeVersion) {
+            throw "Actual Node version $actualNode does not match frozen app toolchain."
+          }
+          $packageManagerCommand = [string]$toolchainConfig.packageManagerCommand
+          $packageManager = Get-Command $packageManagerCommand -ErrorAction SilentlyContinue
+          if ($null -eq $packageManager) { throw "Configured package manager is unavailable: $packageManagerCommand" }
+          $actualPackageManagerVersion = (& $packageManager.Source --version).Trim()
+          if ($actualPackageManagerVersion -ne [string]$toolchainConfig.packageManagerVersion) {
+            throw "Actual package manager version $actualPackageManagerVersion does not match frozen app toolchain."
+          }
+          $verification = [ordered]@{
+            accepted = $true
+            observations = @('checkout SHA, runner metadata, Node, and package-manager version directly matched the frozen contract')
+            checkoutCommit = $actualCommit
+            runnerImageOS = $env:ImageOS
+            runnerImageVersion = $env:ImageVersion
+            nodeVersion = $actualNode
+            packageManager = $packageManagerCommand
+            packageManagerVersion = $actualPackageManagerVersion
+          }
+          [System.IO.File]::WriteAllText($verificationPath, (($verification | ConvertTo-Json -Depth 16) + [Environment]::NewLine), (New-Object System.Text.UTF8Encoding($false)))
+
+      - name: Install locked dependencies
+        shell: pwsh
+        run: |
+          throw 'REQUIRED: add this repository locked-install command after contract verification.'
+
+      - name: Build the frozen Windows installer
+        shell: pwsh
+        run: |
+          throw 'REQUIRED: add the project Windows package command after locked install.'
+
+      - name: Execute real Windows installer acceptance
+        shell: pwsh
+        run: |
+          throw 'REQUIRED: run a project-owned acceptance script that writes every required acceptance JSON file under $env:WCR_EVIDENCE_ROOT.'
+
+      - name: Generate manifest and raw-byte hash evidence
+        if: ${{ success() }}
+        shell: pwsh
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $evidenceRoot = $env:WCR_EVIDENCE_ROOT
+          $bundleRoot = Join-Path $evidenceRoot 'release-bundle'
+          $contractPath = Join-Path $evidenceRoot 'release-contract.json'
+          $ledgerPath = Join-Path $evidenceRoot 'run-ledger.json'
+          $planPath = Join-Path $evidenceRoot 'qualification-plan.json'
+          $verificationPath = Join-Path $evidenceRoot 'runtime-verification.json'
+          $manifestPath = Join-Path $evidenceRoot 'manifest.json'
+          New-Item -ItemType Directory -Path $bundleRoot -Force | Out-Null
+
+          function Write-Utf8Json([string]$Path, $Value) {
+            [System.IO.File]::WriteAllText($Path, (($Value | ConvertTo-Json -Depth 32) + [Environment]::NewLine), (New-Object System.Text.UTF8Encoding($false)))
+          }
+
+          function Get-RawRecord([string]$Path, [string]$RelativePath, [string]$Role) {
+            $item = Get-Item -LiteralPath $Path -ErrorAction Stop
+            return [ordered]@{
+              path = $RelativePath.Replace('\', '/')
+              role = $Role
+              sizeBytes = $item.Length
+              rawBytesSha256 = (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+              hashMode = 'raw-bytes-sha256'
+            }
+          }
+
+          function Resolve-ContractArtifactPath([string]$Workspace, [string]$Candidate) {
+            if ([string]::IsNullOrWhiteSpace($Candidate)) { throw 'Artifact path cannot be empty.' }
+            if ($Candidate.IndexOf([char]0) -ge 0 -or $Candidate.Contains(':')) { throw "Artifact path contains an ADS or drive separator: $Candidate" }
+            if ([System.IO.Path]::IsPathRooted($Candidate)) { throw "Artifact path must be checkout-relative: $Candidate" }
+            if ($Candidate -match '[\\/]{2}') { throw "Artifact path cannot contain empty separator segments: $Candidate" }
+            $segments = @($Candidate -split '[\\/]', -1)
+            foreach ($segment in $segments) {
+              if ([string]::IsNullOrWhiteSpace($segment) -or $segment -eq '.' -or $segment -eq '..') { throw "Artifact path has an empty or traversal segment: $Candidate" }
+              if ($segment.EndsWith('.') -or $segment.EndsWith(' ')) { throw "Artifact path has a Windows-colliding trailing dot or space: $Candidate" }
+            }
+            $workspaceFull = [System.IO.Path]::GetFullPath($Workspace).TrimEnd([System.IO.Path]::DirectorySeparatorChar)
+            $workspacePrefix = $workspaceFull + [System.IO.Path]::DirectorySeparatorChar
+            $candidateFull = [System.IO.Path]::GetFullPath((Join-Path $workspaceFull ($segments -join [System.IO.Path]::DirectorySeparatorChar)))
+            if (-not $candidateFull.StartsWith($workspacePrefix, [System.StringComparison]::OrdinalIgnoreCase)) { throw "Artifact path escapes the checkout: $Candidate" }
+            return $candidateFull.Substring($workspacePrefix.Length).Replace('\', '/')
+          }
+
+          function Assert-ArtifactSourceIsInsideWorkspace([string]$Workspace, [string]$RelativePath) {
+            $workspaceFull = [System.IO.Path]::GetFullPath($Workspace).TrimEnd([System.IO.Path]::DirectorySeparatorChar)
+            $workspacePrefix = $workspaceFull + [System.IO.Path]::DirectorySeparatorChar
+            $current = $workspaceFull
+            foreach ($segment in @($RelativePath -split '/')) {
+              $current = Join-Path $current $segment
+              $item = Get-Item -LiteralPath $current -ErrorAction Stop
+              if (($item.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0) {
+                throw "Artifact source path contains a reparse point: $RelativePath"
+              }
+              $canonical = [System.IO.Path]::GetFullPath($item.FullName)
+              if (-not ($canonical.Equals($workspaceFull, [System.StringComparison]::OrdinalIgnoreCase) -or $canonical.StartsWith($workspacePrefix, [System.StringComparison]::OrdinalIgnoreCase))) {
+                throw "Artifact source path escapes the checkout after canonicalization: $RelativePath"
+              }
+            }
+          }
+
+          function Get-NewlineCanonicalBytes([byte[]]$Bytes) {
+            if ($Bytes.Length -ge 2 -and (($Bytes[0] -eq 0xff -and $Bytes[1] -eq 0xfe) -or ($Bytes[0] -eq 0xfe -and $Bytes[1] -eq 0xff))) {
+              throw 'Lockfile encoding is not UTF-8.'
+            }
+            if ($Bytes.Length -ge 4 -and (($Bytes[0] -eq 0xff -and $Bytes[1] -eq 0xfe -and $Bytes[2] -eq 0x00 -and $Bytes[3] -eq 0x00) -or ($Bytes[0] -eq 0x00 -and $Bytes[1] -eq 0x00 -and $Bytes[2] -eq 0xfe -and $Bytes[3] -eq 0xff))) {
+              throw 'Lockfile encoding is not UTF-8.'
+            }
+            if ($Bytes -contains [byte]0) { throw 'Lockfile contains NUL bytes and is not accepted as UTF-8 text.' }
+            try {
+              $strictUtf8 = New-Object System.Text.UTF8Encoding($false, $true)
+              $null = $strictUtf8.GetString($Bytes)
+            }
+            catch {
+              throw 'Lockfile is not valid UTF-8 text.'
+            }
+            $canonical = New-Object System.Collections.Generic.List[byte]
+            for ($index = 0; $index -lt $Bytes.Length; $index++) {
+              if ($Bytes[$index] -eq 13) {
+                $canonical.Add(10)
+                if (($index + 1) -lt $Bytes.Length -and $Bytes[$index + 1] -eq 10) { $index++ }
+              }
+              else {
+                $canonical.Add($Bytes[$index])
+              }
+            }
+            return $canonical.ToArray()
+          }
+
+          function Get-ByteSha256([byte[]]$Bytes) {
+            $hasher = [System.Security.Cryptography.SHA256]::Create()
+            try {
+              return -join ($hasher.ComputeHash($Bytes) | ForEach-Object { $_.ToString('x2') })
+            }
+            finally {
+              $hasher.Dispose()
+            }
+          }
+
+          function Test-NonEmptyValue($Value) {
+            if ($null -eq $Value) { return $false }
+            if ($Value -is [string]) { return -not [string]::IsNullOrWhiteSpace($Value) }
+            if ($Value -is [System.Collections.IEnumerable]) { return @($Value).Count -gt 0 }
+            return $true
+          }
+
+          function Get-AcceptanceRecord([string]$RelativePath) {
+            $path = Join-Path $evidenceRoot $RelativePath.Replace('/', '\')
+            if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Required independent acceptance evidence is missing: $RelativePath" }
+            $evidence = Get-Content -LiteralPath $path -Raw | ConvertFrom-Json
+            if ($null -eq $evidence.PSObject.Properties['accepted'] -or $evidence.accepted -ne $true) { throw "Acceptance evidence must set accepted:true: $RelativePath" }
+            if ($null -eq $evidence.PSObject.Properties['observations'] -or -not (Test-NonEmptyValue $evidence.observations)) { throw "Acceptance evidence must include non-empty observations: $RelativePath" }
+            $directProperties = @($evidence.PSObject.Properties | Where-Object { $_.Name -notin @('accepted', 'observations') } | Where-Object { Test-NonEmptyValue $_.Value })
+            if ($directProperties.Count -eq 0) { throw "Acceptance evidence must include a non-empty direct observation field: $RelativePath" }
+            if ($RelativePath -match '(^|/)signing\.json$') {
+              foreach ($field in @('status', 'validationResult', 'unsignedDistributionImpact')) {
+                if ($null -eq $evidence.PSObject.Properties[$field] -or -not (Test-NonEmptyValue $evidence.$field)) { throw "Signing evidence is missing $field" }
+              }
+              if ([string]$evidence.status -notin @('signed', 'unsigned')) { throw 'Signing status must be signed or unsigned.' }
+            }
+            return [ordered]@{ evidence = $evidence; record = (Get-RawRecord -Path $path -RelativePath $RelativePath -Role 'acceptance-evidence') }
+          }
+
+          if ((Get-FileHash -LiteralPath $contractPath -Algorithm SHA256).Hash.ToLowerInvariant() -ne $env:WCR_CONTRACT_SHA256) { throw 'Frozen contract hash changed before manifest generation.' }
+          $contract = Get-Content -LiteralPath $contractPath -Raw | ConvertFrom-Json
+          if ($contract.frozen.commit -ne $env:EXPECTED_SHA.ToLowerInvariant()) { throw 'Contract commit does not match the dispatch input.' }
+          if ((Get-FileHash -LiteralPath (Join-Path $env:GITHUB_WORKSPACE ([string]$contract.frozen.profilePath).Replace('/', '\')) -Algorithm SHA256).Hash.ToLowerInvariant() -ne $env:WCR_PROFILE_SHA256) { throw 'Frozen profile hash changed before manifest generation.' }
+          if (-not (Test-Path -LiteralPath $verificationPath -PathType Leaf)) { throw 'Runtime verification evidence is missing.' }
+          if (-not (Test-Path -LiteralPath $planPath -PathType Leaf)) { throw 'Frozen qualification plan is missing.' }
+
+          $records = New-Object System.Collections.Generic.List[object]
+          $seenPaths = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+          $qualificationPlan = Get-Content -LiteralPath $planPath -Raw | ConvertFrom-Json
+          foreach ($contractAsset in @($qualificationPlan.artifactSet)) {
+            $relativePath = Resolve-ContractArtifactPath -Workspace $env:GITHUB_WORKSPACE -Candidate ([string]$contractAsset.sourcePath)
+            if (-not $seenPaths.Add($relativePath)) { throw "Artifact path case-insensitively collides: $relativePath" }
+            $source = Join-Path $env:GITHUB_WORKSPACE $relativePath.Replace('/', '\')
+            if (-not (Test-Path -LiteralPath $source -PathType Leaf)) { throw "Contract artifact is missing: $relativePath" }
+            Assert-ArtifactSourceIsInsideWorkspace -Workspace $env:GITHUB_WORKSPACE -RelativePath $relativePath
+            $sourceItem = Get-Item -LiteralPath $source -ErrorAction Stop
+            if (($sourceItem.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0) { throw "Artifact source cannot be a reparse point: $relativePath" }
+            $assetName = [string]$contractAsset.name
+            if ([string]::IsNullOrWhiteSpace($assetName) -or $assetName -ne [System.IO.Path]::GetFileName($assetName)) { throw "Release asset name must be a flat exact filename: $assetName" }
+            $destination = Join-Path $bundleRoot $assetName
+            New-Item -ItemType Directory -Path ([System.IO.Path]::GetDirectoryName($destination)) -Force | Out-Null
+            Copy-Item -LiteralPath $source -Destination $destination -Force
+            $role = if ($relativePath -match '(?i)\.exe$') { 'installer' } elseif ($relativePath -match '(?i)\.blockmap$') { 'blockmap' } elseif ($relativePath -match '(?i)(latest|update).*\.ya?ml$') { 'updater-metadata' } else { 'release-asset' }
+            $records.Add((Get-RawRecord -Path $destination -RelativePath ("release-bundle/$assetName") -Role $role))
+          }
+
+          $acceptanceRecords = New-Object System.Collections.Generic.List[object]
+          $signingEvidence = $null
+          $acceptanceRoot = Join-Path $evidenceRoot 'acceptance'
+          if (-not (Test-Path -LiteralPath $acceptanceRoot -PathType Container)) { throw 'Acceptance evidence directory is missing.' }
+          $acceptanceRootItem = Get-Item -LiteralPath $acceptanceRoot -Force
+          if (($acceptanceRootItem.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0) { throw 'Acceptance evidence root cannot be a reparse point.' }
+          foreach ($acceptanceItem in @(Get-ChildItem -LiteralPath $acceptanceRoot -Recurse -Force)) {
+            if (($acceptanceItem.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0) { throw "Acceptance evidence contains a reparse point: $($acceptanceItem.FullName)" }
+          }
+          $expectedReceiptPaths = @($qualificationPlan.acceptance.evidenceFiles | ForEach-Object { ([string]$_).Replace('\', '/') } | Sort-Object -CaseSensitive)
+          $actualReceiptPaths = @(Get-ChildItem -LiteralPath $acceptanceRoot -Recurse -File | Where-Object { $_.Extension -ieq '.json' } | ForEach-Object { $_.FullName.Substring($evidenceRoot.Length).TrimStart([System.IO.Path]::DirectorySeparatorChar).Replace('\', '/') } | Sort-Object -CaseSensitive)
+          if (Compare-Object -CaseSensitive -ReferenceObject $expectedReceiptPaths -DifferenceObject $actualReceiptPaths) { throw 'Acceptance JSON set must exactly equal profile acceptanceReceipts.' }
+          foreach ($relativePath in @($qualificationPlan.acceptance.evidenceFiles)) {
+            $acceptanceRecord = Get-AcceptanceRecord -RelativePath ([string]$relativePath)
+            $acceptanceRecords.Add($acceptanceRecord.record)
+            if ([string]$relativePath -eq [string]$qualificationPlan.acceptance.signingEvidencePath) { $signingEvidence = $acceptanceRecord.evidence }
+          }
+          if ($null -eq $signingEvidence) { throw 'Signing evidence was not loaded.' }
+
+          $lockfileEvidence = $null
+          foreach ($candidate in @('pnpm-lock.yaml', 'package-lock.json', 'yarn.lock', 'Cargo.lock')) {
+            $candidatePath = Join-Path $env:GITHUB_WORKSPACE $candidate
+            if (Test-Path -LiteralPath $candidatePath -PathType Leaf) {
+              $rawBytes = [System.IO.File]::ReadAllBytes($candidatePath)
+              $canonicalBytes = Get-NewlineCanonicalBytes -Bytes $rawBytes
+              $lockfileEvidence = [ordered]@{
+                path = $candidate
+                rawBytesSha256 = (Get-FileHash -LiteralPath $candidatePath -Algorithm SHA256).Hash.ToLowerInvariant()
+                newlineCanonicalSha256 = Get-ByteSha256 -Bytes $canonicalBytes
+                canonicalization = 'utf8-only; CRLF and CR changed to LF; all other bytes preserved'
+              }
+              break
+            }
+          }
+
+          $ledger = Get-Content -LiteralPath $ledgerPath -Raw | ConvertFrom-Json
+          if ([string]$ledger.contractRawBytesSha256 -ne $env:WCR_CONTRACT_SHA256 -or [string]$ledger.profileRawBytesSha256 -ne $env:WCR_PROFILE_SHA256) { throw 'Ledger contract/profile binding mismatch.' }
+          $ledger | Add-Member -NotePropertyName completedAtUtc -NotePropertyValue ([DateTime]::UtcNow.ToString('o')) -Force
+          $ledger | Add-Member -NotePropertyName runtimeVerification -NotePropertyValue 'runtime-verification.json' -Force
+          $signingEnvelope = [ordered]@{
+            status = $signingEvidence.status
+            validationResult = $signingEvidence.validationResult
+            unsignedDistributionImpact = $signingEvidence.unsignedDistributionImpact
+            evidencePath = [string]$qualificationPlan.acceptance.signingEvidencePath
+          }
+          $ledger | Add-Member -NotePropertyName signing -NotePropertyValue $signingEnvelope -Force
+          Write-Utf8Json -Path $ledgerPath -Value $ledger
+
+          $evidenceRecords = @(
+            Get-RawRecord -Path $contractPath -RelativePath 'release-contract.json' -Role 'release-contract'
+            Get-RawRecord -Path $ledgerPath -RelativePath 'run-ledger.json' -Role 'run-ledger'
+            Get-RawRecord -Path $planPath -RelativePath 'qualification-plan.json' -Role 'qualification-plan'
+            Get-RawRecord -Path $verificationPath -RelativePath 'runtime-verification.json' -Role 'runtime-verification'
+            $acceptanceRecords.ToArray()
+          )
+          $manifest = [ordered]@{
+            schemaVersion = 2
+            gateLevel = 'RUNTIME_VERIFIED'
+            releaseCreated = $false
+            commit = $env:EXPECTED_SHA.ToLowerInvariant()
+            contractRawBytesSha256 = $env:WCR_CONTRACT_SHA256
+            profileRawBytesSha256 = $env:WCR_PROFILE_SHA256
+            lockfile = $lockfileEvidence
+            artifacts = $records.ToArray()
+            evidence = @($evidenceRecords)
+            signing = $signingEnvelope
+          }
+          Write-Utf8Json -Path $manifestPath -Value $manifest
+
+          $checksumPaths = @(
+            Get-ChildItem -LiteralPath $bundleRoot -Recurse -File
+            Get-Item -LiteralPath $contractPath
+            Get-Item -LiteralPath $ledgerPath
+            Get-Item -LiteralPath $planPath
+            Get-Item -LiteralPath $verificationPath
+            Get-Item -LiteralPath $manifestPath
+            Get-ChildItem -LiteralPath (Join-Path $evidenceRoot 'acceptance') -Recurse -File
+          )
+          $checksumLines = @($checksumPaths | ForEach-Object {
+            $relative = $_.FullName.Substring($evidenceRoot.Length).TrimStart([System.IO.Path]::DirectorySeparatorChar).Replace('\', '/')
+            ((Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant() + '  ' + $relative)
+          } | Sort-Object)
+          $checksumRelativePaths = @($checksumPaths | ForEach-Object { $_.FullName.Substring($evidenceRoot.Length).TrimStart([System.IO.Path]::DirectorySeparatorChar).Replace('\', '/') } | Sort-Object)
+          $manifestRecordPaths = @($manifest.artifacts.path) + @($manifest.evidence.path) + @('manifest.json')
+          if (Compare-Object -ReferenceObject @($manifestRecordPaths | Sort-Object) -DifferenceObject $checksumRelativePaths) { throw 'Checksum table must be the exact manifest record set plus manifest.json.' }
+          [System.IO.File]::WriteAllLines((Join-Path $evidenceRoot 'SHA256SUMS.txt'), $checksumLines, (New-Object System.Text.UTF8Encoding($false)))
+          $expectedUploadPaths = @($checksumRelativePaths) + @('SHA256SUMS.txt') | Sort-Object
+          $actualUploadPaths = @(Get-ChildItem -LiteralPath $evidenceRoot -Recurse -File | ForEach-Object { $_.FullName.Substring($evidenceRoot.Length).TrimStart([System.IO.Path]::DirectorySeparatorChar).Replace('\', '/') } | Sort-Object)
+          if (Compare-Object -ReferenceObject $expectedUploadPaths -DifferenceObject $actualUploadPaths) { throw 'Qualification artifact file set is not exact.' }
+
+      - name: Collect sanitized failure diagnostics
+        if: ${{ failure() }}
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $sourceRoot = Join-Path $env:RUNNER_TEMP 'windows-release-evidence\diagnostics'
+          $uploadRoot = Join-Path $env:RUNNER_TEMP 'windows-release-diagnostics'
+          $allowlist = @('sanitized-build-summary.json', 'sanitized-acceptance-summary.json', 'sanitized-toolchain.json')
+          if (Test-Path -LiteralPath $uploadRoot -PathType Container) {
+            if (@(Get-ChildItem -LiteralPath $uploadRoot -Force).Count -gt 0) {
+              throw 'Refusing to upload a pre-populated diagnostics directory.'
+            }
+          }
+          New-Item -ItemType Directory -Path $uploadRoot -Force | Out-Null
+          foreach ($name in $allowlist) {
+            $source = Join-Path $sourceRoot $name
+            if (Test-Path -LiteralPath $source -PathType Leaf) {
+              Copy-Item -LiteralPath $source -Destination (Join-Path $uploadRoot $name) -Force
+            }
+          }
+          $attestation = [ordered]@{ allowlist = $allowlist; source = 'project-generated sanitized diagnostics only'; collectedAtUtc = [DateTime]::UtcNow.ToString('o') }
+          [System.IO.File]::WriteAllText((Join-Path $uploadRoot 'diagnostics-allowlist.json'), (($attestation | ConvertTo-Json -Depth 8) + [Environment]::NewLine), (New-Object System.Text.UTF8Encoding($false)))
+
+      - name: Upload qualified artifact and evidence
+        if: ${{ success() }}
+        id: upload-qualified
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: qualified-windows
+          retention-days: 14
+          compression-level: 0
+          if-no-files-found: error
+          path: ${{ runner.temp }}\windows-release-evidence
+
+      - name: Persist qualification artifact attestation
+        if: ${{ success() }}
+        shell: pwsh
+        env:
+          ARTIFACT_ID: ${{ steps.upload-qualified.outputs.artifact-id }}
+          ARTIFACT_DIGEST: ${{ steps.upload-qualified.outputs.artifact-digest }}
+          ARTIFACT_URL: ${{ steps.upload-qualified.outputs.artifact-url }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:ARTIFACT_ID) -or [string]::IsNullOrWhiteSpace($env:ARTIFACT_DIGEST) -or [string]::IsNullOrWhiteSpace($env:ARTIFACT_URL)) {
+            throw 'Artifact upload did not return immutable attestation metadata.'
+          }
+          "Qualification artifact ID: $env:ARTIFACT_ID" | Out-File -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
+          "Qualification artifact digest: $env:ARTIFACT_DIGEST" | Out-File -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
+          "Qualification artifact URL: $env:ARTIFACT_URL" | Out-File -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
+
+      - name: Upload sanitized diagnostics on failure
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: windows-installer-qualification-diagnostics-${{ github.run_id }}
+          retention-days: 7
+          if-no-files-found: error
+          path: ${{ runner.temp }}\windows-release-diagnostics

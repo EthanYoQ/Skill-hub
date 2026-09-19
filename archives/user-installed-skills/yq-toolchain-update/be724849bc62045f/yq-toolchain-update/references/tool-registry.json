@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Fixed third-party helper tools for yq-toolchain-update. Versions are discovered at runtime.",
+  "groups": [
+    { "id": "1", "name": "协作与云" },
+    { "id": "2", "name": "浏览、MCP 与检索" },
+    { "id": "3", "name": "内容平台" }
+  ],
+  "tools": [
+    { "id": "agent-reach", "group": "1", "name": "Agent Reach", "executable": "agent-reach", "versionArgs": ["--version"], "source": "Agent Reach 官方更新检查与已验证来源", "updateStrategy": "先运行 check-update；确认官方来源后再更新", "risk": "保留浏览器资料和平台配置" },
+    { "id": "github-cli", "group": "1", "name": "GitHub CLI", "executable": "gh", "versionArgs": ["--version"], "source": "Winget: GitHub.cli", "updateStrategy": "按精确 Winget ID 更新", "risk": "保留登录信息" },
+    { "id": "lark-cli", "group": "1", "name": "飞书 CLI", "executable": "lark-cli", "versionArgs": ["--version"], "source": "npm: @larksuite/cli", "updateStrategy": "按精确 npm 包更新", "risk": "保留登录信息" },
+    { "id": "aliyun-cli", "group": "1", "name": "阿里云 CLI", "executable": "aliyun", "versionArgs": ["version"], "source": "Winget: Alibaba.AlibabaCloudCLI", "updateStrategy": "按精确 Winget ID 更新", "risk": "保留本地配置" },
+    { "id": "codegraph", "group": "1", "name": "CodeGraph", "executable": "codegraph", "versionArgs": ["--version"], "source": "CodeGraph 自带升级命令", "updateStrategy": "先使用 upgrade --check，再升级", "risk": "不重建或删除项目索引" },
+    { "id": "opencli", "group": "2", "name": "OpenCLI", "executable": "opencli", "versionArgs": ["--version"], "source": "npm: @jackwener/opencli", "updateStrategy": "按精确 npm 包更新", "risk": "保留浏览器登录状态" },
+    { "id": "mcporter", "group": "2", "name": "Mcporter", "executable": "mcporter", "versionArgs": ["--version"], "source": "npm: mcporter", "updateStrategy": "按精确 npm 包更新", "risk": "保留 MCP 设置" },
+    { "id": "tavily-cli", "group": "2", "name": "Tavily CLI", "executable": "tvly", "versionArgs": ["--version"], "source": "uv tool: tavily-cli", "updateStrategy": "按精确 uv tool 名称更新", "risk": "不显示 API 密钥" },
+    { "id": "playwright", "group": "2", "name": "Playwright", "executable": "playwright", "versionArgs": ["--version"], "source": "Python package: playwright", "updateStrategy": "更新已安装的 Python 环境，并只安装已有浏览器引擎", "risk": "不改 Chrome 配置或登录状态" },
+    { "id": "better-icons", "group": "2", "name": "Better Icons", "executable": "better-icons", "versionArgs": ["--help"], "source": "npm: better-icons", "updateStrategy": "按精确 npm 包更新", "risk": "无账号配置" },
+    { "id": "bilibili-cli", "group": "3", "name": "Bilibili CLI", "executable": "bili", "versionArgs": ["--version"], "source": "已安装的隔离 Python 环境", "updateStrategy": "核对官方发布后只更新该根包", "risk": "保留 Agent Reach 浏览器资料" },
+    { "id": "linkedin-mcp", "group": "3", "name": "LinkedIn MCP", "executable": "mcp-server-linkedin", "versionArgs": ["--help"], "versionCommand": { "executable": "uv", "args": ["tool", "list", "-v"], "match": "^mcp-server-linkedin v" }, "source": "uv tool: mcp-server-linkedin", "updateStrategy": "按官方名称安装或更新；有活跃配置才迁移", "risk": "保留旧命令作为回退，不凭空创建 MCP 设置" },
+    { "id": "rdt", "group": "3", "name": "RDT", "executable": "rdt", "versionArgs": ["--version"], "source": "已验证的上游源码或隔离 Python 环境", "updateStrategy": "先比较上游提交，禁止用较低版本覆盖", "risk": "保留 Agent Reach 浏览器资料" },
+    { "id": "twitter-cli", "group": "3", "name": "Twitter CLI", "executable": "twitter", "versionArgs": ["--version"], "source": "已安装的隔离 Python 环境", "updateStrategy": "核对官方发布后只更新该根包", "risk": "保留 Agent Reach 浏览器资料" },
+    { "id": "yt-dlp", "group": "3", "name": "yt-dlp", "executable": "yt-dlp", "versionArgs": ["--version"], "source": "已安装的隔离 Python 环境", "updateStrategy": "按官方稳定发布更新该根包", "risk": "保留本地下载配置" }
+  ]
+}

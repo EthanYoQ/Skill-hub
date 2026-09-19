@@ -1,0 +1,25 @@
+name: Public privacy gate
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  public-boundary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Reject private project material
+        shell: bash
+        run: |
+          if find projects -type f -print -quit 2>/dev/null | grep -q .; then
+            echo "::error::projects/ contains private project material. Store it in Skill-hub-private instead."
+            exit 1
+          fi

@@ -1,0 +1,189 @@
+{
+  "skill_name": "skill-lifecycle-manager",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我找一个可以做 PDF 转 Markdown 的高质量 Skill，全局安装。先检查本地有没有已经安装的同类 skill，优先高安装量或高星来源，不要装错同名项目。",
+      "expected_output": "The agent treats this as discovery plus install, verifies existing roots and exact source before choosing a global install.",
+      "files": [],
+      "expectations": [
+        "The response checks active skill roots before recommending a new install.",
+        "The candidate source, exact skill path, and SKILL.md are verified rather than inferred by name.",
+        "Observed installs, stars, license, and source reputation are separated from unavailable evidence.",
+        "The final report states global scope, install path, validation, and restart requirement."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "检查我本地近 30 天没有用过的 skill，把没用的 baoyu 相关 skill 清理掉。",
+      "expected_output": "The agent performs an evidence-based usage audit and quarantines uncertain cleanup candidates.",
+      "files": [],
+      "expectations": [
+        "The response does not use LastAccessTime as proof of usage or non-usage.",
+        "Skills are labeled by explicit usage evidence, likely usage, no observed usage, duplicate, or managed ownership.",
+        "Managed and plugin-owned paths are excluded from normal cleanup.",
+        "Removal targets are contained below intended roots and uncertain candidates are backed up or quarantined."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "把我本地的 skill-creator 更新到上游最新版，但不要动 Codex 系统版，也不要改 Skill Hub repo 里的副本。",
+      "expected_output": "The agent updates only the requested user-maintained install after source verification and backup.",
+      "files": [],
+      "expectations": [
+        "The response distinguishes upstream source, user install, system copy, and Skill Hub copy.",
+        "The upstream source and comparison ref are verified before any overwrite.",
+        "Only the user-maintained installed copy is backed up and updated.",
+        "System and Skill Hub copies are explicitly left unchanged and the final copy is validated."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Skill Hub 里的 SEO skill 和我全局 installed skill 都改过了，帮我合并，要求保留本地触发规则，但同步 GitHub 上新增的质量审计部分。",
+      "expected_output": "The agent performs a behavior-level merge that preserves local trigger intent and adds compatible upstream audit behavior.",
+      "files": [],
+      "expectations": [
+        "The response compares trigger, tools, safety, output, and bundled-resource changes before merging.",
+        "The installed copy is backed up before edits.",
+        "Local trigger behavior is preserved while compatible quality-audit behavior is merged.",
+        "Material unresolved conflicts are reported for a user decision rather than guessed."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "使用提供的 Skill-hub 与本地安装夹具做 repository-to-local dry-run，确认不会把 projects/ 私有 skill 扁平化，也不会覆盖本地已修改的 sample-skill。",
+      "expected_output": "The agent uses repository-to-local dry run, protects local edits, and excludes project-private skills.",
+      "files": [
+        "evals/files/sync-hub/skills/01-agent-engineering/sample-skill/SKILL.md",
+        "evals/files/sync-hub/projects/example/private-skill/SKILL.md",
+        "evals/files/sync-local/sample-skill/SKILL.md"
+      ],
+      "expectations": [
+        "The response reads the Skill Hub operations reference and classifies repo-to-local mode.",
+        "A no-write dry-run or equivalent fixture-backed simulation is executed before any live action.",
+        "The response confirms the script scans skills/ and excludes projects/.",
+        "Locally edited overwrite candidates are compared and backed up instead of silently replaced."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "我本地新建了 skill-lifecycle-manager，帮我同步进 Skill-hub，归到 agent-engineering，并更新索引。",
+      "expected_output": "The agent classifies a reusable skill under shared agent engineering, establishes or verifies source and lock metadata, rebuilds indexes only when needed, and validates or safely reports divergence between the copies.",
+      "files": [],
+      "expectations": [
+        "The response distinguishes the local installed copy from the Skill Hub source path.",
+        "The final shared mapping is established before any sync-push or equivalent copy; an already-correct mapping is treated as an idempotent no-op.",
+        "skills-lock and skill-upstreams metadata are both verified and changed only when their desired final state differs.",
+        "Index dry run, source validation, installed validation, and hash comparison are reported; a live rebuild is required only after source or metadata changes, and unsafe divergent copies are reported instead of overwritten."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "我想让 .agents\\skills 和 .codex\\skills 共用同一个 Skill Hub 本地源，帮我设置 junction。",
+      "expected_output": "The agent treats junction setup as an ownership change, dry-runs, backs up real directories, and verifies targets.",
+      "files": [],
+      "expectations": [
+        "The response explains the ownership and blast-radius change.",
+        "setup-junctions.ps1 is run with DryRun before live mode.",
+        "Every intended runtime root is listed explicitly and existing directories are backed up.",
+        "The final verification checks junction targets and SKILL.md counts and reports rollback paths."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "用 skill-upgrade 的方式检查 Skill-hub 和我本地全局 skills 是否有可升级项。能自动安全升级的升级，没证据的不要覆盖。",
+      "expected_output": "The manager handles the legacy skill-upgrade request through its canonical upstream audit helper and applies only evidence-backed operations.",
+      "files": [],
+      "expectations": [
+        "The response routes the legacy skill-upgrade request to skill-lifecycle-manager upstream auditing.",
+        "check_upstreams.ps1 SelfTest and read-only Repo and Local audits run before Apply; if temporary WorkDir effects are prohibited, the response reports the blocked prerequisite and does not Apply.",
+        "Repository mirrors require verified mirror policy and strict path containment; every applied mirror reports a non-empty backup path, while a no-op audit reports that no backup was created.",
+        "Mapped, manual, self, local, candidate, unknown, dirty, or standalone skills are not automatically overwritten without supporting policy."
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "把这个刚做完的合同审查 skill 整理成可以公开发布的包，放进 Skill-hub 并准备 GitHub 提交，但先不要 push。",
+      "expected_output": "The agent audits and packages the skill, updates repository metadata, prepares but does not push the Git change.",
+      "files": [],
+      "expectations": [
+        "The response runs a quality and secret/privacy audit before packaging.",
+        "Generated outputs, caches, credentials, and personal paths are excluded from the package.",
+        "Lock, source, name, domain, platform, and README metadata are updated as applicable.",
+        "The final report distinguishes prepared local Git changes from an unperformed push."
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "把这个 Node 项目的 npm 依赖全部升级到最新版，再清理 node_modules 和构建缓存。",
+      "expected_output": "The agent recognizes this as ordinary software dependency and project-file maintenance, not an agent-skill lifecycle task.",
+      "files": [],
+      "expectations": [
+        "The response states that skill-lifecycle-manager is not the governing workflow for npm dependency upgrades.",
+        "The response does not inspect Skill Hub, skills-lock.json, skill-upstreams.json, or agent skill roots.",
+        "Any proposed cleanup is scoped to the Node project and does not use skill usage evidence labels.",
+        "The task is routed to the repository's normal dependency and cleanup workflow."
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "我第一次使用这个 skill。请检查我全局安装的 skills 是否有 GitHub 新版本；这台机器没有 skill-upstreams.json，也没有保存过来源对应关系。",
+      "expected_output": "The agent bootstraps an exact-path local source index, completes evidence-backed source discovery before version claims, and leaves unresolved candidates untouched.",
+      "files": [],
+      "expectations": [
+        "The response detects the missing source index and does not claim full upgrade coverage from skill names alone.",
+        "Local provenance is inventoried before current GitHub or registry searches use exact frontmatter names and distinctive body phrases.",
+        "Verified mappings record canonical install path, repository URL, exact upstream skill path, ref, immutable commit, evidence, and update policy.",
+        "Candidate or conflicting matches remain in a discovery queue and are not automatically overwritten."
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "我的 ~/.agents/skill-upstreams.json 已经记录了一个独立复制安装的 report-writer，它对应 owner/tools 仓库的 skills/report-writer。请复查有没有落后，安全的话升级。",
+      "expected_output": "The agent resolves the standalone skill by canonical installed path, refreshes the recorded ref, compares complete trees, and only applies verified mirror drift after backup.",
+      "files": [],
+      "expectations": [
+        "The mapping is selected by canonical install path rather than name alone.",
+        "The recorded ref is fetched and resolved to an immutable commit before the full skill directory is compared.",
+        "Only verified mirror drift is eligible for automatic replacement; mapped or manual drift is reported for review.",
+        "An applied replacement has strict root containment, a timestamped backup, validation, and persisted lastChecked status."
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "我用 Claude Code，CLAUDE_CONFIG_DIR 指向 D:/claude-profile。请检查个人 skills 和当前 monorepo 的 .claude/skills，建立来源索引并查更新，不要扫描 Codex。",
+      "expected_output": "The agent selects Claude Code roots only, respects CLAUDE_CONFIG_DIR, distinguishes personal and project scopes, and reports which monorepo roots were covered.",
+      "files": [],
+      "expectations": [
+        "The response reads the runtime adapter and does not assume the executing agent runtime is the managed runtime.",
+        "Personal discovery uses D:/claude-profile/skills rather than ~/.claude/skills, and Codex roots are excluded.",
+        "Project and relevant nested .claude/skills roots are inventoried with explicit coverage boundaries.",
+        "Index entries record canonical install path, runtime=claude-code, scope, provenance status, and safe update policy."
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "Claude Code 里一个 marketplace plugin 的 skill 看起来过期了。直接修改 ~/.claude/plugins/cache 里的 SKILL.md 帮我升级。",
+      "expected_output": "The agent refuses direct cache mutation and routes lifecycle work through Claude Code plugin metadata and update commands.",
+      "files": [],
+      "expectations": [
+        "The response classifies ~/.claude/plugins/cache as runtime-managed and does not mirror or edit it directly.",
+        "The installed plugin identity, marketplace/source, version or commit, enabled state, and scope are inventoried with claude plugin list/details.",
+        "A supported update uses claude plugin update with the correct scope; managed scope is treated as administrator-owned.",
+        "The response reports /reload-plugins or restart behavior appropriate to the components that changed."
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "同一个 report-writer 同时装在 ~/.agents/skills 和 ~/.claude/skills，两个副本修改程度不同。检查 GitHub 更新并安全处理，不要因为名字相同就覆盖成一份。",
+      "expected_output": "The agent maintains separate exact-path mappings per runtime, compares each install independently, and avoids name-based cross-runtime overwrite.",
+      "files": [],
+      "expectations": [
+        "The two installs receive separate canonical-path index entries with runtime and scope metadata.",
+        "The same verified upstream may be reused as provenance, but each complete installed tree is compared independently.",
+        "Divergent user changes cause mapped/manual review or separate backups instead of a name-based mirror across runtimes.",
+        "The final report states the active result and reload requirements for both Codex and Claude Code."
+      ]
+    }
+  ]
+}

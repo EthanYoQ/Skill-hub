@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub README Visuals"
+  short_description: "Create screenshot-led, verified product visuals for GitHub README pages."
+  default_prompt: "Use $github-readme-visuals to add the deterministic Product-proof split hero with real product screenshots and localized interface evidence to this repository README."

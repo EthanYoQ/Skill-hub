@@ -1,0 +1,1350 @@
+{
+  "version": "1.1",
+  "updated_at": "2026-09-15",
+  "purpose": "Track verified original upstream repositories for Skill-hub skills so future upgrades can compare evidence-backed sources instead of guessing by skill name.",
+  "scope": {
+    "startsFrom": [
+      "_meta/skill-upstreams.json",
+      "_meta/skills-lock.json"
+    ],
+    "localSkillCount": 60,
+    "sharedSkillCount": 52,
+    "projectSkillCount": 8
+  },
+  "rules": [
+    "Only entries with classification=open-source and updatePolicy=mirror are eligible for automated replacement; mapped entries require review and a declared merge mapping.",
+    "Entries marked candidate or unknown require more evidence before overwrite.",
+    "Self-made and project-private/local skills are manual unless the owner adds an explicit upstream.",
+    "No upstream is considered verified without repository URL, upstream path, ref, commit, and evidence of directory comparison or an explicit source link."
+  ],
+  "classifications": {
+    "open-source": "Original upstream repository/path/ref/commit verified; updatePolicy controls whether automated updates are allowed.",
+    "candidate": "Likely source exists, but immutable source path/commit or content equivalence is not proven.",
+    "unknown": "No verified source or self/local provenance established yet.",
+    "self": "Evidence indicates a self-authored or owner-maintained skill; external updates disabled.",
+    "local": "Repository/project-local or pipeline-local skill; external updates disabled."
+  },
+  "verificationSummary": {
+    "countsByClassification": {
+      "open-source": 33,
+      "self": 16,
+      "local": 10,
+      "candidate": 1
+    },
+    "githubCodeSearch": "Blocked by GitHub API rate limit during broad exact-name search; unresolved entries keep verificationPath commands for later retry.",
+    "readOnlyAuditCommand": ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1"
+  },
+  "sources": [
+    {
+      "name": "deep-research",
+      "path": "skills/01-agent-engineering/deep-research/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/affaan-m/ECC",
+        "path": "skills/deep-research/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-15",
+        "commit": "8321021c54d670126ce3b2969d5deb880b4b0c2a"
+      },
+      "updatePolicy": "mirror",
+      "status": "current",
+      "evidence": [
+        "Prior source index entry existed or explicit local URL was present.",
+        "Repository cloned or fetched during this audit.",
+        "Read-only normalized hash audit verified the recorded upstream directory/status."
+      ],
+      "verificationPath": [
+        ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1",
+        "Compare normalized file hashes before any mirror or mapped update."
+      ],
+      "notes": "Exact upstream directory verified by prior index and read-only normalized hash audit."
+    },
+    {
+      "name": "find-skills",
+      "path": "skills/01-agent-engineering/find-skills/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/vercel-labs/skills",
+        "path": "skills/find-skills/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-08-29",
+        "commit": "435076e78988e1e6ec40d00b0b1d76bdbbc5419a"
+      },
+      "updatePolicy": "mapped",
+      "status": "mapped-current",
+      "evidence": [
+        "Prior source index entry existed or explicit local URL was present.",
+        "Repository cloned or fetched during this audit.",
+        "Read-only normalized hash audit verified the recorded upstream directory/status."
+      ],
+      "verificationPath": [
+        ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1",
+        "Compare normalized file hashes before any mirror or mapped update."
+      ],
+      "notes": "Updated from the verified upstream, then retained the proactive trigger language and current-project install scope. Automatic mirror remains disabled because those local routing choices are intentional."
+    },
+    {
+      "name": "yq-windows-trash-cleaner",
+      "path": "skills/01-agent-engineering/yq-windows-trash-cleaner/",
+      "classification": "self",
+      "updatePolicy": "none",
+      "status": "self-maintained-merged-windows-cleaner",
+      "evidence": [
+        "Merged the locally maintained windows-memory-disk-health and project-cleanup-audit workflows under one new skill name.",
+        "Skill-creator validation, PowerShell parser checks, read-only fixture tests, privacy scan, and rejection of an unallowlisted recursive-delete manifest passed before publication.",
+        "The report information architecture records concept-level provenance to KKKKhazix/khazix-skills storage-analyzer at commit 2b4a645cfdc894156ae347d897723562f719ce95; no upstream Python, HTML, CSS, JavaScript, or assets were copied."
+      ],
+      "verificationPath": [
+        "Run skill-creator quick_validate.py against the complete skill directory.",
+        "Parse every bundled PowerShell script and rerun the project ignored-path, memory, Docker, report, and manifest-rejection fixtures before release."
+      ],
+      "notes": "Self-maintained shared skill. External automatic updates are disabled; the cited khazix source is design provenance, not a mirror source."
+    },
+    {
+      "name": "santa-method",
+      "path": "skills/01-agent-engineering/santa-method/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/affaan-m/ECC",
+        "path": "skills/santa-method/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-15",
+        "commit": "8321021c54d670126ce3b2969d5deb880b4b0c2a"
+      },
+      "updatePolicy": "mirror",
+      "status": "current",
+      "evidence": [
+        "Prior source index entry existed or explicit local URL was present.",
+        "Repository cloned or fetched during this audit.",
+        "Read-only normalized hash audit verified the recorded upstream directory/status."
+      ],
+      "verificationPath": [
+        ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1",
+        "Compare normalized file hashes before any mirror or mapped update."
+      ],
+      "notes": "Exact upstream directory verified by prior index and read-only normalized hash audit."
+    },
+    {
+      "name": "skill-creator",
+      "path": "skills/01-agent-engineering/skill-creator/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/anthropics/skills",
+        "path": "skills/skill-creator/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-15",
+        "commit": "34040c9c568585f6929bedeaad110ad08f079624"
+      },
+      "updatePolicy": "mirror",
+      "status": "current",
+      "evidence": [
+        "Prior source index entry existed or explicit local URL was present.",
+        "Repository cloned or fetched during this audit.",
+        "Read-only normalized hash audit verified the recorded upstream directory/status."
+      ],
+      "verificationPath": [
+        ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1",
+        "Compare normalized file hashes before any mirror or mapped update."
+      ],
+      "notes": "Exact upstream directory verified by prior index and read-only normalized hash audit."
+    },
+    {
+      "name": "skill-lifecycle-manager",
+      "path": "skills/01-agent-engineering/skill-lifecycle-manager/",
+      "classification": "self",
+      "updatePolicy": "none",
+      "status": "self-maintained-lifecycle-orchestrator",
+      "evidence": [
+        "Skill was created in this repository by merging the local skill lifecycle workflow with the predecessor skill-upgrade behavior.",
+        "The manager is now the canonical owner of check_upstreams.ps1, including strict path containment, automatic mirror backups, and a self-test.",
+        "Local mode can bootstrap an exact-install-path source index, preserve unresolved candidates for evidence-backed discovery, and reuse verified mappings to compare or safely mirror standalone installed skills.",
+        "Claude Code support covers CLAUDE_CONFIG_DIR personal roots, project .claude/skills roots, runtime-neutral upstream indexes, exact-path duplicate handling, and read-only treatment of managed plugin caches."
+      ],
+      "verificationPath": [
+        "Use this repository history as the canonical source until an explicit upstream is published.",
+        "Run .\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1 in read-only mode before applying upstream changes.",
+        "For a first-time local user, create a local index with -Mode Local -BootstrapIndex, verify every candidate repository/path, then rerun with the same -IndexPath.",
+        "For Claude Code, validate root discovery with -Mode Local -Runtime ClaudeCode and explicit -ProjectRoots; use claude plugin commands instead of editing plugin-cache paths."
+      ],
+      "notes": "Self-maintained cross-runtime skill for Codex, Claude Code, and host-neutral Agent Skills roots; external automatic updates disabled."
+    },
+    {
+      "name": "liquid-glass-design",
+      "path": "skills/02-coding-languages/swift/liquid-glass-design/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/affaan-m/ECC",
+        "path": "skills/liquid-glass-design/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-15",
+        "commit": "8321021c54d670126ce3b2969d5deb880b4b0c2a"
+      },
+      "updatePolicy": "mirror",
+      "status": "current",
+      "evidence": [
+        "Prior source index entry existed or explicit local URL was present.",
+        "Repository cloned or fetched during this audit.",
+        "Read-only normalized hash audit verified the recorded upstream directory/status."
+      ],
+      "verificationPath": [
+        ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1",
+        "Compare normalized file hashes before any mirror or mapped update."
+      ],
+      "notes": "Exact upstream directory verified by prior index and read-only normalized hash audit."
+    },
+    {
+      "name": "frontend-design",
+      "path": "skills/03-frameworks/frontend-design/",
+      "classification": "candidate",
+      "candidate": {
+        "url": "https://github.com/affaan-m/everything-claude-code",
+        "path": "skills/frontend-design/",
+        "ref": "historical-main"
+      },
+      "updatePolicy": "none",
+      "status": "candidate-historical-source-unverified",
+      "evidence": [
+        "Local frontmatter says origin: ECC.",
+        "Public skill registries show affaan-m/everything-claude-code/frontend-design with matching body text.",
+        "Current affaan-m/everything-claude-code main at 49128b5763b7ac0b50acef35ac0bcca08d1576af no longer contains skills/frontend-design; it contains frontend-design-direction instead."
+      ],
+      "verificationPath": [
+        "Recover the historical commit or registry artifact that contained skills/frontend-design/SKILL.md.",
+        "Compare normalized local SKILL.md against that historical tree before changing classification to open-source.",
+        "If no immutable upstream commit can be found, keep updatePolicy=none."
+      ],
+      "notes": "Likely source exists, but the current upstream tree or immutable source commit is not proven safe for overwrite."
+    },
+    {
+      "name": "data-scraper-agent",
+      "path": "skills/06-data-search/data-scraper-agent/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/affaan-m/ECC",
+        "path": "skills/data-scraper-agent/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-15",
+        "commit": "8321021c54d670126ce3b2969d5deb880b4b0c2a"
+      },
+      "updatePolicy": "mirror",
+      "status": "current",
+      "evidence": [
+        "Prior source index entry existed or explicit local URL was present.",
+        "Repository cloned or fetched during this audit.",
+        "Read-only normalized hash audit verified the recorded upstream directory/status."
+      ],
+      "verificationPath": [
+        ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1",
+        "Compare normalized file hashes before any mirror or mapped update."
+      ],
+      "notes": "Exact upstream directory verified by prior index and read-only normalized hash audit."
+    },
+    {
+      "name": "docx",
+      "path": "skills/07-media-content/docx/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/anthropics/skills",
+        "path": "skills/docx/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-15",
+        "commit": "34040c9c568585f6929bedeaad110ad08f079624"
+      },
+      "updatePolicy": "mirror",
+      "status": "current",
+      "evidence": [
+        "Prior source index entry existed or explicit local URL was present.",
+        "Repository cloned or fetched during this audit.",
+        "Read-only normalized hash audit verified the recorded upstream directory/status."
+      ],
+      "verificationPath": [
+        ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1",
+        "Compare normalized file hashes before any mirror or mapped update."
+      ],
+      "notes": "Exact upstream directory verified by prior index and read-only normalized hash audit.",
+      "normalization": {
+        "trimTrailingWhitespace": true
+      }
+    },
+    {
+      "name": "yq-editorial-presentation-html",
+      "path": "skills/07-media-content/yq-editorial-presentation-html/",
+      "classification": "self",
+      "updatePolicy": "none",
+      "status": "self-inaccessible-upstream",
+      "evidence": [
+        "README identifies yq-editorial-presentation-html.",
+        "README installation block references https://github.com/EthanYoQ/editorial-presentation-skill.git.",
+        "git ls-remote and authenticated gh repo view both returned Repository not found during the 2026-07-14 audit.",
+        "The local skill was independently validated with skill-creator and remains the available canonical copy."
+      ],
+      "verificationPath": [
+        "Ask repository owner to make EthanYoQ/editorial-presentation-skill accessible or provide a replacement upstream URL.",
+        "After access is available, compare normalized tree and record commit before enabling mapped or mirror updates."
+      ],
+      "notes": "Manual maintenance only unless owner provides an explicit upstream and comparison commit."
+    },
+    {
+      "name": "ui-ux-pro-max",
+      "path": "skills/07-media-content/ui-ux-pro-max/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+        "path": ".claude/skills/ui-ux-pro-max/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-08-29",
+        "commit": "8bd29e775453ebcae52b6e6514fbf134df0c5770"
+      },
+      "license": "MIT",
+      "updatePolicy": "mapped",
+      "status": "mapped-current",
+      "evidence": [
+        "Repository metadata and MIT license were verified with GitHub CLI.",
+        "The complete .claude/skills/ui-ux-pro-max directory was synchronized from the recorded commit; two CSV files contain only declared local-path sanitization mappings.",
+        "data/stacks/avalonia.csv maps a Windows user-directory example to %USERPROFILE%; data/stacks/javafx.csv maps a macOS user-directory example to ~.",
+        "The upstream root LICENSE was copied into the vendored directory as LICENSE.txt."
+      ],
+      "verificationPath": [
+        "Compare the pinned upstream directory file-by-file with SHA-256.",
+        "Run quick_validate.py, scripts/tests, and scripts/validate_data.py before accepting an update."
+      ],
+      "notes": "Mapped import preserves the complete upstream directory, repository-level MIT license, and two privacy-required local-path sanitizations."
+    },
+    {
+      "name": "general-video",
+      "path": "skills/07-media-content/general-video/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/general-video/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
+      "license": "Apache-2.0",
+      "updatePolicy": "mapped",
+      "status": "installed-snapshot-current",
+      "evidence": [
+        "Installed tree matched the pinned upstream directory file-for-file before backup."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."
+      ],
+      "notes": "Backup of the installed Skill removed from the active Codex roots during the Astra transition."
+    },
+    {
+      "name": "hyperframes",
+      "path": "skills/07-media-content/hyperframes/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/hyperframes/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
+      "license": "Apache-2.0",
+      "updatePolicy": "mapped",
+      "status": "installed-snapshot-current",
+      "evidence": [
+        "Installed tree matched the pinned upstream directory file-for-file before backup."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."
+      ],
+      "notes": "Backup of the installed Skill removed from the active Codex roots during the Astra transition."
+    },
+    {
+      "name": "hyperframes-animation",
+      "path": "skills/07-media-content/hyperframes-animation/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/hyperframes-animation/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
+      "license": "Apache-2.0",
+      "updatePolicy": "mapped",
+      "status": "installed-snapshot-current",
+      "evidence": [
+        "Installed tree matched the pinned upstream directory file-for-file before backup."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."
+      ],
+      "notes": "Backup of the installed Skill removed from the active Codex roots during the Astra transition."
+    },
+    {
+      "name": "hyperframes-audio",
+      "path": "skills/07-media-content/hyperframes-audio/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/hyperframes-audio/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
+      "license": "Apache-2.0",
+      "updatePolicy": "mapped",
+      "status": "installed-snapshot-validator-mapped",
+      "evidence": [
+        "Installed tree matched the pinned upstream before a description-only angle-bracket normalization required by the repository validator."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."
+      ],
+      "notes": "Automatic mirror is disabled because the public Skill Hub copy normalizes one custom-element mention in frontmatter."
+    },
+    {
+      "name": "hyperframes-cli",
+      "path": "skills/07-media-content/hyperframes-cli/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/hyperframes-cli/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
+      "license": "Apache-2.0",
+      "updatePolicy": "mapped",
+      "status": "installed-snapshot-current",
+      "evidence": [
+        "Installed tree matched the pinned upstream directory file-for-file before backup."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."
+      ],
+      "notes": "Backup of the installed Skill removed from the active Codex roots during the Astra transition."
+    },
+    {
+      "name": "hyperframes-core",
+      "path": "skills/07-media-content/hyperframes-core/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/hyperframes-core/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
+      "license": "Apache-2.0",
+      "updatePolicy": "mapped",
+      "status": "installed-snapshot-current",
+      "evidence": [
+        "Installed tree matched the pinned upstream directory file-for-file before backup."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."
+      ],
+      "notes": "Backup of the installed Skill removed from the active Codex roots during the Astra transition."
+    },
+    {
+      "name": "hyperframes-creative",
+      "path": "skills/07-media-content/hyperframes-creative/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/hyperframes-creative/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
+      "license": "Apache-2.0",
+      "updatePolicy": "mapped",
+      "status": "installed-snapshot-with-declared-divergence",
+      "evidence": [
+        "The installed snapshot differs from the pinned upstream only at references/house-style.md."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash and declared divergence in docs/astra-transition-skill-snapshots.md."
+      ],
+      "notes": "The older installed file is intentionally preserved; updates require review."
+    },
+    {
+      "name": "hyperframes-keyframes",
+      "path": "skills/07-media-content/hyperframes-keyframes/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/hyperframes-keyframes/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
+      "license": "Apache-2.0",
+      "updatePolicy": "mapped",
+      "status": "installed-snapshot-current",
+      "evidence": [
+        "Installed tree matched the pinned upstream directory file-for-file before backup."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash in docs/astra-transition-skill-snapshots.md and the pinned upstream tree."
+      ],
+      "notes": "Backup of the installed Skill removed from the active Codex roots during the Astra transition."
+    },
+    {
+      "name": "hyperframes-registry",
+      "path": "skills/07-media-content/hyperframes-registry/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/hyperframes-registry/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
+      "license": "Apache-2.0",
+      "updatePolicy": "mapped",
+      "status": "installed-snapshot-with-declared-divergence",
+      "evidence": [
+        "The installed snapshot differs from the pinned upstream only at references/contributing.md."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash and declared divergence in docs/astra-transition-skill-snapshots.md."
+      ],
+      "notes": "The older installed file is intentionally preserved; updates require review."
+    },
+    {
+      "name": "media-use",
+      "path": "skills/07-media-content/media-use/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/heygen-com/hyperframes",
+        "path": "skills/media-use/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "ae3d80c30f89f8811e27189838f8a1f34572d062"
+      },
+      "license": "Apache-2.0",
+      "updatePolicy": "mapped",
+      "status": "installed-snapshot-privacy-mapped",
+      "evidence": [
+        "Installed tree matched the pinned upstream before one repository-only PostHog project-key redaction."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash and privacy mapping in docs/astra-transition-skill-snapshots.md."
+      ],
+      "notes": "Automatic mirror is disabled because the public Skill Hub copy intentionally redacts the embedded telemetry project key."
+    },
+    {
+      "name": "impeccable",
+      "path": "skills/07-media-content/impeccable/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/pbakaus/impeccable",
+        "path": ".agents/skills/impeccable/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-08-29",
+        "commit": "b0594c72d18006b5865c70eb3a97e8b04064e600"
+      },
+      "license": "Apache-2.0",
+      "updatePolicy": "mapped",
+      "status": "mapped-current",
+      "evidence": [
+        "Repository metadata and Apache-2.0 license were verified with GitHub CLI.",
+        "The complete upstream .agents skill directory was synchronized from the recorded commit.",
+        "SKILL.md only maps the upstream top-level version field into metadata.version for repository validator compatibility.",
+        "The upstream root LICENSE was copied into the vendored directory as LICENSE.txt."
+      ],
+      "verificationPath": [
+        "Compare every upstream file except the declared SKILL.md frontmatter mapping by SHA-256.",
+        "Run quick_validate.py, syntax-check all scripts, and run scripts/context.mjs before accepting an update."
+      ],
+      "notes": "Mapped import preserves the Codex-oriented .agents skill; keep metadata.version mapping and the local LICENSE.txt during updates."
+    },
+    {
+      "name": "make-interfaces-feel-better",
+      "path": "skills/07-media-content/make-interfaces-feel-better/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/jakubkrehel/make-interfaces-feel-better",
+        "path": "skills/make-interfaces-feel-better/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-08-29",
+        "commit": "5a4076ac611d6610b9cb4d67f5275cb4f869411b"
+      },
+      "license": "MIT",
+      "updatePolicy": "mapped",
+      "status": "mapped-current",
+      "evidence": [
+        "Repository metadata and MIT license were verified with GitHub CLI.",
+        "The complete upstream skill directory was synchronized from the recorded commit.",
+        "The upstream root LICENSE was copied into the vendored directory as LICENSE.txt."
+      ],
+      "verificationPath": [
+        "Compare the pinned upstream directory file-by-file with SHA-256.",
+        "Run quick_validate.py and verify all local Markdown references resolve before accepting an update."
+      ],
+      "notes": "Complete upstream skill directory is preserved; mapped review retains the repository-level MIT license inside the vendored skill."
+    },
+    {
+      "name": "imagegen",
+      "path": "skills/07-media-content/imagegen/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/openai/skills",
+        "path": "skills/.system/imagegen/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-15",
+        "commit": "49f948faa9258a0c61caceaf225e179651397431"
+      },
+      "updatePolicy": "mirror",
+      "status": "current",
+      "evidence": [
+        "Prior source index entry existed or explicit local URL was present.",
+        "Repository cloned or fetched during this audit.",
+        "Read-only normalized hash audit verified the recorded upstream directory/status."
+      ],
+      "verificationPath": [
+        ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1",
+        "Compare normalized file hashes before any mirror or mapped update."
+      ],
+      "notes": "Exact upstream directory verified by prior index and read-only normalized hash audit."
+    },
+    {
+      "name": "jianying-editor",
+      "path": "skills/07-media-content/jianying-editor/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/luoluoluo22/jianying-editor-skill",
+        "path": "./",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-15",
+        "commit": "32c56928ded4f9e2c2b80e099dc7abb793d2c30b"
+      },
+      "updatePolicy": "mirror",
+      "status": "updated",
+      "evidence": [
+        "Prior source index entry existed or explicit local URL was present.",
+        "Repository cloned or fetched during this audit.",
+        "Read-only normalized hash audit verified the recorded upstream directory/status."
+      ],
+      "verificationPath": [
+        ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1",
+        "Compare normalized file hashes before any mirror or mapped update."
+      ],
+      "notes": "Explicit GitHub clone URL exists in local README; exact upstream directory verified by read-only normalized hash audit.",
+      "normalization": {
+        "trimTrailingWhitespace": true
+      }
+    },
+    {
+      "name": "pdf",
+      "path": "skills/07-media-content/pdf/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/openai/skills",
+        "path": "skills/.curated/pdf/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-15",
+        "commit": "49f948faa9258a0c61caceaf225e179651397431"
+      },
+      "updatePolicy": "mirror",
+      "status": "current",
+      "evidence": [
+        "Prior source index entry existed or explicit local URL was present.",
+        "Repository cloned or fetched during this audit.",
+        "Read-only normalized hash audit verified the recorded upstream directory/status."
+      ],
+      "verificationPath": [
+        ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1",
+        "Compare normalized file hashes before any mirror or mapped update."
+      ],
+      "notes": "Exact upstream directory verified by prior index and read-only normalized hash audit."
+    },
+    {
+      "name": "ppt-nano",
+      "path": "skills/07-media-content/ppt-nano/",
+      "classification": "self",
+      "updatePolicy": "none",
+      "status": "self-local-workflow",
+      "evidence": [
+        "README hardcodes local workspace path ~/.openclaw/workspace/skills/ppt-nano.",
+        "README describes project-specific dvcode/nanobanana workflow and local reference images.",
+        "No verified upstream repository was found in the inspected files or web exact-name search."
+      ],
+      "verificationPath": [
+        "Search exact unique phrases from README and SKILL.md in GitHub code search when rate limit resets.",
+        "If a source repo is found, compare styles/ assets and scripts before changing classification."
+      ],
+      "notes": "Manual maintenance only unless owner provides an explicit upstream and comparison commit."
+    },
+    {
+      "name": "pptx",
+      "path": "skills/07-media-content/pptx/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/anthropics/skills",
+        "path": "skills/pptx/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-15",
+        "commit": "34040c9c568585f6929bedeaad110ad08f079624"
+      },
+      "updatePolicy": "mirror",
+      "status": "current",
+      "evidence": [
+        "Prior source index entry existed or explicit local URL was present.",
+        "Repository cloned or fetched during this audit.",
+        "Read-only normalized hash audit verified the recorded upstream directory/status."
+      ],
+      "verificationPath": [
+        ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1",
+        "Compare normalized file hashes before any mirror or mapped update."
+      ],
+      "notes": "Exact upstream directory verified by prior index and read-only normalized hash audit.",
+      "normalization": {
+        "trimTrailingWhitespace": true
+      }
+    },
+    {
+      "name": "remotion-video-creation",
+      "path": "skills/07-media-content/remotion-video-creation/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/remotion-dev/remotion",
+        "path": "packages/agent-plugin/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-05",
+        "commit": "cb053ab25292f8e7559dc5295f4286cde2268481"
+      },
+      "license": "MIT",
+      "updatePolicy": "mapped",
+      "status": "openai-curated-plugin-snapshot-1.0.3",
+      "evidence": [
+        "The installed remotion@openai-curated 1.0.3 manifest declares Remotion as author, this repository, and the MIT license.",
+        "The complete installed skill tree was copied before plugin uninstall and its source hash is recorded in docs/astra-transition-skill-snapshots.md.",
+        "The repository folder name is retained in frontmatter as a deliberate Skill Hub mapping."
+      ],
+      "verificationPath": [
+        "Compare the installed-source hash and declared mapping in docs/astra-transition-skill-snapshots.md.",
+        "Reinstall remotion@openai-curated to validate the managed plugin independently."
+      ],
+      "notes": "Deliberate migration from the prior ECC mirror to the installed official Remotion plugin snapshot; automatic mirror remains disabled."
+    },
+    {
+      "name": "wechat-article",
+      "path": "skills/07-media-content/wechat-article/",
+      "classification": "self",
+      "updatePolicy": "none",
+      "status": "self-or-local-unverified",
+      "evidence": [
+        "Skill is a Chinese writing workflow with no explicit upstream URL found in inspected files.",
+        "No verified original repository was identified during this audit."
+      ],
+      "verificationPath": [
+        "Search exact frontmatter description and unique section headings in GitHub code search.",
+        "If only marketplace mirrors are found, keep as candidate until an original repo commit is available."
+      ],
+      "notes": "Manual maintenance only unless owner provides an explicit upstream and comparison commit."
+    },
+    {
+      "name": "xlsx",
+      "path": "skills/07-media-content/xlsx/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/anthropics/skills",
+        "path": "skills/xlsx/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-15",
+        "commit": "34040c9c568585f6929bedeaad110ad08f079624"
+      },
+      "updatePolicy": "mirror",
+      "status": "current",
+      "evidence": [
+        "Prior source index entry existed or explicit local URL was present.",
+        "Repository cloned or fetched during this audit.",
+        "Read-only normalized hash audit verified the recorded upstream directory/status."
+      ],
+      "verificationPath": [
+        ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1",
+        "Compare normalized file hashes before any mirror or mapped update."
+      ],
+      "notes": "Exact upstream directory verified by prior index and read-only normalized hash audit.",
+      "normalization": {
+        "trimTrailingWhitespace": true
+      }
+    },
+    {
+      "name": "yq-article-style-imitation",
+      "path": "skills/08-writing-marketing/yq-article-style-imitation/",
+      "classification": "self",
+      "updatePolicy": "none",
+      "status": "self-authored",
+      "evidence": [
+        "Skill name has the owner's YQ prefix, while its instructions and command paths are now user-neutral and portable.",
+        "No external upstream URL appears in the skill files inspected during this audit."
+      ],
+      "verificationPath": [
+        "Search exact unique body phrases in GitHub code search when rate limit resets.",
+        "If no public repo exists, keep updatePolicy=none as self-authored."
+      ],
+      "notes": "Manual maintenance only unless owner provides an explicit upstream and comparison commit."
+    },
+    {
+      "name": "contract-review",
+      "path": "skills/10-business-industry/contract-review/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/xfs96192/claude-config",
+        "path": "skills/contract-review/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-08-29",
+        "commit": "5f2f92723780bb2d3c1c8076016da27559ee6159"
+      },
+      "updatePolicy": "mapped",
+      "status": "mapped-current",
+      "evidence": [
+        "Prior source index entry existed or explicit local URL was present.",
+        "Repository cloned or fetched during this audit.",
+        "Read-only normalized hash audit verified the recorded upstream directory/status."
+      ],
+      "verificationPath": [
+        ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1",
+        "Compare normalized file hashes before any mirror or mapped update."
+      ],
+      "notes": "Upstream directory verified through LobeHub source link and clone. Local SKILL.md localizes the frontmatter description; other files matched in normalized comparison."
+    },
+    {
+      "name": "creating-financial-models",
+      "path": "skills/10-business-industry/creating-financial-models/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/anthropics/claude-cookbooks",
+        "path": "skills/custom_skills/creating-financial-models/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-08-29",
+        "commit": "bbfab1bbbe5d4c353241a6df4e7d9a112a1ba356"
+      },
+      "updatePolicy": "mapped",
+      "status": "mapped-current",
+      "evidence": [
+        "Prior source index entry existed or explicit local URL was present.",
+        "Repository cloned or fetched during this audit.",
+        "Read-only normalized hash audit verified the recorded upstream directory/status."
+      ],
+      "verificationPath": [
+        ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1",
+        "Compare normalized file hashes before any mirror or mapped update."
+      ],
+      "notes": "Updated from the verified upstream, then retained the scripts/ layout, Chinese trigger text, and compatibility field. Automatic mirror remains disabled because those mappings are intentional."
+    },
+    {
+      "name": "healthcare-cdss-patterns",
+      "path": "skills/10-business-industry/healthcare-cdss-patterns/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/affaan-m/ECC",
+        "path": "skills/healthcare-cdss-patterns/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-15",
+        "commit": "8321021c54d670126ce3b2969d5deb880b4b0c2a"
+      },
+      "updatePolicy": "mirror",
+      "status": "current",
+      "evidence": [
+        "Prior source index entry existed or explicit local URL was present.",
+        "Repository cloned or fetched during this audit.",
+        "Read-only normalized hash audit verified the recorded upstream directory/status."
+      ],
+      "verificationPath": [
+        ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1",
+        "Compare normalized file hashes before any mirror or mapped update."
+      ],
+      "notes": "Exact upstream directory verified by prior index and read-only normalized hash audit."
+    },
+    {
+      "name": "healthcare-emr-patterns",
+      "path": "skills/10-business-industry/healthcare-emr-patterns/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/affaan-m/ECC",
+        "path": "skills/healthcare-emr-patterns/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-15",
+        "commit": "8321021c54d670126ce3b2969d5deb880b4b0c2a"
+      },
+      "updatePolicy": "mirror",
+      "status": "current",
+      "evidence": [
+        "Prior source index entry existed or explicit local URL was present.",
+        "Repository cloned or fetched during this audit.",
+        "Read-only normalized hash audit verified the recorded upstream directory/status."
+      ],
+      "verificationPath": [
+        ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1",
+        "Compare normalized file hashes before any mirror or mapped update."
+      ],
+      "notes": "Exact upstream directory verified by prior index and read-only normalized hash audit."
+    },
+    {
+      "name": "healthcare-eval-harness",
+      "path": "skills/10-business-industry/healthcare-eval-harness/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/affaan-m/ECC",
+        "path": "skills/healthcare-eval-harness/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-15",
+        "commit": "8321021c54d670126ce3b2969d5deb880b4b0c2a"
+      },
+      "updatePolicy": "mirror",
+      "status": "current",
+      "evidence": [
+        "Prior source index entry existed or explicit local URL was present.",
+        "Repository cloned or fetched during this audit.",
+        "Read-only normalized hash audit verified the recorded upstream directory/status."
+      ],
+      "verificationPath": [
+        ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1",
+        "Compare normalized file hashes before any mirror or mapped update."
+      ],
+      "notes": "Exact upstream directory verified by prior index and read-only normalized hash audit."
+    },
+    {
+      "name": "healthcare-phi-compliance",
+      "path": "skills/10-business-industry/healthcare-phi-compliance/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/affaan-m/ECC",
+        "path": "skills/healthcare-phi-compliance/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-09-15",
+        "commit": "8321021c54d670126ce3b2969d5deb880b4b0c2a"
+      },
+      "updatePolicy": "mirror",
+      "status": "current",
+      "evidence": [
+        "Prior source index entry existed or explicit local URL was present.",
+        "Repository cloned or fetched during this audit.",
+        "Read-only normalized hash audit verified the recorded upstream directory/status."
+      ],
+      "verificationPath": [
+        ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1",
+        "Compare normalized file hashes before any mirror or mapped update."
+      ],
+      "notes": "Exact upstream directory verified by prior index and read-only normalized hash audit."
+    },
+    {
+      "name": "aliyun-openapi-mcp-ops",
+      "path": "projects/ai-seed-project/aliyun-openapi-mcp-ops/",
+      "classification": "local",
+      "updatePolicy": "none",
+      "status": "project-local",
+      "evidence": [
+        "Path is under projects/, so it is scoped to a specific local project.",
+        "No evidence in skills-lock.json indicates this is an installable upstream skill package."
+      ],
+      "verificationPath": [
+        "If this project skill is later published, add its repository URL and compare the exact project subdirectory before changing classification."
+      ],
+      "notes": "Project-private or project-derived skill; do not auto-upgrade from external sources."
+    },
+    {
+      "name": "feishu-automation",
+      "path": "projects/ai-seed-project/feishu-automation/",
+      "classification": "local",
+      "updatePolicy": "none",
+      "status": "project-local",
+      "evidence": [
+        "Path is under projects/, so it is scoped to a specific local project.",
+        "No evidence in skills-lock.json indicates this is an installable upstream skill package."
+      ],
+      "verificationPath": [
+        "If this project skill is later published, add its repository URL and compare the exact project subdirectory before changing classification."
+      ],
+      "notes": "Project-private or project-derived skill; do not auto-upgrade from external sources."
+    },
+    {
+      "name": "aliyun-swas-manage",
+      "path": "projects/ai-seed-project-phase-one-feishu/aliyun-swas-manage/",
+      "classification": "local",
+      "updatePolicy": "none",
+      "status": "project-local",
+      "evidence": [
+        "Path is under projects/, so it is scoped to a specific local project.",
+        "No evidence in skills-lock.json indicates this is an installable upstream skill package."
+      ],
+      "verificationPath": [
+        "If this project skill is later published, add its repository URL and compare the exact project subdirectory before changing classification."
+      ],
+      "notes": "Project-private or project-derived skill; do not auto-upgrade from external sources."
+    },
+    {
+      "name": "feishu-card-ws",
+      "path": "projects/ai-seed-project-phase-one-feishu/feishu-card-ws/",
+      "classification": "local",
+      "updatePolicy": "none",
+      "status": "project-local",
+      "evidence": [
+        "Path is under projects/, so it is scoped to a specific local project.",
+        "No evidence in skills-lock.json indicates this is an installable upstream skill package."
+      ],
+      "verificationPath": [
+        "If this project skill is later published, add its repository URL and compare the exact project subdirectory before changing classification."
+      ],
+      "notes": "Project-private or project-derived skill; do not auto-upgrade from external sources."
+    },
+    {
+      "name": "163-email-ground-truth",
+      "path": "projects/codex-invoice/163-email-ground-truth/",
+      "classification": "local",
+      "updatePolicy": "none",
+      "status": "project-local",
+      "evidence": [
+        "Path is under projects/, so it is scoped to a specific local project.",
+        "No evidence in skills-lock.json indicates this is an installable upstream skill package."
+      ],
+      "verificationPath": [
+        "If this project skill is later published, add its repository URL and compare the exact project subdirectory before changing classification."
+      ],
+      "notes": "Project-private or project-derived skill; do not auto-upgrade from external sources."
+    },
+    {
+      "name": "controlled-lockcheck-autofix",
+      "path": "projects/codex-invoice/controlled-lockcheck-autofix/",
+      "classification": "local",
+      "updatePolicy": "none",
+      "status": "project-local",
+      "evidence": [
+        "Path is under projects/, so it is scoped to a specific local project.",
+        "No evidence in skills-lock.json indicates this is an installable upstream skill package."
+      ],
+      "verificationPath": [
+        "If this project skill is later published, add its repository URL and compare the exact project subdirectory before changing classification."
+      ],
+      "notes": "Project-private or project-derived skill; do not auto-upgrade from external sources."
+    },
+    {
+      "name": "email-batch-test",
+      "path": "projects/codex-invoice/email-batch-test/",
+      "classification": "local",
+      "updatePolicy": "none",
+      "status": "project-local",
+      "evidence": [
+        "Path is under projects/, so it is scoped to a specific local project.",
+        "No evidence in skills-lock.json indicates this is an installable upstream skill package."
+      ],
+      "verificationPath": [
+        "If this project skill is later published, add its repository URL and compare the exact project subdirectory before changing classification."
+      ],
+      "notes": "Project-private or project-derived skill; do not auto-upgrade from external sources."
+    },
+    {
+      "name": "qq-email-ground-truth",
+      "path": "projects/codex-invoice/qq-email-ground-truth/",
+      "classification": "local",
+      "updatePolicy": "none",
+      "status": "project-local",
+      "evidence": [
+        "Path is under projects/, so it is scoped to a specific local project.",
+        "No evidence in skills-lock.json indicates this is an installable upstream skill package."
+      ],
+      "verificationPath": [
+        "If this project skill is later published, add its repository URL and compare the exact project subdirectory before changing classification."
+      ],
+      "notes": "Project-private or project-derived skill; do not auto-upgrade from external sources."
+    },
+    {
+      "name": "github-readme-visuals",
+      "path": "skills/07-media-content/github-readme-visuals/",
+      "classification": "self",
+      "updatePolicy": "none",
+      "status": "self-maintained-readme-visual-workflow",
+      "evidence": [
+        "Skill was created and iterated locally from an owner-directed GitHub README visual production workflow.",
+        "No external skill package was used as its source; reference repositories are visual inputs, not upstream skill code."
+      ],
+      "verificationPath": [
+        "Use this repository history as the canonical source until an explicit upstream is published.",
+        "Validate SKILL.md and references/visual-checklist.md with skill-creator before release."
+      ],
+      "notes": "Self-maintained shared skill; external automatic updates disabled."
+    },
+    {
+      "name": "xhs-pharma-social-listening",
+      "path": "skills/10-business-industry/xhs-pharma-social-listening/",
+      "classification": "self",
+      "updatePolicy": "none",
+      "status": "self-maintained-xhs-pharma-listening",
+      "evidence": [
+        "Skill was developed locally from owner-directed Xiaohongshu pharma social-listening collection and analysis runs.",
+        "Referenced crawler repositories are collection backends, not upstream copies of this skill."
+      ],
+      "verificationPath": [
+        "Use this repository history as the canonical source until an explicit upstream is published.",
+        "Validate independent-evidence counting and CAPTCHA/frequency-block handling with skill-creator before release."
+      ],
+      "notes": "Self-maintained shared skill; external automatic updates disabled."
+    },
+    {
+      "name": "gpt6-pro-consult",
+      "path": "skills/01-agent-engineering/gpt6-pro-consult/",
+      "classification": "self",
+      "updatePolicy": "none",
+      "status": "self-maintained-codex-iab-gpt6-pro-consult",
+      "evidence": [
+        "Skill was redesigned locally from an owner-directed Codex in-app Browser workflow for GPT-6 Pro review and orchestration.",
+        "The predecessor Chrome/OpenCLI implementation was retained only as an evaluation baseline and is not an upstream package for automatic mirroring.",
+        "Real iab forward tests, paired baseline grading, human viewer review, and isolated Terra/Xhigh trigger-routing tests were completed before local installation."
+      ],
+      "verificationPath": [
+        "Run the bundled contract tests and system skill-creator quick_validate.py.",
+        "Verify the installed folder hash manifest matches the frozen evaluated candidate before release."
+      ],
+      "notes": "Self-maintained shared skill; external automatic updates disabled."
+    },
+    {
+      "name": "electron-development",
+      "path": "skills/03-frameworks/electron-development/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/sickn33/agentic-awesome-skills",
+        "path": "skills/electron-development/",
+        "ref": "main"
+      },
+      "lastChecked": {
+        "date": "2026-08-29",
+        "commit": "03623634e9c9b7f7f2e75f548c1a3e53362a10fc"
+      },
+      "updatePolicy": "mapped",
+      "status": "locally-adapted-platform-boundaries",
+      "evidence": [
+        "The original global installation was verified as an exact upstream copy at the recorded commit.",
+        "Owner-directed edits define non-overlapping GitHub Actions ownership: this Skill builds and qualifies macOS Electron installers, while github-desktop-release owns Windows qualification and shared promotion/publication."
+      ],
+      "verificationPath": [
+        "Compare the complete upstream directory before adopting any future upstream change.",
+        "Preserve the platform-ownership routing and run skill-creator validation plus the bundled routing evals before publishing an update."
+      ],
+      "notes": "Derived shared skill with an upstream provenance record. Do not mirror automatically because the local platform-routing adaptation is intentional."
+    },
+    {
+      "name": "github-desktop-release",
+      "path": "skills/01-agent-engineering/github-desktop-release/",
+      "classification": "self",
+      "updatePolicy": "none",
+      "status": "self-maintained-desktop-release-orchestrator",
+      "evidence": [
+        "Skill was created from owner-directed GitHub Actions desktop release qualification and promotion lessons.",
+        "Owner-directed routing confines Windows qualification and shared GitHub Release promotion/publication to this Skill; Electron macOS build and qualification remain owned by electron-development."
+      ],
+      "verificationPath": [
+        "Run skill-creator quick_validate.py against the complete skill directory.",
+        "Parse bundled evals and run the promotion script self-tests before publishing future changes."
+      ],
+      "notes": "Self-maintained shared skill. External automatic updates are disabled."
+    },
+    {
+      "name": "netlify-cli",
+      "path": "skills/03-frameworks/netlify-cli/",
+      "classification": "local",
+      "updatePolicy": "none",
+      "status": "owner-maintained-local",
+      "evidence": [
+        "The Skill entered this repository in migration commit 1cec4a053b536dc5c5b4eab419a56df2f6f0bada.",
+        "Its frontmatter and content do not declare an immutable upstream repository, path, ref, or commit."
+      ],
+      "verificationPath": [
+        "Require an explicit source URL and immutable comparison commit before changing classification.",
+        "Keep external automatic updates disabled while provenance is unverified."
+      ],
+      "notes": "Shared owner-maintained Skill imported from the prior organization repository; no verified external upstream is recorded."
+    },
+    {
+      "name": "html-design-polish",
+      "path": "skills/07-media-content/html-design-polish/",
+      "classification": "local",
+      "updatePolicy": "none",
+      "status": "owner-maintained-local",
+      "evidence": [
+        "The Skill entered this repository in migration commit 1cec4a053b536dc5c5b4eab419a56df2f6f0bada.",
+        "Its frontmatter and content do not declare an immutable upstream repository, path, ref, or commit."
+      ],
+      "verificationPath": [
+        "Require an explicit source URL and immutable comparison commit before changing classification.",
+        "Keep external automatic updates disabled while provenance is unverified."
+      ],
+      "notes": "Shared owner-maintained Skill imported from the prior organization repository; no verified external upstream is recorded."
+    },
+    {
+      "name": "yq-doc-maintenance",
+      "path": "skills/08-writing-marketing/yq-doc-maintenance/",
+      "classification": "self",
+      "updatePolicy": "none",
+      "status": "self-maintained-yq-doc-maintenance",
+      "evidence": [
+        "Owner-directed YQ documentation-governance workflow maintained in this Skill-hub repository.",
+        "The current design combines claim ownership, corpus repair, and future-decision-value classification as one locally maintained skill."
+      ],
+      "verificationPath": [
+        "Use this repository history as the canonical source.",
+        "Run skill-creator quick_validate.py and the documented behavior cases after changes."
+      ],
+      "notes": "Self-maintained shared skill; external automatic updates are disabled."
+    },
+    {
+      "name": "yq-simplify-code",
+      "path": "skills/01-agent-engineering/yq-simplify-code/",
+      "classification": "self",
+      "updatePolicy": "none",
+      "status": "self-maintained-yq-simplify-code",
+      "evidence": [
+        "Owner-directed YQ simplification workflow maintained in this Skill-hub repository.",
+        "The current design audits code, tests, and gates as one evidence-based portfolio without creating additional validation machinery."
+      ],
+      "verificationPath": [
+        "Use this repository history as the canonical source.",
+        "Run skill-creator quick_validate.py and the documented behavior cases after changes."
+      ],
+      "notes": "Self-maintained shared skill; external automatic updates are disabled."
+    },
+    {
+      "name": "yq-pre-push-checks",
+      "path": "skills/01-agent-engineering/yq-pre-push-checks/",
+      "classification": "self",
+      "updatePolicy": "none",
+      "status": "self-maintained-yq-pre-push-checks",
+      "evidence": [
+        "Owner-directed YQ pre-push evidence-selection workflow maintained in this Skill-hub repository.",
+        "The current design selects the smallest credible checks from each repository's own risk and tooling."
+      ],
+      "verificationPath": [
+        "Use this repository history as the canonical source.",
+        "Run skill-creator quick_validate.py and the documented behavior cases after changes."
+      ],
+      "notes": "Self-maintained shared skill; external automatic updates are disabled."
+    },
+    {
+      "name": "yq-technical-writing",
+      "path": "skills/08-writing-marketing/yq-technical-writing/",
+      "classification": "self",
+      "updatePolicy": "none",
+      "status": "self-maintained-yq-technical-writing",
+      "evidence": [
+        "Owner-directed YQ technical-writing workflow maintained in this Skill-hub repository.",
+        "The current design preserves complete technical propositions while removing repetition and authoring residue."
+      ],
+      "verificationPath": [
+        "Use this repository history as the canonical source.",
+        "Run skill-creator quick_validate.py and the documented behavior cases after changes."
+      ],
+      "notes": "Self-maintained shared skill; external automatic updates are disabled."
+    },
+    {
+      "name": "yq-remove-reasoning-leaks",
+      "path": "skills/08-writing-marketing/yq-remove-reasoning-leaks/",
+      "classification": "self",
+      "updatePolicy": "none",
+      "status": "self-maintained-yq-remove-reasoning-leaks",
+      "evidence": [
+        "Owner-directed YQ reasoning-leak cleanup workflow maintained in this Skill-hub repository.",
+        "The current design combines a local residue taxonomy with proposition-preserving keep and rewrite rules."
+      ],
+      "verificationPath": [
+        "Use this repository history as the canonical source.",
+        "Run skill-creator quick_validate.py and the documented behavior cases after changes."
+      ],
+      "notes": "Self-maintained shared skill; external automatic updates are disabled."
+    },
+    {
+      "name": "yq-translate-docs",
+      "path": "skills/08-writing-marketing/yq-translate-docs/",
+      "classification": "self",
+      "updatePolicy": "none",
+      "status": "self-maintained-yq-translate-docs",
+      "evidence": [
+        "Owner-directed YQ bilingual-document workflow maintained in this Skill-hub repository.",
+        "The current design supports minimal updates, complete-pair translation, conflict reconciliation, and explicit-only invocation without imposing new project machinery."
+      ],
+      "verificationPath": [
+        "Use this repository history as the canonical source.",
+        "Run skill-creator quick_validate.py and the documented behavior cases after changes."
+      ],
+      "notes": "Self-maintained explicit-only shared skill; external automatic updates are disabled."
+    }
+  ],
+  "alternateCandidates": [
+    {
+      "name": "frontend-design",
+      "path": "skills/03-frameworks/frontend-design/",
+      "candidate": {
+        "url": "https://github.com/affaan-m/everything-claude-code",
+        "path": "skills/frontend-design/",
+        "ref": "historical-main"
+      },
+      "evidence": [
+        "Public registries preserve matching frontend-design text.",
+        "Current upstream main no longer contains the exact path, so this is not safe for automated mirroring."
+      ],
+      "status": "candidate-historical-source-unverified"
+    }
+  ]
+}

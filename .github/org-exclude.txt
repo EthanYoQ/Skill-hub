@@ -1,0 +1,54 @@
+# 不镜像到组织仓库 Singularity-AI-Gamer/agent-skills 的 skill 列表。
+# 镜像 workflow 读取本文件，在 push 到组织仓库前删除这些路径。
+# 个人仓库保留全部 skill，此文件只影响组织仓库的同步内容。
+# 新增 skill 默认会同步到组织仓库；不想同步的，加路径到本文件即可。
+# 每行一个路径（相对仓库根），# 开头为注释，空行忽略。
+
+# --- 01-agent-engineering ---
+skills/01-agent-engineering/deep-research
+skills/01-agent-engineering/project-cleanup-audit
+
+# --- 02-coding-languages ---
+skills/02-coding-languages/swift/liquid-glass-design
+
+# --- 06-data-search ---
+skills/06-data-search/data-scraper-agent
+skills/06-data-search/evidence-appendix-sync
+skills/06-data-search/market-sizing-mece-foundation
+skills/06-data-search/medical-evidence-grading
+skills/06-data-search/medical-research
+skills/06-data-search/pubtator-entity-search
+skills/06-data-search/report-bundle-builder
+
+# --- 07-media-content ---
+skills/07-media-content/jianying-editor
+skills/07-media-content/docx
+skills/07-media-content/pdf
+skills/07-media-content/pptx
+skills/07-media-content/remotion-video-creation
+skills/07-media-content/wechat-article
+
+# --- 08-writing-marketing ---
+skills/08-writing-marketing/decision-tree-with-lp-embedding
+skills/08-writing-marketing/github-repo-seo-standard
+skills/08-writing-marketing/github-seo-evaluation-loop
+
+# --- 10-business-industry ---
+skills/10-business-industry/citation-anchor-resolver
+skills/10-business-industry/cite-bound-content-generator
+skills/10-business-industry/content-verification-layer
+skills/10-business-industry/contract-elicitor
+skills/10-business-industry/design-system-injector
+skills/10-business-industry/disease-market-sizing-html-template
+skills/10-business-industry/disease-market-sizing-orchestration
+skills/10-business-industry/disease-stratifier
+skills/10-business-industry/drug-citation-verifier
+skills/10-business-industry/healthcare-cdss-patterns
+skills/10-business-industry/healthcare-emr-patterns
+skills/10-business-industry/healthcare-eval-harness
+skills/10-business-industry/healthcare-phi-compliance
+skills/10-business-industry/ifi-market-sizing-skill
+skills/10-business-industry/session-resume
+
+# --- projects（全部不镜像）---
+projects/

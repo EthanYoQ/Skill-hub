@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Visual Director"
+  short_description: "Plan varied WeChat article visuals."
+  default_prompt: "Plan distinctive cover and body visuals for a WeChat article before generating images."

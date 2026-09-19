@@ -1,0 +1,51 @@
+{
+  "captured_at": "2026-07-21T15:00:00+08:00",
+  "volumes": [
+    {"drive": "C:", "free_gib": 41.2, "size_gib": 953.0},
+    {"drive": "D:", "free_gib": 212.0, "size_gib": 931.0}
+  ],
+  "coverage": {
+    "scan_roots": ["C:\\Work", "C:\\Users\\Example\\Documents", "D:\\Projects", "C:\\tmp"],
+    "access_errors": ["C:\\System Volume Information: access denied"],
+    "reparse_points_followed": false
+  },
+  "projects": [
+    {
+      "id": "research-active",
+      "root": "D:\\Projects\\MarketResearch",
+      "git_dirty": true,
+      "active_processes": [4321],
+      "instructions": ["AGENTS.md", "docs/CURRENT_STATE.md"],
+      "candidates": [
+        {"path": ".pytest-tmp-run", "gib": 1.1, "type": "pytest-temp", "latest_write": "2026-07-21T14:55:00+08:00"},
+        {"path": "output", "gib": 3.2, "type": "research-evidence"},
+        {"path": ".codegraph", "gib": 0.04, "type": "index", "status": "up-to-date"}
+      ]
+    },
+    {
+      "id": "merged-worktree",
+      "root": "C:\\Work\\App\\.worktrees\\finished-feature",
+      "registered_worktree": true,
+      "git_dirty": false,
+      "active_processes": [],
+      "head_in_remote_default": true,
+      "candidates": [{"path": "node_modules", "gib": 0.8, "ignored": true, "lockfile": "package-lock.json"}]
+    },
+    {
+      "id": "dirty-worktree",
+      "root": "C:\\Work\\App\\.worktrees\\draft-feature",
+      "registered_worktree": true,
+      "git_dirty": true,
+      "active_processes": [],
+      "head_in_remote_default": false,
+      "candidates": [{"path": "node_modules", "gib": 1.0, "ignored": true, "lockfile": "pnpm-lock.yaml"}]
+    }
+  ],
+  "cross_project": [
+    {"id": "pnpm-store", "gib": 7.5, "owner_active": false, "semantic_action": "pnpm store prune", "reclaimable_unknown": true},
+    {"id": "npm-npx", "gib": 0.4, "owner_active": true, "processes_using_path": 6},
+    {"id": "codex-sessions", "gib": 12.0, "type": "user-history"},
+    {"id": "docker-vhdx", "gib": 210.0, "allocated_gib": 210.0, "engine_running": false, "current_logical_inventory": false},
+    {"id": "pagefile", "gib": 44.0, "type": "system-managed"}
+  ]
+}

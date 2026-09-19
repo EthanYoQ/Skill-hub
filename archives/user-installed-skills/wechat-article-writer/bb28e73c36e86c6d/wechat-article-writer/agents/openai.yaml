@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Article Writer"
+  short_description: "Draft WeChat articles from project evidence."
+  default_prompt: "Write a WeChat-ready article from the provided repo materials or product notes."

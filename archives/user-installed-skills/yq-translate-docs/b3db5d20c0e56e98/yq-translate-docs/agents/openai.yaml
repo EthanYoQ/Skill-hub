@@ -1,0 +1,6 @@
+interface:
+  display_name: "YQ Translate Docs"
+  short_description: "Keep bilingual documents accurate and aligned"
+  default_prompt: "Use $yq-translate-docs to synchronize this English and Chinese document pair."
+policy:
+  allow_implicit_invocation: false

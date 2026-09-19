@@ -1,0 +1,1392 @@
+{
+  "date": "2026-09-12",
+  "purpose": "Exact directory snapshots before owner-requested local removal. Kept outside active skill indexes.",
+  "archives": [
+    {
+      "name": "tdd",
+      "path": "archives/user-installed-skills/tdd/6bbd02f62efebec5/tdd",
+      "treeSha256": "6bbd02f62efebec5522aae0d3c1e9aee15bcb541ea41532a79c6677dec408982",
+      "fileCount": 4,
+      "scope": "user-global"
+    },
+    {
+      "name": "teach",
+      "path": "archives/user-installed-skills/teach/5ca9fab50d3b524d/teach",
+      "treeSha256": "5ca9fab50d3b524d91a515e12869d5bd6fba7acd187200b467c4b6b64fbe2453",
+      "fileCount": 6,
+      "scope": "user-global"
+    },
+    {
+      "name": "triage",
+      "path": "archives/user-installed-skills/triage/0ad62c2999068af2/triage",
+      "treeSha256": "0ad62c2999068af2654269db5bde807ada17b4439b9da1c2a9299b1327494d37",
+      "fileCount": 4,
+      "scope": "user-global"
+    },
+    {
+      "name": "doc",
+      "path": "archives/user-installed-skills/doc/6dec3cfb66491505/doc",
+      "treeSha256": "6dec3cfb66491505ad5e25ef0750d3a4b524326ca5e7296a73f34b9674955963",
+      "fileCount": 7,
+      "scope": "user-global"
+    },
+    {
+      "name": "to-spec",
+      "path": "archives/user-installed-skills/to-spec/4939a761c28d866d/to-spec",
+      "treeSha256": "4939a761c28d866dc0e16f0b4960168ea7a33048cd10c7805c80e11bb07580dc",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "loop-me",
+      "path": "archives/user-installed-skills/loop-me/96eebb9dd0025caa/loop-me",
+      "treeSha256": "96eebb9dd0025caafade2666b19287fc215ddfb60c7c0fbf78d3d49e870b6616",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "handoff",
+      "path": "archives/user-installed-skills/handoff/4a9396c1d9c8bd97/handoff",
+      "treeSha256": "4a9396c1d9c8bd97cfc5f5861f1dffea248e6d668dfce908dba7bd018709a8e0",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "tavily-cli",
+      "path": "archives/user-installed-skills/tavily-cli/48afd5cd46b0c975/tavily-cli",
+      "treeSha256": "48afd5cd46b0c9752b80a368ccc6508629b901ad0c05b0b3930f7edb36d22f38",
+      "fileCount": 3,
+      "scope": "user-global"
+    },
+    {
+      "name": "research",
+      "path": "archives/user-installed-skills/research/36c1dad5f8712d16/research",
+      "treeSha256": "36c1dad5f8712d163292b36d19bf3e72db7a1d13bd3330e4e2d67232ce984e70",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "grilling",
+      "path": "archives/user-installed-skills/grilling/7f1bf5d037baf46a/grilling",
+      "treeSha256": "7f1bf5d037baf46a02ce2907fbed4c0b55d426d4e21819042f7673c2f89d0406",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "grill-me",
+      "path": "archives/user-installed-skills/grill-me/85425453b6dcb472/grill-me",
+      "treeSha256": "85425453b6dcb4729ffc180a43aafc2705a1e1842293c76775142b8f262c2357",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "ask-matt",
+      "path": "archives/user-installed-skills/ask-matt/ce28e9386e858c96/ask-matt",
+      "treeSha256": "ce28e9386e858c967ffe30179bf523475549d245f7df6fefaed0931c56b898eb",
+      "fileCount": 3,
+      "scope": "user-global"
+    },
+    {
+      "name": "prototype",
+      "path": "archives/user-installed-skills/prototype/4cb08bb734e6e73a/prototype",
+      "treeSha256": "4cb08bb734e6e73a58b24fda6f5652ade0519092818bf866374157f91b6af7e6",
+      "fileCount": 4,
+      "scope": "user-global"
+    },
+    {
+      "name": "wayfinder",
+      "path": "archives/user-installed-skills/wayfinder/eb1f0694929f1d6d/wayfinder",
+      "treeSha256": "eb1f0694929f1d6d1dae053f80e4d2541a0c05c6a1dde70a1c854e87d7385833",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "wait-what",
+      "path": "archives/user-installed-skills/wait-what/96ac9b116a14ba3f/wait-what",
+      "treeSha256": "96ac9b116a14ba3fc3fe685c8f657b793978a4dbaa8888b926ca5ae43a3d62e7",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "implement",
+      "path": "archives/user-installed-skills/implement/e3fca7ae011c4e74/implement",
+      "treeSha256": "e3fca7ae011c4e7432bf96ea032e5497aa82e4d83740bb80896e527b4f1be2c4",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "to-tickets",
+      "path": "archives/user-installed-skills/to-tickets/fef444bd40ea6849/to-tickets",
+      "treeSha256": "fef444bd40ea6849ce0912948bb86b469479e98b53e5fc149a019883c4501da4",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "github-cli",
+      "path": "archives/user-installed-skills/github-cli/e4ed8a3ab1d64cb6/github-cli",
+      "treeSha256": "e4ed8a3ab1d64cb6c2223e5a918f7b5ce5627f198695b5a306188fd1341568f1",
+      "fileCount": 1,
+      "scope": "user-global"
+    },
+    {
+      "name": "playwright",
+      "path": "archives/user-installed-skills/playwright/7b5d43df5a5085bc/playwright",
+      "treeSha256": "7b5d43df5a5085bc5fc21ef0c00e2761284c83eedcf86d5fb7707910ac00cd07",
+      "fileCount": 9,
+      "scope": "user-global"
+    },
+    {
+      "name": "impeccable",
+      "path": "archives/user-installed-skills/impeccable/f3b2a8bf86d05263/impeccable",
+      "treeSha256": "f3b2a8bf86d05263331ab36af2a45d99dd509d297101eec64d92e7bef58ea612",
+      "fileCount": 168,
+      "scope": "user-global"
+    },
+    {
+      "name": "tavily-search",
+      "path": "archives/user-installed-skills/tavily-search/03a954856675caee/tavily-search",
+      "treeSha256": "03a954856675caee1acaa4a352b50a04b85b5079c94d253615c85a67144175c7",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "code-review",
+      "path": "archives/user-installed-skills/code-review/8baa32a14c668405/code-review",
+      "treeSha256": "8baa32a14c66840576e33dddf9d0b70d663b5ae0ec0d7adaed4adf3d968f2270",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "agent-reach",
+      "path": "archives/user-installed-skills/agent-reach/330e35da8cf10b5e/agent-reach",
+      "treeSha256": "330e35da8cf10b5ec73e90b94760b803f2b9fba5040268bf7212a804af3492b8",
+      "fileCount": 6,
+      "scope": "user-global"
+    },
+    {
+      "name": "find-skills",
+      "path": "archives/user-installed-skills/find-skills/46a14d3e6e165241/find-skills",
+      "treeSha256": "46a14d3e6e1652411015c9f846fb43183a1ccfda0e15a659a8132951975e70d2",
+      "fileCount": 1,
+      "scope": "user-global"
+    },
+    {
+      "name": "tavily-extract",
+      "path": "archives/user-installed-skills/tavily-extract/c0e4d33a0cc3790b/tavily-extract",
+      "treeSha256": "c0e4d33a0cc3790b2b14213e7f0334e3446bfece1a3d7018b41e7bb5e225a5bc",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "tavily-research",
+      "path": "archives/user-installed-skills/tavily-research/32d5ebb055722a74/tavily-research",
+      "treeSha256": "32d5ebb055722a7460a6d486515005f5e314c0c97d7f30c727cee963f7eed13f",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "pubmed-search",
+      "path": "archives/user-installed-skills/pubmed-search/f3b80442582790ea/pubmed-search",
+      "treeSha256": "f3b80442582790ea6eca9bcbd759e409604b18f9c50848f39a3a8d3b9621910b",
+      "fileCount": 3,
+      "scope": "user-global"
+    },
+    {
+      "name": "agent-reach",
+      "path": "archives/user-installed-skills/agent-reach/81c9cf0fc08ce044/agent-reach",
+      "treeSha256": "81c9cf0fc08ce044700fd8a5bcbaef684bca20af600a6623fd68d27a224d31e9",
+      "fileCount": 7,
+      "scope": "user-global"
+    },
+    {
+      "name": "tavily-map",
+      "path": "archives/user-installed-skills/tavily-map/07d96fb0db398039/tavily-map",
+      "treeSha256": "07d96fb0db398039e9de45f18b222319dd8baa350f51ab54aaecdd76915d2ca4",
+      "fileCount": 1,
+      "scope": "user-global"
+    },
+    {
+      "name": "tavily-cli",
+      "path": "archives/user-installed-skills/tavily-cli/07984187c040377d/tavily-cli",
+      "treeSha256": "07984187c040377daba978c3223c13873734d9426025a42756e0484d7b2687a6",
+      "fileCount": 1,
+      "scope": "user-global"
+    },
+    {
+      "name": "hyperframes-audio",
+      "path": "archives/user-installed-skills/hyperframes-audio/9b09db8b281a4deb/hyperframes-audio",
+      "treeSha256": "9b09db8b281a4debe660a620a9823cc131c3b8fb5629f5ea86d0a2237cc4484c",
+      "fileCount": 7,
+      "scope": "user-global"
+    },
+    {
+      "name": "grill-with-docs",
+      "path": "archives/user-installed-skills/grill-with-docs/1c4086b10bce8596/grill-with-docs",
+      "treeSha256": "1c4086b10bce8596e8dfa03c86b68a672e1c82ba53a35874d17971cec23cc35e",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "domain-modeling",
+      "path": "archives/user-installed-skills/domain-modeling/69066d0b45e1617d/domain-modeling",
+      "treeSha256": "69066d0b45e1617d77c74e02d2fea3ce3fa1cf83028e22ca7808f90b9350c628",
+      "fileCount": 4,
+      "scope": "user-global"
+    },
+    {
+      "name": "diagnosing-bugs",
+      "path": "archives/user-installed-skills/diagnosing-bugs/ef32e100a6eed61f/diagnosing-bugs",
+      "treeSha256": "ef32e100a6eed61f3f093782dd5ca7e5c8f6d1501aa0364838da55d9a8ff6323",
+      "fileCount": 3,
+      "scope": "user-global"
+    },
+    {
+      "name": "codebase-design",
+      "path": "archives/user-installed-skills/codebase-design/b8ba6e8c0bae45b1/codebase-design",
+      "treeSha256": "b8ba6e8c0bae45b18185fe7bc0a6e37274d7377614167222c5e5ea64c6f26ed1",
+      "fileCount": 4,
+      "scope": "user-global"
+    },
+    {
+      "name": "tavily-crawl",
+      "path": "archives/user-installed-skills/tavily-crawl/43d44e3856574444/tavily-crawl",
+      "treeSha256": "43d44e38565744441e6c470fd97c70088b31c8f4d17b2c5ada063fb7042d7f03",
+      "fileCount": 1,
+      "scope": "user-global"
+    },
+    {
+      "name": "medical-research",
+      "path": "archives/user-installed-skills/medical-research/6b64bd4b70eb245f/medical-research",
+      "treeSha256": "6b64bd4b70eb245f3fec6b44f3bce8e7d51ded1fa35354bfdff91a458b1c8672",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "to-questionnaire",
+      "path": "archives/user-installed-skills/to-questionnaire/fa833da1bd480861/to-questionnaire",
+      "treeSha256": "fa833da1bd4808610278802fb0d6f25f9e3f393b9349b5b80afd5f1e4d4ac3a5",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "gpt6-pro-consult",
+      "path": "archives/user-installed-skills/gpt6-pro-consult/fbcce65af38ec6a4/gpt6-pro-consult",
+      "treeSha256": "fbcce65af38ec6a4a862f526d2c71ea4349469d279eddd8be2b23902f661270b",
+      "fileCount": 20,
+      "scope": "user-global"
+    },
+    {
+      "name": "tavily-search",
+      "path": "archives/user-installed-skills/tavily-search/0a32321e7c7d33d0/tavily-search",
+      "treeSha256": "0a32321e7c7d33d026195cbda360f3f6400a0e609c9468b81b097d99a0b6eb79",
+      "fileCount": 1,
+      "scope": "user-global"
+    },
+    {
+      "name": "yq-translate-docs",
+      "path": "archives/user-installed-skills/yq-translate-docs/b3db5d20c0e56e98/yq-translate-docs",
+      "treeSha256": "b3db5d20c0e56e98e0ef991f8e4358b3fdec4d3fd97f57986091ed4ef98e4c16",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "guizang-ppt-skill",
+      "path": "archives/user-installed-skills/guizang-ppt-skill/cbd3977af12237cb/guizang-ppt-skill",
+      "treeSha256": "cbd3977af12237cb6eb3349481fe4faf1b05392003eedd6f1d375261b55042dc",
+      "fileCount": 9,
+      "scope": "user-global"
+    },
+    {
+      "name": "tavily-extract",
+      "path": "archives/user-installed-skills/tavily-extract/a5abf2cd152a4dd0/tavily-extract",
+      "treeSha256": "a5abf2cd152a4dd0c17b6da3b71679a8e766b40bab069d6753addae1addacff5",
+      "fileCount": 1,
+      "scope": "user-global"
+    },
+    {
+      "name": "writing-for-agents",
+      "path": "archives/user-installed-skills/writing-for-agents/979cc51b5c6cc09a/writing-for-agents",
+      "treeSha256": "979cc51b5c6cc09aa69e514b6439d5cb44ef204aefb360076aae53cd709864c1",
+      "fileCount": 3,
+      "scope": "user-global"
+    },
+    {
+      "name": "tavily-research",
+      "path": "archives/user-installed-skills/tavily-research/069725235368fdcd/tavily-research",
+      "treeSha256": "069725235368fdcd7769ad26f5dc95905a608a26bb72cc53a3940cd30681cc3c",
+      "fileCount": 1,
+      "scope": "user-global"
+    },
+    {
+      "name": "nano-banana-pro",
+      "path": "archives/user-installed-skills/nano-banana-pro/47471509aeb8dc27/nano-banana-pro",
+      "treeSha256": "47471509aeb8dc27c81c084ccc93872598a0dba5f13c50494e0100908ac56df3",
+      "fileCount": 3,
+      "scope": "user-global"
+    },
+    {
+      "name": "yq-toolchain-update",
+      "path": "archives/user-installed-skills/yq-toolchain-update/be724849bc62045f/yq-toolchain-update",
+      "treeSha256": "be724849bc62045f789c77ce99845d21217e5ef32b162aac992d43acb21fa656",
+      "fileCount": 3,
+      "scope": "user-global"
+    },
+    {
+      "name": "openai-image-gen",
+      "path": "archives/user-installed-skills/openai-image-gen/73e7c02d01f2d814/openai-image-gen",
+      "treeSha256": "73e7c02d01f2d8148beb380f1315c338a83c5597af86d4d469961410661d9367",
+      "fileCount": 3,
+      "scope": "user-global"
+    },
+    {
+      "name": "markitdown-skill",
+      "path": "archives/user-installed-skills/markitdown-skill/1dbe0b6427269806/markitdown-skill",
+      "treeSha256": "1dbe0b6427269806775d2612f391f5c1964ef30900f208afde38de52ded1e176",
+      "fileCount": 5,
+      "scope": "user-global"
+    },
+    {
+      "name": "yq-build-foundation",
+      "path": "archives/user-installed-skills/yq-build-foundation/f0d50e954bcad7bc/yq-build-foundation",
+      "treeSha256": "f0d50e954bcad7bc588dc1cb6a43e1d65ecc07bb42950eaab3738f5a41abca86",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "electron-development",
+      "path": "archives/user-installed-skills/electron-development/c92e7a797c35600f/electron-development",
+      "treeSha256": "c92e7a797c35600f2ddf549f5f8e50bf1f10daac60a59e372eb311fee35b0f65",
+      "fileCount": 4,
+      "scope": "user-global"
+    },
+    {
+      "name": "writing-plans",
+      "path": "archives/user-installed-skills/writing-plans/db4304c0a18fb985/writing-plans",
+      "treeSha256": "db4304c0a18fb985d69778bda8062e28353487ec1232797db4275f3ec20c52f5",
+      "fileCount": 2,
+      "scope": "user-agent-copy"
+    },
+    {
+      "name": "brainstorming",
+      "path": "archives/user-installed-skills/brainstorming/3a05ae08140fe5c6/brainstorming",
+      "treeSha256": "3a05ae08140fe5c6d579301d40c740de2e6cf3d44f11b9d7899847eced53d322",
+      "fileCount": 8,
+      "scope": "user-agent-copy"
+    },
+    {
+      "name": "project-cleanup-audit",
+      "path": "archives/user-installed-skills/project-cleanup-audit/2e6d5bddaf2fdedb/project-cleanup-audit",
+      "treeSha256": "2e6d5bddaf2fdedb5d3225456ae5a33ee23cc011dc4ff4b5007817cf090415e7",
+      "fileCount": 10,
+      "scope": "user-global"
+    },
+    {
+      "name": "writing-skills",
+      "path": "archives/user-installed-skills/writing-skills/77e9cfa05e5efe3f/writing-skills",
+      "treeSha256": "77e9cfa05e5efe3f799d0ba425de9fe6ad46321c9e5a14ee54646076dc1d1ad5",
+      "fileCount": 7,
+      "scope": "user-agent-copy"
+    },
+    {
+      "name": "executing-plans",
+      "path": "archives/user-installed-skills/executing-plans/765b8a4ff9047df1/executing-plans",
+      "treeSha256": "765b8a4ff9047df1dcc0295b8e20136c57c98eb26f0a0465839b0752ce8ec3f3",
+      "fileCount": 1,
+      "scope": "user-agent-copy"
+    },
+    {
+      "name": "skill-lifecycle-manager",
+      "path": "archives/user-installed-skills/skill-lifecycle-manager/1fa5f7eabafdfa53/skill-lifecycle-manager",
+      "treeSha256": "1fa5f7eabafdfa53787a3c5c6ebe61345920beb93482d8104ecb323ca7ca50ff",
+      "fileCount": 6,
+      "scope": "user-global"
+    },
+    {
+      "name": "galgamex-enc-decrypt",
+      "path": "archives/user-installed-skills/galgamex-enc-decrypt/c1973c53969ebc2d/galgamex-enc-decrypt",
+      "treeSha256": "c1973c53969ebc2dce5041d962fd4643a29a67d6980780ab7400ba344d97eff3",
+      "fileCount": 1,
+      "scope": "user-global"
+    },
+    {
+      "name": "to-prd",
+      "path": "archives/user-installed-skills/to-prd/1141d8ab978ea1ae/to-prd",
+      "treeSha256": "1141d8ab978ea1ae0bbf28c5241c0655f25a8452b845e0a5d6956e4e0e943665",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "yq-windows-trash-cleaner",
+      "path": "archives/user-installed-skills/yq-windows-trash-cleaner/84e4d76aed387ae0/yq-windows-trash-cleaner",
+      "treeSha256": "84e4d76aed387ae040c15a9955f5c961aae1a77afa8c1b6ab9c24bda471c4923",
+      "fileCount": 29,
+      "scope": "user-global"
+    },
+    {
+      "name": "medical-evidence-grading",
+      "path": "archives/user-installed-skills/medical-evidence-grading/042ae6de0f123242/medical-evidence-grading",
+      "treeSha256": "042ae6de0f12324275d5b74b8674e18d4a44e8ccddcfc2125c11be13346614eb",
+      "fileCount": 5,
+      "scope": "user-global"
+    },
+    {
+      "name": "setup-matt-pocock-skills",
+      "path": "archives/user-installed-skills/setup-matt-pocock-skills/5b38d7f31e39e208/setup-matt-pocock-skills",
+      "treeSha256": "5b38d7f31e39e208be8ba92e1d6737dbb55c8fda8a12bc565fd1b39bda415d05",
+      "fileCount": 7,
+      "scope": "user-global"
+    },
+    {
+      "name": "tavily-best-practices",
+      "path": "archives/user-installed-skills/tavily-best-practices/e3e1178f6d84b417/tavily-best-practices",
+      "treeSha256": "e3e1178f6d84b41702531f7dfef048bf02f9dea993330110788a3cf180beeb5c",
+      "fileCount": 1,
+      "scope": "user-global"
+    },
+    {
+      "name": "ponytail",
+      "path": "archives/user-installed-skills/ponytail/730e88b121ff39a2/ponytail",
+      "treeSha256": "730e88b121ff39a2d9b281fe423508a45813cba1e26d37177e1f608faf987b87",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "add-changeset",
+      "path": "archives/user-installed-skills/add-changeset/eca9273317fbdf81/add-changeset",
+      "treeSha256": "eca9273317fbdf812250d50ce793e8db72b1c8ee1344024a75c9c56e1d7dfad0",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "writing-plans",
+      "path": "archives/user-installed-skills/writing-plans/9de471c4261bd074/writing-plans",
+      "treeSha256": "9de471c4261bd074bc0dd46dd5593fd110380dd83940b5dddc8df3b296de197d",
+      "fileCount": 2,
+      "scope": "project-skill"
+    },
+    {
+      "name": "brainstorming",
+      "path": "archives/user-installed-skills/brainstorming/9d791fee5ee33f6f/brainstorming",
+      "treeSha256": "9d791fee5ee33f6f8564631f81311cfaa7ebebb5effa31e28aa253f1c6805821",
+      "fileCount": 8,
+      "scope": "project-skill"
+    },
+    {
+      "name": "nmpa-drug-registry-lookup",
+      "path": "archives/user-installed-skills/nmpa-drug-registry-lookup/c46e383d394cc99a/nmpa-drug-registry-lookup",
+      "treeSha256": "c46e383d394cc99a538ca8a66c7cb48f1c0b9cdcb5d87d1afe07ab3f6df19452",
+      "fileCount": 11,
+      "scope": "user-global"
+    },
+    {
+      "name": "resolving-merge-conflicts",
+      "path": "archives/user-installed-skills/resolving-merge-conflicts/1c694fde7b72c14d/resolving-merge-conflicts",
+      "treeSha256": "1c694fde7b72c14d9030b9abab6b56dac606c2e3303b3265028bc3cd2e7fbbca",
+      "fileCount": 2,
+      "scope": "user-global"
+    },
+    {
+      "name": "add-competitor",
+      "path": "archives/user-installed-skills/add-competitor/72939df8cfcf87bc/add-competitor",
+      "treeSha256": "72939df8cfcf87bc57eafe2636dfd0fa0b6298e1d11bc2747431b547fb26d0b1",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "writing-skills",
+      "path": "archives/user-installed-skills/writing-skills/370e1036fe8f4c8e/writing-skills",
+      "treeSha256": "370e1036fe8f4c8eea3007fdf4bb43dcf3bd8c13656f1c4a7af4f04c9006a451",
+      "fileCount": 7,
+      "scope": "project-skill"
+    },
+    {
+      "name": "using-git-worktrees",
+      "path": "archives/user-installed-skills/using-git-worktrees/c9ad391c76f47255/using-git-worktrees",
+      "treeSha256": "c9ad391c76f47255016b27bbb086a57972c4cdabbbf8312cbe5cb19bee98a29d",
+      "fileCount": 1,
+      "scope": "user-agent-copy"
+    },
+    {
+      "name": "windows-agent-env-clone",
+      "path": "archives/user-installed-skills/windows-agent-env-clone/c0921d0f8bcb54f4/windows-agent-env-clone",
+      "treeSha256": "c0921d0f8bcb54f43144b8e74a9dafdb9cef66c8ea799c6b8391765fc70e9520",
+      "fileCount": 1,
+      "scope": "user-global"
+    },
+    {
+      "name": "executing-plans",
+      "path": "archives/user-installed-skills/executing-plans/99695952ae8907c2/executing-plans",
+      "treeSha256": "99695952ae8907c2f2c83ae689c02209d743198468779f5a878817fc683ae982",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "systematic-debugging",
+      "path": "archives/user-installed-skills/systematic-debugging/3f29ec85693de1b4/systematic-debugging",
+      "treeSha256": "3f29ec85693de1b4b4045c9233b389395996d49b4ba9d5d3485f3579092b0d67",
+      "fileCount": 11,
+      "scope": "user-agent-copy"
+    },
+    {
+      "name": "receiving-code-review",
+      "path": "archives/user-installed-skills/receiving-code-review/35a9287da7c89ac9/receiving-code-review",
+      "treeSha256": "35a9287da7c89ac9b12ab84627c07f19e787def2d4321b45e0a4b800a8384292",
+      "fileCount": 1,
+      "scope": "user-agent-copy"
+    },
+    {
+      "name": "improve-codebase-architecture",
+      "path": "archives/user-installed-skills/improve-codebase-architecture/a26f2ccc7da1d2ad/improve-codebase-architecture",
+      "treeSha256": "a26f2ccc7da1d2ad039fcd775977f9ff5689f234a4ce971b1efaebae988577e5",
+      "fileCount": 3,
+      "scope": "user-global"
+    },
+    {
+      "name": "requesting-code-review",
+      "path": "archives/user-installed-skills/requesting-code-review/14e71aae5a72c787/requesting-code-review",
+      "treeSha256": "14e71aae5a72c787118d1a723c8a2fc423a3b4bad29f28721cccfb42e7829c49",
+      "fileCount": 2,
+      "scope": "user-agent-copy"
+    },
+    {
+      "name": "test-driven-development",
+      "path": "archives/user-installed-skills/test-driven-development/9ca121ddc64b9dc2/test-driven-development",
+      "treeSha256": "9ca121ddc64b9dc20d7eb180ff969d2ba4d105ac3c7d9196e36a0b1cfa350ee4",
+      "fileCount": 2,
+      "scope": "user-agent-copy"
+    },
+    {
+      "name": "lark-vc",
+      "path": "archives/user-installed-skills/lark-vc/057782b6b8381fab/lark-vc",
+      "treeSha256": "057782b6b8381fab2b89ad9cacf2aeb0e0531bffff2ca82d19f0eb2ad9658e6c",
+      "fileCount": 4,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-im",
+      "path": "archives/user-installed-skills/lark-im/bc4230e63e3ff154/lark-im",
+      "treeSha256": "bc4230e63e3ff154d0828f0e715c5113a1788ece8c9fabf3f441d20464b3ea2e",
+      "fileCount": 17,
+      "scope": "project-skill"
+    },
+    {
+      "name": "using-git-worktrees",
+      "path": "archives/user-installed-skills/using-git-worktrees/871e23db2b900da8/using-git-worktrees",
+      "treeSha256": "871e23db2b900da8ae7558adcb0354af65e48c576848c43ea6dcdc440d380821",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-okr",
+      "path": "archives/user-installed-skills/lark-okr/8c2a44cfe9e46555/lark-okr",
+      "treeSha256": "8c2a44cfe9e46555ae1c850e46aded4afb07bfe653bbc82a5702bd8b6f64d3f5",
+      "fileCount": 11,
+      "scope": "project-skill"
+    },
+    {
+      "name": "typography",
+      "path": "archives/user-installed-skills/typography/bc4e191c9c3dfa07/typography",
+      "treeSha256": "bc4e191c9c3dfa071d5e321975a581e594bfd3e4f5492ceaeb8963b15304e4c4",
+      "fileCount": 5,
+      "scope": "project-skill"
+    },
+    {
+      "name": "systematic-debugging",
+      "path": "archives/user-installed-skills/systematic-debugging/040ea7242bd82f9a/systematic-debugging",
+      "treeSha256": "040ea7242bd82f9a4b4a023a4112012b01ec2b30b6e808ab78bec09f6a5b349d",
+      "fileCount": 11,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-wiki",
+      "path": "archives/user-installed-skills/lark-wiki/5a161883f5802af0/lark-wiki",
+      "treeSha256": "5a161883f5802af0151fcb63cc5a0ab3c6ef8823aa3bbda3d48a46a8624d83dd",
+      "fileCount": 13,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-task",
+      "path": "archives/user-installed-skills/lark-task/b5d5478e4a0f4d2f/lark-task",
+      "treeSha256": "b5d5478e4a0f4d2f3942cf76fd41a0af92dbd8ed10ab5f374c6c408449b09b20",
+      "fileCount": 19,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-base",
+      "path": "archives/user-installed-skills/lark-base/6e5415c1a737e85d/lark-base",
+      "treeSha256": "6e5415c1a737e85d420c00a3216e4ff08dddefba04cef44c617fe37ae62e00c4",
+      "fileCount": 94,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-apps",
+      "path": "archives/user-installed-skills/lark-apps/d872683cd8749f7f/lark-apps",
+      "treeSha256": "d872683cd8749f7f149d300723fc8e6ca624def7b1236523436cac7fb0d023e2",
+      "fileCount": 7,
+      "scope": "project-skill"
+    },
+    {
+      "name": "receiving-code-review",
+      "path": "archives/user-installed-skills/receiving-code-review/2153da5e1a96c7da/receiving-code-review",
+      "treeSha256": "2153da5e1a96c7dad9b64a332505f66b6cb7c3d8753eac4cd70115d4ff69fa2b",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-event",
+      "path": "archives/user-installed-skills/lark-event/a9f2a79f14fb1071/lark-event",
+      "treeSha256": "a9f2a79f14fb107139c6be286b8ed9ececf731d24ddfdcfc1c19c92c191eff2a",
+      "fileCount": 2,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-drive",
+      "path": "archives/user-installed-skills/lark-drive/b85f715614c551f3/lark-drive",
+      "treeSha256": "b85f715614c551f3c59ed0d0c27691f33168d02c501a6a2e449d3c30e92d28fb",
+      "fileCount": 23,
+      "scope": "project-skill"
+    },
+    {
+      "name": "liquid-glass",
+      "path": "archives/user-installed-skills/liquid-glass/8613df9e2925e66f/liquid-glass",
+      "treeSha256": "8613df9e2925e66fefb1be8e4e5ecae1f38a886189408a8f06a0bcd82ea7bc93",
+      "fileCount": 5,
+      "scope": "project-skill"
+    },
+    {
+      "name": "requesting-code-review",
+      "path": "archives/user-installed-skills/requesting-code-review/95f8541025239c0d/requesting-code-review",
+      "treeSha256": "95f8541025239c0ded32491c132d9abe28564af8627e3607e93ba9a55c6d7665",
+      "fileCount": 2,
+      "scope": "project-skill"
+    },
+    {
+      "name": "subagent-driven-development",
+      "path": "archives/user-installed-skills/subagent-driven-development/a89722adf9fea026/subagent-driven-development",
+      "treeSha256": "a89722adf9fea026d45b02b4bb2c42713595c31ece107a9820ef026746964648",
+      "fileCount": 4,
+      "scope": "user-agent-copy"
+    },
+    {
+      "name": "dispatching-parallel-agents",
+      "path": "archives/user-installed-skills/dispatching-parallel-agents/ac80437ec2fc8306/dispatching-parallel-agents",
+      "treeSha256": "ac80437ec2fc8306d236e0e3e6cea1f92a8aae651272147172f071a4f89bfef6",
+      "fileCount": 1,
+      "scope": "user-agent-copy"
+    },
+    {
+      "name": "lark-sheets",
+      "path": "archives/user-installed-skills/lark-sheets/a9b125ac88d3e6d1/lark-sheets",
+      "treeSha256": "a9b125ac88d3e6d13ae4277b6d62d7b95aa627e186ac6e88044193c5ace7c136",
+      "fileCount": 11,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-shared",
+      "path": "archives/user-installed-skills/lark-shared/7804769af79d5e40/lark-shared",
+      "treeSha256": "7804769af79d5e4073bd3ac51108d039ad2024f0b91293b6a9debd284092bb41",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "test-driven-development",
+      "path": "archives/user-installed-skills/test-driven-development/d8a2bff179711178/test-driven-development",
+      "treeSha256": "d8a2bff179711178b453c4847dc80ff7f7d481748771acbe121c1989a392b643",
+      "fileCount": 2,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-minutes",
+      "path": "archives/user-installed-skills/lark-minutes/e959c79480a1f9e0/lark-minutes",
+      "treeSha256": "e959c79480a1f9e0e4a5759bf1dbddcb301fdbc7f5c7fade1558a71fb3fdd4ef",
+      "fileCount": 6,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-contact",
+      "path": "archives/user-installed-skills/lark-contact/d6595a8396f9831c/lark-contact",
+      "treeSha256": "d6595a8396f9831cb15de3220ee134d0c9a2552bb7000f0213662e2f57a45bdc",
+      "fileCount": 3,
+      "scope": "project-skill"
+    },
+    {
+      "name": "aesthetic",
+      "path": "archives/user-installed-skills/aesthetic/a4c80565d9241341/aesthetic",
+      "treeSha256": "a4c80565d9241341b88245ad0713d3df129fb6c364455cfb01c6a48e2087f0c8",
+      "fileCount": 7,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-vc-agent",
+      "path": "archives/user-installed-skills/lark-vc-agent/a0d3ed947ea8afc4/lark-vc-agent",
+      "treeSha256": "a0d3ed947ea8afc42f54d92849f7688f56166123487dbe864387ff2f99755bd2",
+      "fileCount": 4,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-markdown",
+      "path": "archives/user-installed-skills/lark-markdown/b1fe5d74e3eeb393/lark-markdown",
+      "treeSha256": "b1fe5d74e3eeb393d27b46e917a6abcd91ecd56e9730df2dbaf37f1190544b3d",
+      "fileCount": 6,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-calendar",
+      "path": "archives/user-installed-skills/lark-calendar/e914e7d285649472/lark-calendar",
+      "treeSha256": "e914e7d28564947290ef0243d968428d34c0aad14326699a2b82427660987c2e",
+      "fileCount": 9,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-approval",
+      "path": "archives/user-installed-skills/lark-approval/e637b5fe789339a3/lark-approval",
+      "treeSha256": "e637b5fe789339a3ebbef3ce89ed0d31f511f543c3724077058128219ea9d2d8",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "verification-before-completion",
+      "path": "archives/user-installed-skills/verification-before-completion/9ade78359ddd6792/verification-before-completion",
+      "treeSha256": "9ade78359ddd67924377f0f7b4df992c242ed831f5563fd660c8b297c575cfee",
+      "fileCount": 1,
+      "scope": "user-agent-copy"
+    },
+    {
+      "name": "finishing-a-development-branch",
+      "path": "archives/user-installed-skills/finishing-a-development-branch/9fa02f925662da89/finishing-a-development-branch",
+      "treeSha256": "9fa02f925662da893eaaf032a6441181ae46fba48a24044dbf7e1db068b40f9e",
+      "fileCount": 1,
+      "scope": "user-agent-copy"
+    },
+    {
+      "name": "dsh-code-review",
+      "path": "archives/user-installed-skills/dsh-code-review/ba66a7bec2dc85f0/dsh-code-review",
+      "treeSha256": "ba66a7bec2dc85f0fd775980cbde7409e1f69608c2f1c3f2183f73068bb613e1",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-whiteboard",
+      "path": "archives/user-installed-skills/lark-whiteboard/2b35e9b3500f6672/lark-whiteboard",
+      "treeSha256": "2b35e9b3500f6672fbe174e97ef24264ebeea81521f206efc61229deb27d4912",
+      "fileCount": 28,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-attendance",
+      "path": "archives/user-installed-skills/lark-attendance/0bcc97b1768bee00/lark-attendance",
+      "treeSha256": "0bcc97b1768bee0098a3c1f36b44a9bbb9efa0e3ba13161db5cefd8f14d21e25",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "subagent-driven-development",
+      "path": "archives/user-installed-skills/subagent-driven-development/94fb9fd2eafd8961/subagent-driven-development",
+      "treeSha256": "94fb9fd2eafd8961e2f417ce9f968f0e3f8d515ccfc3050c44a9b1b1add5ef5f",
+      "fileCount": 7,
+      "scope": "project-skill"
+    },
+    {
+      "name": "dispatching-parallel-agents",
+      "path": "archives/user-installed-skills/dispatching-parallel-agents/ee683f5c24609b9e/dispatching-parallel-agents",
+      "treeSha256": "ee683f5c24609b9e9eab11fa650e0836a10b5482ae85b472a44e0be888c6cb36",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-skill-maker",
+      "path": "archives/user-installed-skills/lark-skill-maker/49186cdcfc9b66c0/lark-skill-maker",
+      "treeSha256": "49186cdcfc9b66c0972ca3182e72af8f8da84148418b383a01d408bfbabe10ec",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "dsh-doc-standards",
+      "path": "archives/user-installed-skills/dsh-doc-standards/fe6309d47568afa6/dsh-doc-standards",
+      "treeSha256": "fe6309d47568afa69a5d895c6785196b322041f86342f0bbb39ddab1feb738ea",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "dsh-doc-site-sync",
+      "path": "archives/user-installed-skills/dsh-doc-site-sync/e459a87aa8822866/dsh-doc-site-sync",
+      "treeSha256": "e459a87aa88228662eb1348fc75ea149cb02e53c104c68bc9d3b90b9d1626c73",
+      "fileCount": 2,
+      "scope": "project-skill"
+    },
+    {
+      "name": "record-browser-gif",
+      "path": "archives/user-installed-skills/record-browser-gif/ebeaa9617701f698/record-browser-gif",
+      "treeSha256": "ebeaa9617701f698a54ebf570ce9548b727084e88209d4ad8a9500a1eb3a4724",
+      "fileCount": 3,
+      "scope": "project-skill"
+    },
+    {
+      "name": "dsh-translate-docs",
+      "path": "archives/user-installed-skills/dsh-translate-docs/72c57c2179f869fd/dsh-translate-docs",
+      "treeSha256": "72c57c2179f869fdfcd713ef3b353ca3f8530c520088e731d8b28afe1bd4cd51",
+      "fileCount": 2,
+      "scope": "project-skill"
+    },
+    {
+      "name": "dsh-prose-standard",
+      "path": "archives/user-installed-skills/dsh-prose-standard/85b4cdb4f271cf46/dsh-prose-standard",
+      "treeSha256": "85b4cdb4f271cf465339895399cc15a3a14ecece1ae80b144a38e16ee2a8641f",
+      "fileCount": 3,
+      "scope": "project-skill"
+    },
+    {
+      "name": "email-batch-test",
+      "path": "archives/user-installed-skills/email-batch-test/fdf8193fab63b418/email-batch-test",
+      "treeSha256": "fdf8193fab63b418254f2f2f27628ae70a82fed37a683c062c447b305f0e3f3e",
+      "fileCount": 3,
+      "scope": "project-skill"
+    },
+    {
+      "name": "baoyu-image-gen",
+      "path": "archives/user-installed-skills/baoyu-image-gen/a731a72a5659ea55/baoyu-image-gen",
+      "treeSha256": "a731a72a5659ea55ac78b861c72cddb6db6f0f7661c380f49e9710874d596801",
+      "fileCount": 49,
+      "scope": "project-skill"
+    },
+    {
+      "name": "verification-before-completion",
+      "path": "archives/user-installed-skills/verification-before-completion/08db239daad924ee/verification-before-completion",
+      "treeSha256": "08db239daad924ee3007b095928734454cd3dccf514305f7414c5c4d12ef01b9",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "finishing-a-development-branch",
+      "path": "archives/user-installed-skills/finishing-a-development-branch/14361a0ac3903944/finishing-a-development-branch",
+      "treeSha256": "14361a0ac3903944712586f841a58ffaa0bb5e81fbc04ce464534320cb5d9a0f",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "dsh-pre-push-checks",
+      "path": "archives/user-installed-skills/dsh-pre-push-checks/10ec1aa1a1b724bd/dsh-pre-push-checks",
+      "treeSha256": "10ec1aa1a1b724bdabdf2bd78554c5dac50e5566a443fff5af3febf3b84adb8d",
+      "fileCount": 2,
+      "scope": "project-skill"
+    },
+    {
+      "name": "wechat-mp-writer",
+      "path": "archives/user-installed-skills/wechat-mp-writer/a9387d9387f53103/wechat-mp-writer",
+      "treeSha256": "a9387d9387f5310366fc3e1e799f347a28eae529c5689abb45e9e9983e6705ae",
+      "fileCount": 2,
+      "scope": "project-skill"
+    },
+    {
+      "name": "humanize-writing",
+      "path": "archives/user-installed-skills/humanize-writing/954a5f2d444ba696/humanize-writing",
+      "treeSha256": "954a5f2d444ba696505cda34288cb4ae630bda43c1e8cd0ae646f27ce907f585",
+      "fileCount": 3,
+      "scope": "project-skill"
+    },
+    {
+      "name": "baoyu-xhs-images",
+      "path": "archives/user-installed-skills/baoyu-xhs-images/7589359cbad7162c/baoyu-xhs-images",
+      "treeSha256": "7589359cbad7162c19ee4aef51a9013cdd9dc7e27be52daee840aec2a7546c5a",
+      "fileCount": 29,
+      "scope": "project-skill"
+    },
+    {
+      "name": "dsh-trim-cot-leakage",
+      "path": "archives/user-installed-skills/dsh-trim-cot-leakage/221d37f4f03a7f97/dsh-trim-cot-leakage",
+      "treeSha256": "221d37f4f03a7f979faa4790a23eebed9f4dca96032341c0eb36b9ac305177e8",
+      "fileCount": 3,
+      "scope": "project-skill"
+    },
+    {
+      "name": "baoyu-cover-image",
+      "path": "archives/user-installed-skills/baoyu-cover-image/c0f4eec2017a327c/baoyu-cover-image",
+      "treeSha256": "c0f4eec2017a327cb1a52dba55138a958f6084da4d397c262745e2555e07d54f",
+      "fileCount": 35,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-openapi-explorer",
+      "path": "archives/user-installed-skills/lark-openapi-explorer/6e4d27dd5114a852/lark-openapi-explorer",
+      "treeSha256": "6e4d27dd5114a85223df3c9d88dd956e43ef4de19b137ae60e954671f4cbe99a",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "miniprogram-development",
+      "path": "archives/user-installed-skills/miniprogram-development/7589fd357bcbfe40/miniprogram-development",
+      "treeSha256": "7589fd357bcbfe4014ef42d35ba625914ecdcebb8b2e949e6843cb40af830ad6",
+      "fileCount": 5,
+      "scope": "project-skill"
+    },
+    {
+      "name": "make-interfaces-feel-better",
+      "path": "archives/user-installed-skills/make-interfaces-feel-better/1f53c813f78de5f9/make-interfaces-feel-better",
+      "treeSha256": "1f53c813f78de5f9e85bec4855c5c55d9564a1d4944c8f1ae7110990b611b20d",
+      "fileCount": 5,
+      "scope": "project-skill"
+    },
+    {
+      "name": "dsh-merging-stacked-prs",
+      "path": "archives/user-installed-skills/dsh-merging-stacked-prs/8723fbeedda50569/dsh-merging-stacked-prs",
+      "treeSha256": "8723fbeedda50569b888b1c67e944cd213845918f1d6e667eba30eb04666cb22",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "dsh-archive-agent-notes",
+      "path": "archives/user-installed-skills/dsh-archive-agent-notes/ed7854ef248fb63f/dsh-archive-agent-notes",
+      "treeSha256": "ed7854ef248fb63f4d8fef1b2f57cbd8e4718c06e5f15873a029ee28aab75fb4",
+      "fileCount": 2,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lingzao",
+      "path": "archives/user-installed-skills/lingzao/b256a2fa1d5c12dc/lingzao",
+      "treeSha256": "b256a2fa1d5c12dcb1128c76e3b9dc251a9ed6153a717277b22e9958ad3379dc",
+      "fileCount": 5,
+      "scope": "project-skill"
+    },
+    {
+      "name": "baoyu-post-to-wechat",
+      "path": "archives/user-installed-skills/baoyu-post-to-wechat/4c56f97f039741df/baoyu-post-to-wechat",
+      "treeSha256": "4c56f97f039741dfcb5debcdd591f7eb9cfdcf9c4de05e7c4818ebcd7ab1aba1",
+      "fileCount": 29,
+      "scope": "project-skill"
+    },
+    {
+      "name": "dsh-find-simplifications",
+      "path": "archives/user-installed-skills/dsh-find-simplifications/782403a77c5988fc/dsh-find-simplifications",
+      "treeSha256": "782403a77c5988fcd9668fd3eb0afdbfe9269d4cfa3f38c347d8187ed928aeae",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "wechat-article-writer",
+      "path": "archives/user-installed-skills/wechat-article-writer/bb28e73c36e86c6d/wechat-article-writer",
+      "treeSha256": "bb28e73c36e86c6d59987340d545fe7c5e2e1d8b6db0921723011a37a2d8554b",
+      "fileCount": 2,
+      "scope": "project-skill"
+    },
+    {
+      "name": "baoyu-url-to-markdown",
+      "path": "archives/user-installed-skills/baoyu-url-to-markdown/563848d7572fbe8c/baoyu-url-to-markdown",
+      "treeSha256": "563848d7572fbe8caef48a128d7ca6c83f0a1e39857ad3da2752313a6bcae020",
+      "fileCount": 48,
+      "scope": "project-skill"
+    },
+    {
+      "name": "baoyu-format-markdown",
+      "path": "archives/user-installed-skills/baoyu-format-markdown/1d6d0d806b554506/baoyu-format-markdown",
+      "treeSha256": "1d6d0d806b554506edb9a178155531c2e4aa489178f9d98d1595c2c4e3749d55",
+      "fileCount": 8,
+      "scope": "project-skill"
+    },
+    {
+      "name": "wechat-visual-director",
+      "path": "archives/user-installed-skills/wechat-visual-director/d34d5ba7914639a9/wechat-visual-director",
+      "treeSha256": "d34d5ba7914639a9f8dc7d2fcbbf6558cbd543e16d51d1b4c28e451308e30f5c",
+      "fileCount": 3,
+      "scope": "project-skill"
+    },
+    {
+      "name": "baoyu-markdown-to-html",
+      "path": "archives/user-installed-skills/baoyu-markdown-to-html/4c7fa4f95e8ed33b/baoyu-markdown-to-html",
+      "treeSha256": "4c7fa4f95e8ed33bef92c1e0c066bcbf48825150cb766f70a621a4fcfafbe0fe",
+      "fileCount": 5,
+      "scope": "project-skill"
+    },
+    {
+      "name": "make-interfaces-feel-better",
+      "path": "archives/user-installed-skills/make-interfaces-feel-better/e94cd8b224176e28/make-interfaces-feel-better",
+      "treeSha256": "e94cd8b224176e28ad6a35a0b5fae27133fa577726fe982ad4c2d6fdeec2eda5",
+      "fileCount": 7,
+      "scope": "project-skill"
+    },
+    {
+      "name": "electron-builder-config",
+      "path": "archives/user-installed-skills/electron-builder-config/0b7a44839ef22b0d/electron-builder-config",
+      "treeSha256": "0b7a44839ef22b0da0c8665e55cb66d3eba82f508ac158b9d1f11a855ceabedc",
+      "fileCount": 2,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "wechat-title-strategist",
+      "path": "archives/user-installed-skills/wechat-title-strategist/1239fd2abc6d6ce6/wechat-title-strategist",
+      "treeSha256": "1239fd2abc6d6ce66e76b6d6bcc40639cca81aca07396d2add9ef1ea5a468a1b",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "impeccable",
+      "path": "archives/user-installed-skills/impeccable/fe070965ec9b9008/impeccable",
+      "treeSha256": "fe070965ec9b90083e1103804caa6c374f325b180ce0301862d96a4fe8c99c6b",
+      "fileCount": 168,
+      "scope": "hub-local-source"
+    },
+    {
+      "name": "lark-workflow-standup-report",
+      "path": "archives/user-installed-skills/lark-workflow-standup-report/3d48895be495a6ac/lark-workflow-standup-report",
+      "treeSha256": "3d48895be495a6acb79b3bb605afc3aafee5b3530fbf1f435021f941634b39d2",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "baoyu-article-illustrator",
+      "path": "archives/user-installed-skills/baoyu-article-illustrator/40f2ad037bd8ea35/baoyu-article-illustrator",
+      "treeSha256": "40f2ad037bd8ea35333cb1916420f89ba4738c5092ce4d603b5cea5071705d6e",
+      "fileCount": 37,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-workflow-meeting-summary",
+      "path": "archives/user-installed-skills/lark-workflow-meeting-summary/0d60543a2334fe8f/lark-workflow-meeting-summary",
+      "treeSha256": "0d60543a2334fe8f269e6509c836f97bd6ebf65a817717504f908089dc984f6f",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "visual-storytelling-design",
+      "path": "archives/user-installed-skills/visual-storytelling-design/e1f027e03d154a89/visual-storytelling-design",
+      "treeSha256": "e1f027e03d154a89323fe980c9c2ba17694b2e77817c97668753aef7867a77cd",
+      "fileCount": 4,
+      "scope": "project-skill"
+    },
+    {
+      "name": "opencli-browser",
+      "path": "archives/user-installed-skills/opencli-browser/3aa28f5282d5ab1b/opencli-browser",
+      "treeSha256": "3aa28f5282d5ab1b06ddbac332cbc144928237333d28e1dad99abd0968359656",
+      "fileCount": 2,
+      "scope": "project-skill"
+    },
+    {
+      "name": "coze-project",
+      "path": "archives/user-installed-skills/coze-project/64253a722c140a5d/coze-project",
+      "treeSha256": "64253a722c140a5dddbed03758ad73fe519ef1be00eb4e8a9679b4a3b20310b5",
+      "fileCount": 3,
+      "scope": "project-skill"
+    },
+    {
+      "name": "coze-file-send",
+      "path": "archives/user-installed-skills/coze-file-send/c38411dafecd7435/coze-file-send",
+      "treeSha256": "c38411dafecd7435f70966734aae513e72602601135749dd73d03eaca3ed1736",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "add-lang",
+      "path": "archives/user-installed-skills/add-lang/00700e7d79525f4e/add-lang",
+      "treeSha256": "00700e7d79525f4ecac7e9afa27dd95ba249966afd0bad018200650f69b53ff8",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "chinese-indie-dev",
+      "path": "archives/user-installed-skills/chinese-indie-dev/59276d92ac43152d/chinese-indie-dev",
+      "treeSha256": "59276d92ac43152d919da496fdd59d2fbe997ca670fd1ed6a8f807bce0aba5f1",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "agent-eval",
+      "path": "archives/user-installed-skills/agent-eval/61ca5bbbd5c736b7/agent-eval",
+      "treeSha256": "61ca5bbbd5c736b7963bf7acfd63f6445f0e716a407210760ef0ab7bebfd02a9",
+      "fileCount": 2,
+      "scope": "project-skill"
+    },
+    {
+      "name": "remotion-video-creation",
+      "path": "archives/user-installed-skills/remotion-video-creation/ca17d111396c8243/remotion-video-creation",
+      "treeSha256": "ca17d111396c8243bf80790d1bfedc6e69876064b358e74a557050ae38e058c2",
+      "fileCount": 32,
+      "scope": "hub-local-source"
+    },
+    {
+      "name": "feishu-card-ws",
+      "path": "archives/user-installed-skills/feishu-card-ws/3537149a4f6a10bc/feishu-card-ws",
+      "treeSha256": "3537149a4f6a10bc64fcb02dc4f0c55e54494ceeebd2ab609085d0a43e804281",
+      "fileCount": 1,
+      "scope": "project-skill"
+    },
+    {
+      "name": "github-desktop-release",
+      "path": "archives/user-installed-skills/github-desktop-release/d854be69809a2b36/github-desktop-release",
+      "treeSha256": "d854be69809a2b36667f4f3c6e296e0c344501f6ffc7899247379027e8290a36",
+      "fileCount": 29,
+      "scope": "hub-local-source"
+    },
+    {
+      "name": "skill-lifecycle-manager",
+      "path": "archives/user-installed-skills/skill-lifecycle-manager/0143a0d1372a542a/skill-lifecycle-manager",
+      "treeSha256": "0143a0d1372a542af41fec568284767d0c4ffdf3d159e49382118ccec2d36b19",
+      "fileCount": 10,
+      "scope": "hub-local-source"
+    },
+    {
+      "name": "yq-windows-trash-cleaner",
+      "path": "archives/user-installed-skills/yq-windows-trash-cleaner/99438044b7c3b652/yq-windows-trash-cleaner",
+      "treeSha256": "99438044b7c3b652c764133cc13ba53a4fd71f7415700bb4233ec21b3f180dfa",
+      "fileCount": 29,
+      "scope": "hub-local-source"
+    },
+    {
+      "name": "aliyun-swas-manage",
+      "path": "archives/user-installed-skills/aliyun-swas-manage/1f89c6ea527741b3/aliyun-swas-manage",
+      "treeSha256": "1f89c6ea527741b3ca148683f84aa241fd1c70c318ac1ef500a3857ca3f6868b",
+      "fileCount": 11,
+      "scope": "project-skill"
+    },
+    {
+      "name": "yq-editorial-presentation-html",
+      "path": "archives/user-installed-skills/yq-editorial-presentation-html/80d9dcdf01a5dac6/yq-editorial-presentation-html",
+      "treeSha256": "80d9dcdf01a5dac6cafc4797201718a71a80204c4da6af4f0f2d488d6cda26d4",
+      "fileCount": 25,
+      "scope": "hub-local-source"
+    },
+    {
+      "name": "humanized-chinese-writing-polisher",
+      "path": "archives/user-installed-skills/humanized-chinese-writing-polisher/131740a7036b42c7/humanized-chinese-writing-polisher",
+      "treeSha256": "131740a7036b42c7aa78e8258414da3363073a6e2d2640fce2d0e43f9a0d9e34",
+      "fileCount": 4,
+      "scope": "project-skill"
+    },
+    {
+      "name": "lark-base",
+      "path": "archives/user-installed-skills/lark-base/61a9ddfd289f4978/lark-base",
+      "treeSha256": "61a9ddfd289f4978a4fe630e0f5e12a2d2f3a82e100a6c0a5fe2a79d5e73984e",
+      "fileCount": 99,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "lark-sheets",
+      "path": "archives/user-installed-skills/lark-sheets/5c0ed7fbf5593355/lark-sheets",
+      "treeSha256": "5c0ed7fbf5593355e02faaeb669a3bc3526b7f2addaaa5faacedbc858d2e7084",
+      "fileCount": 29,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "adaptive-quality-gate",
+      "path": "archives/user-installed-skills/adaptive-quality-gate/b5189ce6c1bdba9b/adaptive-quality-gate",
+      "treeSha256": "b5189ce6c1bdba9bf74749dac941c17ad3abad58ced77d0708345b5c04e2a395",
+      "fileCount": 2,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "github-readme-visuals",
+      "path": "archives/user-installed-skills/github-readme-visuals/eefc03e54938ca96/github-readme-visuals",
+      "treeSha256": "eefc03e54938ca966f19255a5cbabceb263786861cec967ee1efc5578ecbd739",
+      "fileCount": 3,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "project-cleanup-audit",
+      "path": "archives/user-installed-skills/project-cleanup-audit/4735bd4d2756b29c/project-cleanup-audit",
+      "treeSha256": "4735bd4d2756b29c13837dc476018ebb0ca0803acf6f83ee794b4b6337e85597",
+      "fileCount": 4,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "skill-lifecycle-manager",
+      "path": "archives/user-installed-skills/skill-lifecycle-manager/5dacf80b32dd2a14/skill-lifecycle-manager",
+      "treeSha256": "5dacf80b32dd2a1409b4df29551d4e6575e77078c80ff079c3e8646e273cc09f",
+      "fileCount": 10,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "skill-lifecycle-manager",
+      "path": "archives/user-installed-skills/skill-lifecycle-manager/4f411187436951a8/skill-lifecycle-manager",
+      "treeSha256": "4f411187436951a8b95503a6fcd7b3ee5d610c4533daf361dcb960482be96e83",
+      "fileCount": 9,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "skill-lifecycle-manager",
+      "path": "archives/user-installed-skills/skill-lifecycle-manager/62b13f99988fbe42/skill-lifecycle-manager",
+      "treeSha256": "62b13f99988fbe428a849645a841a0683f1a950fa7268ede48af1d1f90f8d80f",
+      "fileCount": 9,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "aact-bulk-trials",
+      "path": "archives/user-installed-skills/aact-bulk-trials/e07736f27453c7b6/aact-bulk-trials",
+      "treeSha256": "e07736f27453c7b6a02b6023eec09b9ffa549a4d599a5951a88b05c0675c3a9a",
+      "fileCount": 4,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "bioc-fulltext-fetch",
+      "path": "archives/user-installed-skills/bioc-fulltext-fetch/7e9571b254406b2d/bioc-fulltext-fetch",
+      "treeSha256": "7e9571b254406b2d42ba6fe4757328b73bd1b9ea685c18fb9e34b504459016e7",
+      "fileCount": 4,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "clinical-trials-v2",
+      "path": "archives/user-installed-skills/clinical-trials-v2/28605e20fd8f2af5/clinical-trials-v2",
+      "treeSha256": "28605e20fd8f2af5f9dfe6c92ab86be45d74c8ab5150e12720f3cbd2f649cbf6",
+      "fileCount": 2,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "europepmc-search",
+      "path": "archives/user-installed-skills/europepmc-search/92dc3a06bb453e44/europepmc-search",
+      "treeSha256": "92dc3a06bb453e44a6a96eccca3a1f31f0a47175be3e6cf99850c782825e22b6",
+      "fileCount": 4,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "medical-evidence-grading",
+      "path": "archives/user-installed-skills/medical-evidence-grading/5c342d58013a59c8/medical-evidence-grading",
+      "treeSha256": "5c342d58013a59c8b368a2d3ec40fc600773192a17a1ff10755700c4868a67be",
+      "fileCount": 5,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "pubtator-entity-search",
+      "path": "archives/user-installed-skills/pubtator-entity-search/366b9a940d152650/pubtator-entity-search",
+      "treeSha256": "366b9a940d15265045f07cda64b30f3c0007ff8383d612aaa179ee43749e4415",
+      "fileCount": 3,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "aact-bulk-trials",
+      "path": "archives/user-installed-skills/aact-bulk-trials/e171d39ba5bce7c9/aact-bulk-trials",
+      "treeSha256": "e171d39ba5bce7c99ca99730fb93a5e4fd8f704cd5c5857d6bfc3f058e09de83",
+      "fileCount": 1,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "bioc-fulltext-fetch",
+      "path": "archives/user-installed-skills/bioc-fulltext-fetch/c1d806facb0db73a/bioc-fulltext-fetch",
+      "treeSha256": "c1d806facb0db73a795774deeffa275f733d6d0cc57dc0cad0566f5bde9cc922",
+      "fileCount": 1,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "clinical-trials-v2",
+      "path": "archives/user-installed-skills/clinical-trials-v2/73631290f45b84c6/clinical-trials-v2",
+      "treeSha256": "73631290f45b84c63125e264d1ecb2874fafe28aa90f0a9d7cffd82e87e4c2e6",
+      "fileCount": 1,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "europepmc-search",
+      "path": "archives/user-installed-skills/europepmc-search/5eec9d3036d956eb/europepmc-search",
+      "treeSha256": "5eec9d3036d956ebf87228bb5ebb63a5e72d6417f1eb54ce9c038f5685c2f6ad",
+      "fileCount": 1,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "medical-evidence-grading",
+      "path": "archives/user-installed-skills/medical-evidence-grading/0adee46a5906a20e/medical-evidence-grading",
+      "treeSha256": "0adee46a5906a20ece50f143843cad121c4b1b7fdd29a3189672a89482db5153",
+      "fileCount": 1,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "pubtator-entity-search",
+      "path": "archives/user-installed-skills/pubtator-entity-search/36ed1a3ea059827e/pubtator-entity-search",
+      "treeSha256": "36ed1a3ea059827e9cbc4b9562e636c7d95f35aad8ea593165e26956613b5b67",
+      "fileCount": 1,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "citation-anchor-resolver",
+      "path": "archives/user-installed-skills/citation-anchor-resolver/de29313b62832c40/citation-anchor-resolver",
+      "treeSha256": "de29313b62832c40b7b679af3dc31444b0333a707933549488a922447478d8cf",
+      "fileCount": 9,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "cite-bound-content-generator",
+      "path": "archives/user-installed-skills/cite-bound-content-generator/af815257a24c3075/cite-bound-content-generator",
+      "treeSha256": "af815257a24c3075f0c66331f28f3c94ee3e10ab9264e0b7d97506d889a673d9",
+      "fileCount": 3,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "content-verification-layer",
+      "path": "archives/user-installed-skills/content-verification-layer/767923d0aaaf33a3/content-verification-layer",
+      "treeSha256": "767923d0aaaf33a363c0f57bdda4abafaf482dda563b09f076ec7b694c9d25b8",
+      "fileCount": 3,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "contract-elicitor",
+      "path": "archives/user-installed-skills/contract-elicitor/825109dd3b0ef293/contract-elicitor",
+      "treeSha256": "825109dd3b0ef293de62087757082c23bd048ceab2fd5c1a23014a7c53f0b025",
+      "fileCount": 2,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "medical-research",
+      "path": "archives/user-installed-skills/medical-research/900533a4e9d19cf7/medical-research",
+      "treeSha256": "900533a4e9d19cf7cb8ac60876d8dad6694ca408ba46da45cf5f03e51b4a06ff",
+      "fileCount": 2,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "pubmed-search",
+      "path": "archives/user-installed-skills/pubmed-search/ef35478d4277240c/pubmed-search",
+      "treeSha256": "ef35478d4277240cdd91097c71b319168e03ab2ef8d3d8d481c8039568feecea",
+      "fileCount": 3,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "design-system-injector",
+      "path": "archives/user-installed-skills/design-system-injector/57d311e82a35c5b9/design-system-injector",
+      "treeSha256": "57d311e82a35c5b9cceebd500e18e5add291ba713d404e877eb48017cfa68e9d",
+      "fileCount": 2,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "disease-market-sizing-orchestration",
+      "path": "archives/user-installed-skills/disease-market-sizing-orchestration/0379dd4196b242f6/disease-market-sizing-orchestration",
+      "treeSha256": "0379dd4196b242f6d02e791e699f524f0673a1b46d35881c87121dbecc3aafdc",
+      "fileCount": 2,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "disease-stratifier",
+      "path": "archives/user-installed-skills/disease-stratifier/85c30053571fca66/disease-stratifier",
+      "treeSha256": "85c30053571fca66b1c77060eab191d938cc003bcf3d7b45c05135ce8910c499",
+      "fileCount": 2,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "drug-citation-verifier",
+      "path": "archives/user-installed-skills/drug-citation-verifier/1f2150dc9f32394f/drug-citation-verifier",
+      "treeSha256": "1f2150dc9f32394f53981369f3eb878ab6543b408b731b94069aee0140019dd4",
+      "fileCount": 8,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "mermaid-renderer",
+      "path": "archives/user-installed-skills/mermaid-renderer/d41320222bdbad43/mermaid-renderer",
+      "treeSha256": "d41320222bdbad43c134418039f7ce740c781742515e1909420991a00d5acfec",
+      "fileCount": 3,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "report-bundle-builder",
+      "path": "archives/user-installed-skills/report-bundle-builder/6635774a64eeed6e/report-bundle-builder",
+      "treeSha256": "6635774a64eeed6e83e728b21d475dbcddaec2d88a91d44915138d0a6a9a6390",
+      "fileCount": 11,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "session-resume",
+      "path": "archives/user-installed-skills/session-resume/25179664192836dd/session-resume",
+      "treeSha256": "25179664192836dd555731fb19c45ce782849a66c51afecd5188da3d0fa022a9",
+      "fileCount": 2,
+      "scope": "historical-backup"
+    },
+    {
+      "name": "miniprogram-development",
+      "path": "archives/user-installed-skills/miniprogram-development/29cb93957a26b96f/miniprogram-development",
+      "treeSha256": "29cb93957a26b96ff83a02f0948c800fc5aa08b9e80b840082ba4c808d89ecc4",
+      "fileCount": 5,
+      "scope": "historical-backup"
+    }
+  ]
+}

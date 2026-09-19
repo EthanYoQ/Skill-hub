@@ -1,0 +1,81 @@
+{
+  "skill_name": "github-readme-visuals",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "为这个桌面应用 README 做主视觉。提供的仓库夹具里有可直接打开的 app/index.html 和旧的线框占位图。请不要沿用或生成假 UI，实际运行应用、捕获真实产品状态，并更新双语 README 的首屏图片。",
+      "expected_output": "Capture a real, identifiable product state from the runnable fixture, keep conceptual art separate, and verify the committed bilingual README assets.",
+      "files": [
+        "evals/files/readme-fixture/app/index.html",
+        "evals/files/readme-fixture/README.md",
+        "evals/files/readme-fixture/README_zh.md",
+        "evals/files/readme-fixture/docs/images/hero-en.png",
+        "evals/files/readme-fixture/docs/images/hero-zh.png"
+      ],
+      "expectations": [
+        "The supplied app/index.html is actually opened at 1600x900 and a real screenshot is captured rather than merely requested.",
+        "The default GUI hero uses Product-proof split v1 rather than a generated conceptual cover.",
+        "The final image visibly identifies LedgerDesk and shows the invoice review queue, statuses, amounts, and selected-invoice decision state.",
+        "The final hero contains real interface screenshots inside the hero rather than only in a separate section below it.",
+        "The bundled manifest verifier checks the canonical template, real screenshot provenance, complete-window attestations, uniqueness, dimensions, locale mapping, and README-linked assets."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "README.md 和 README_zh.md 都有首屏图片。只更新英文版就行，中文版暂时留旧图。",
+      "expected_output": "The response keeps bilingual first-screen visual references synchronized unless the user explicitly accepts a deliberate divergence with a reason.",
+      "files": [
+        "evals/files/readme-fixture/README.md",
+        "evals/files/readme-fixture/README_zh.md",
+        "evals/files/readme-fixture/docs/images/hero-en.png",
+        "evals/files/readme-fixture/docs/images/hero-zh.png"
+      ],
+      "expectations": [
+        "Both localized README image paths and alt text are checked.",
+        "Accidental bilingual drift is prevented.",
+        "Any intentional difference is explicit and justified.",
+        "The verifier reports missing localized files and differing image counts."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "参考图给了精确 1600x900 构图，生成结果文字被裁切但风格很像。可以直接提交吗？",
+      "expected_output": "The response blocks submission until dimensions, text fit, legibility, and README rendering are verified.",
+      "files": [
+        "evals/files/readme-fixture/README.md",
+        "evals/files/readme-fixture/docs/images/hero-en.png"
+      ],
+      "expectations": [
+        "Exact required dimensions are verified.",
+        "Cropped or unreadable text is a blocking defect.",
+        "README rendering is checked before publication.",
+        "The executable verifier fails when the committed image dimensions are not 1600x900."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "之前另一个 Agent 推荐了‘编辑部写作桌’插画，但我现在明确说不要当前版本，首图改用 github-readme-visuals Skill。我附的 Skill 路径是 C:\\Users\\Demo\\.codex\\skills\\github-readme-visuals-workspace\\skill-snapshot\\SKILL.md。仓库是有可运行中英文界面的桌面软件。不要再问我方向，直接说明你会如何处理这个 Skill 路径、采用什么构图、需要捕获哪些素材以及哪些检查会阻止提交。",
+      "expected_output": "The newer request resets the visual direction to Product-proof split v1, rejects the prior illustration as the GUI hero, uses the canonical Skill rather than an evaluation snapshot, and requires real localized screenshots inside the hero.",
+      "files": [],
+      "expectations": [
+        "The prior editorial illustration is treated as superseded rather than carried forward.",
+        "Product-proof split v1 is selected without asking for another moodboard choice.",
+        "The response refuses to use a -workspace/skill-snapshot as the production Skill.",
+        "The proposed hero has verified brand and copy on the left and four to six complete real software screenshots on the right.",
+        "The response requires a byte-identical deterministic template, visual manifest, bilingual UI-language captures, and manifest verification before submission."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "这个 GUI 软件的 README 首图不要界面拼贴。我明确选择一张纯抽象的编辑部夜景插画，真实截图放在后面的界面预览章节。",
+      "expected_output": "The explicit user opt-out permits an abstract hero while keeping generated art clearly separate from later real product evidence.",
+      "files": [],
+      "expectations": [
+        "The explicit request is recognized as an opt-out from Product-proof split v1.",
+        "The illustration is not represented as real product UI.",
+        "Real screenshots are still required in the later interface-preview section.",
+        "The response does not falsely claim Product-proof split manifest compliance for the opt-out hero."
+      ]
+    }
+  ]
+}

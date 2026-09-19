@@ -1,0 +1,150 @@
+# INSTALL: copy <github-desktop-release-skill-root>/scripts/github-desktop-promotion.mjs
+# and validate-release-profile.mjs verbatim to .release/scripts/ with the same
+# filenames. Vendor both Skill scripts;
+# do not rewrite a project-specific promotion engine. Projects supply only the
+# release profile and qualification acceptance adapters.
+# The fixed verifier runtime below is not the application toolchain.
+name: Promote qualified desktop release
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: Full source SHA shared by all qualification runs
+        required: true
+        type: string
+      release_tag:
+        description: Frozen target tag
+        required: true
+        type: string
+      release_version:
+        description: Frozen version used to resolve {version} asset names
+        required: true
+        type: string
+      profile_path:
+        description: Repository-relative release profile path
+        required: true
+        default: .release/release-profile.json
+        type: string
+      qualification_runs_json:
+        description: JSON object mapping each platform to runId, attempt, and artifactId
+        required: true
+        type: string
+      confirmation:
+        description: Type PROMOTE_QUALIFIED_DESKTOP_RELEASE exactly
+        required: true
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: promote-qualified-desktop-${{ inputs.release_tag }}
+  cancel-in-progress: false
+
+jobs:
+  plan-and-verify:
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: read
+      contents: read
+    outputs:
+      verified_artifact_id: ${{ steps.upload-verified.outputs.artifact-id }}
+      verified_artifact_digest: ${{ steps.upload-verified.outputs.artifact-digest }}
+    steps:
+      - name: Require dispatch from the default branch
+        shell: bash
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          test "$GITHUB_REF" = "refs/heads/$DEFAULT_BRANCH"
+
+      - name: Checkout trusted promotion code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Set up fixed verifier runtime
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.23.1'
+
+      - name: Verify all required platform artifacts without rebuilding
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+          RELEASE_VERSION: ${{ inputs.release_version }}
+          PROFILE_PATH: ${{ inputs.profile_path }}
+          QUALIFICATION_RUNS_JSON: ${{ inputs.qualification_runs_json }}
+          CONFIRMATION: ${{ inputs.confirmation }}
+        run: |
+          test "$CONFIRMATION" = "PROMOTE_QUALIFIED_DESKTOP_RELEASE"
+          test "$(node --version)" = "v22.23.1"
+          test -f "$PROFILE_PATH"
+          test -f .release/scripts/github-desktop-promotion.mjs
+          test -f .release/scripts/validate-release-profile.mjs
+          node .release/scripts/github-desktop-promotion.mjs verify \
+            --repository "$GITHUB_REPOSITORY" \
+            --expected-sha "$EXPECTED_SHA" \
+            --tag "$RELEASE_TAG" \
+            --version "$RELEASE_VERSION" \
+            --profile "$PROFILE_PATH" \
+            --qualification-runs-json "$QUALIFICATION_RUNS_JSON" \
+            --output verified-package
+
+      - name: Preserve the verified same-byte package
+        id: upload-verified
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: verified-desktop-release-${{ inputs.expected_sha }}
+          path: verified-package
+          if-no-files-found: error
+          retention-days: 2
+
+  publish:
+    needs: plan-and-verify
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - name: Checkout the same trusted promotion code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Set up fixed verifier runtime
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.23.1'
+
+      - name: Download only this run's verified package
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          artifact-ids: ${{ needs.plan-and-verify.outputs.verified_artifact_id }}
+          path: verified-package-download
+
+      - name: Publish and perform authoritative readback
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+          RELEASE_VERSION: ${{ inputs.release_version }}
+          PROFILE_PATH: ${{ inputs.profile_path }}
+          VERIFIED_ARTIFACT_DIGEST: ${{ needs.plan-and-verify.outputs.verified_artifact_digest }}
+        run: |
+          test "$(node --version)" = "v22.23.1"
+          test -f .release/scripts/github-desktop-promotion.mjs
+          test -f .release/scripts/validate-release-profile.mjs
+          node .release/scripts/github-desktop-promotion.mjs publish \
+            --repository "$GITHUB_REPOSITORY" \
+            --expected-sha "$EXPECTED_SHA" \
+            --tag "$RELEASE_TAG" \
+            --version "$RELEASE_VERSION" \
+            --profile "$PROFILE_PATH" \
+            --verified-package verified-package-download \
+            --outer-artifact-digest "$VERIFIED_ARTIFACT_DIGEST"

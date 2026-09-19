@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat MP Writer"
+  short_description: "Project workflow for GitHub-to-WeChat drafting and publishing."
+  default_prompt: "Turn a GitHub repository or markdown draft into a WeChat Official Account draft using the project workflow."

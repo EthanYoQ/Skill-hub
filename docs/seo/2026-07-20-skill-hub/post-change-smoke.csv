@@ -1,0 +1,6 @@
+timestamp_utc,run_id,check,status,evidence
+2026-07-19T16:08:00Z,skill-hub-seo-20260720,README.md hero reference,PASS,verify_readme_visuals.py found the local image with non-empty Chinese alt text
+2026-07-19T16:08:00Z,skill-hub-seo-20260720,README.en.md hero reference,PASS,verify_readme_visuals.py found the local image with non-empty English alt text
+2026-07-19T16:08:00Z,skill-hub-seo-20260720,README_EN.md hero reference,PASS,verify_readme_visuals.py found the local image with non-empty English alt text
+2026-07-19T16:08:00Z,skill-hub-seo-20260720,Hero dimensions,PASS,1774x887 and readable from all three README entry points
+2026-07-19T16:08:00Z,skill-hub-seo-20260720,GitHub description update,PASS,gh repo view returned the exact English-first bilingual description

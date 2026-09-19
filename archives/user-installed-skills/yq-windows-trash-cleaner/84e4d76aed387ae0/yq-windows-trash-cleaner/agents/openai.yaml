@@ -1,0 +1,4 @@
+interface:
+  display_name: "YQ Windows Trash Cleaner"
+  short_description: "安全审计并清理 Windows 磁盘、项目与内存异常"
+  default_prompt: "Use $yq-windows-trash-cleaner to audit Windows storage, project clutter, Docker/WSL, and memory health; mutate only exact approved targets and verify the result."
