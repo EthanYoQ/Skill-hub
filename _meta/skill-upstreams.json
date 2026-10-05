@@ -1,14 +1,14 @@
 {
   "version": "1.1",
-  "updated_at": "2026-09-15",
+  "updated_at": "2026-10-05",
   "purpose": "Track verified original upstream repositories for Skill-hub skills so future upgrades can compare evidence-backed sources instead of guessing by skill name.",
   "scope": {
     "startsFrom": [
       "_meta/skill-upstreams.json",
       "_meta/skills-lock.json"
     ],
-    "localSkillCount": 60,
-    "sharedSkillCount": 52,
+    "localSkillCount": 63,
+    "sharedSkillCount": 55,
     "projectSkillCount": 8
   },
   "rules": [
@@ -26,7 +26,7 @@
   },
   "verificationSummary": {
     "countsByClassification": {
-      "open-source": 33,
+      "open-source": 36,
       "self": 16,
       "local": 10,
       "candidate": 1
@@ -1329,6 +1329,74 @@
         "Run skill-creator quick_validate.py and the documented behavior cases after changes."
       ],
       "notes": "Self-maintained explicit-only shared skill; external automatic updates are disabled."
+    },
+    {
+      "name": "yq-stable-tests",
+      "path": "skills/01-agent-engineering/yq-stable-tests/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/deepseek-ai/deepseek-harness",
+        "path": ".agents/skills/dsh-ci-test-reliability/",
+        "ref": "master"
+      },
+      "lastChecked": {
+        "date": "2026-10-05",
+        "commit": "5badb15009ae1756c3afe0ae0cef1faafc290ccc"
+      },
+      "updatePolicy": "none",
+      "status": "owner-maintained-generic-adaptation",
+      "evidence": [
+        "Git blob IDs verified against immutable commit.",
+        "Every edited byte span recorded in docs/skill-adaptations/yq-dsh-adaptation-20261005.md",
+        "Byte-preservation verification covers unchanged spans and existing skills.",
+        "Generalization spans recorded and checked separately; unrelated candidate and existing skill files unchanged."
+      ],
+      "notes": "Local candidate only. No automatic upstream replacement. DSH-specific mixed requirements minimally generalized; no pending DSH dependencies. See docs/skill-adaptations/yq-dsh-generalization-20261005.md."
+    },
+    {
+      "name": "yq-clear-context",
+      "path": "skills/01-agent-engineering/yq-clear-context/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/deepseek-ai/deepseek-harness",
+        "path": "packages/preset/agent-preset/skills/agent-experience/",
+        "ref": "master"
+      },
+      "lastChecked": {
+        "date": "2026-10-05",
+        "commit": "5badb15009ae1756c3afe0ae0cef1faafc290ccc"
+      },
+      "updatePolicy": "none",
+      "status": "owner-maintained-minimal-adaptation",
+      "evidence": [
+        "Git blob IDs verified against immutable commit.",
+        "Every edited byte span recorded in docs/skill-adaptations/yq-dsh-adaptation-20261005.md",
+        "Byte-preservation verification covers unchanged spans and existing skills."
+      ],
+      "notes": "Local candidate only. No automatic upstream replacement.  Source symlink .agents/skills/agent-experience/SKILL.md resolved to upstream.path."
+    },
+    {
+      "name": "yq-ui-checks",
+      "path": "skills/07-media-content/yq-ui-checks/",
+      "classification": "open-source",
+      "upstream": {
+        "url": "https://github.com/deepseek-ai/deepseek-harness",
+        "path": ".agents/skills/dsh-client-ui-ux/",
+        "ref": "master"
+      },
+      "lastChecked": {
+        "date": "2026-10-05",
+        "commit": "5badb15009ae1756c3afe0ae0cef1faafc290ccc"
+      },
+      "updatePolicy": "none",
+      "status": "owner-maintained-generic-adaptation",
+      "evidence": [
+        "Git blob IDs verified against immutable commit.",
+        "Every edited byte span recorded in docs/skill-adaptations/yq-dsh-adaptation-20261005.md",
+        "Byte-preservation verification covers unchanged spans and existing skills.",
+        "Generalization spans recorded and checked separately; unrelated candidate and existing skill files unchanged."
+      ],
+      "notes": "Local candidate only. No automatic upstream replacement. DSH-specific mixed requirements minimally generalized; no pending DSH dependencies. See docs/skill-adaptations/yq-dsh-generalization-20261005.md."
     }
   ],
   "alternateCandidates": [

@@ -1,19 +1,19 @@
 # 按能力域索引
 
-共 60 个技能，按 7 个能力域 + projects（项目私有）分组。
+共 55 个技能，按 7 个能力域 + projects（项目私有）分组。
 
 ## 目录
 
-- [01 Agent 工程](#01-agent-工程)（10）
+- [01 Agent 工程](#01-agent-工程)（12）
 - [02 编程语言](#02-编程语言)（1）
 - [03 框架与技术栈](#03-框架与技术栈)（3）
 - [06 数据与检索](#06-数据与检索)（1）
-- [07 媒体与内容制作](#07-媒体与内容制作)（25）
+- [07 媒体与内容制作](#07-媒体与内容制作)（26）
 - [08 写作与营销](#08-写作与营销)（5）
 - [10 行业与业务](#10-行业与业务)（7）
-- [Projects 项目私有](#projects-项目私有)（8）
+- [Projects 项目私有](#projects-项目私有)（0）
 
-## 01 Agent 工程（10）
+## 01 Agent 工程（12）
 
 | 技能名 | 路径 | 中文简介 |
 |---|---|---|
@@ -24,8 +24,10 @@
 | **santa-method** | [skills/01-agent-engineering/santa-method/](../skills/01-agent-engineering/santa-method/) | 多 Agent 对抗验证收敛循环，两个独立审查都通过后才出交付。 |
 | **skill-creator** | [skills/01-agent-engineering/skill-creator/](../skills/01-agent-engineering/skill-creator/) | 创建、修改和优化 skill，并可跑 eval 衡量触发准确率与性能。 |
 | **skill-lifecycle-manager** | [skills/01-agent-engineering/skill-lifecycle-manager/](../skills/01-agent-engineering/skill-lifecycle-manager/) | 管理本地/全局/项目级 skill 与 Skill-hub 生命周期：搜索、推荐、安装、升级、同步、合并、清理、来源校验、质量审计和发布。 |
+| **yq-clear-context** | [skills/01-agent-engineering/yq-clear-context/](../skills/01-agent-engineering/yq-clear-context/) | 设计工具说明、技能加载或上下文组织时使用。 |
 | **yq-pre-push-checks** | [skills/01-agent-engineering/yq-pre-push-checks/](../skills/01-agent-engineering/yq-pre-push-checks/) | 推送或宣称就绪前，选择与变更风险匹配的最小验证。 |
 | **yq-simplify-code** | [skills/01-agent-engineering/yq-simplify-code/](../skills/01-agent-engineering/yq-simplify-code/) | 审计代码、测试或门禁是否重复、过度设计或失去用途。 |
+| **yq-stable-tests** | [skills/01-agent-engineering/yq-stable-tests/](../skills/01-agent-engineering/yq-stable-tests/) | 测试出现偶发失败、资源争用或异步清理问题时使用。 |
 | **yq-windows-trash-cleaner** | [skills/01-agent-engineering/yq-windows-trash-cleaner/](../skills/01-agent-engineering/yq-windows-trash-cleaner/) | Windows C盘、项目垃圾、Docker/WSL、Git worktree、CodeGraph、Agent 会话或内存异常需要安全审计、清理和验证时使用。 |
 
 ## 02 编程语言（1）
@@ -48,7 +50,7 @@
 |---|---|---|
 | **data-scraper-agent** | [skills/06-data-search/data-scraper-agent/](../skills/06-data-search/data-scraper-agent/) | 构建全自动 AI 数据采集 Agent：按计划抓取公开源并用 LLM 富化入库。 |
 
-## 07 媒体与内容制作（25）
+## 07 媒体与内容制作（26）
 
 | 技能名 | 路径 | 中文简介 |
 |---|---|---|
@@ -77,6 +79,7 @@
 | **wechat-article** | [skills/07-media-content/wechat-article/](../skills/07-media-content/wechat-article/) | 傅盛风格的公众号文章创作：对话式、故事驱动、有观点。 |
 | **xlsx** | [skills/07-media-content/xlsx/](../skills/07-media-content/xlsx/) | 电子表格 .xlsx/.csv 等创建、编辑、公式、格式、数据分析与可视化。 |
 | **yq-editorial-presentation-html** | [skills/07-media-content/yq-editorial-presentation-html/](../skills/07-media-content/yq-editorial-presentation-html/) | Anthropic 暖色编辑设计语言，用于演示/case sharing/战略汇报。 |
+| **yq-ui-checks** | [skills/07-media-content/yq-ui-checks/](../skills/07-media-content/yq-ui-checks/) | 开发或审查界面的反馈、可读性和交互边界时使用。 |
 
 ## 08 写作与营销（5）
 
@@ -100,27 +103,6 @@
 | **healthcare-phi-compliance** | [skills/10-business-industry/healthcare-phi-compliance/](../skills/10-business-industry/healthcare-phi-compliance/) | 医疗应用 PHI/PII 合规：数据分级、访问控制、审计、加密、常见泄漏路径。 |
 | **xhs-pharma-social-listening** | [skills/10-business-industry/xhs-pharma-social-listening/](../skills/10-business-industry/xhs-pharma-social-listening/) | 面向外资药企员工痛点的小红书证据化舆情研究：采集并分析药企、岗位、合规、医学事务与 AI 相关笔记和评论，按去重笔记加去重评论计算独立证据，并处理 MediaCrawler CAPTCHA/461 与 OpenCLI 回退。 |
 
-## Projects 项目私有（8）
+## Projects 项目私有（0）
 
-### ai-seed-project（2）
-
-| 技能名 | 路径 | 中文简介 |
-|---|---|---|
-| **aliyun-openapi-mcp-ops** | [projects/ai-seed-project/aliyun-openapi-mcp-ops/](../projects/ai-seed-project/aliyun-openapi-mcp-ops/) | 通过自建 OpenAPI MCP 运维阿里云，聚焦 SWAS 部署：OAuth、选择器更新、诊断、预发验证。 |
-| **feishu-automation** | [projects/ai-seed-project/feishu-automation/](../projects/ai-seed-project/feishu-automation/) | 飞书自动化能力，优先用官方 OpenAPI MCP/CLI，不把后台配置动作误判为 MCP 能力。 |
-
-### ai-seed-project-phase-one-feishu（2）
-
-| 技能名 | 路径 | 中文简介 |
-|---|---|---|
-| **aliyun-swas-manage** | [projects/ai-seed-project-phase-one-feishu/aliyun-swas-manage/](../projects/ai-seed-project-phase-one-feishu/aliyun-swas-manage/) | 端到端管理阿里云 SWAS：实例、命令、磁盘快照、防火墙、监控与轻量数据库。 |
-| **feishu-card-ws** | [projects/ai-seed-project-phase-one-feishu/feishu-card-ws/](../projects/ai-seed-project-phase-one-feishu/feishu-card-ws/) | 飞书交互式卡片在 WebSocket 长连接模式下的配置指南与回调处理。 |
-
-### codex-invoice（4）
-
-| 技能名 | 路径 | 中文简介 |
-|---|---|---|
-| **163-email-ground-truth** | [projects/codex-invoice/163-email-ground-truth/](../projects/codex-invoice/163-email-ground-truth/) | 163/网易邮箱真值集构建、审计与跑批，含 IMAP ID 命令等特殊处理。 |
-| **controlled-lockcheck-autofix** | [projects/codex-invoice/controlled-lockcheck-autofix/](../projects/codex-invoice/controlled-lockcheck-autofix/) | QQ 受控前端 lockcheck 自动化：失败分类、受限自动修复、打包门的证据留存。 |
-| **email-batch-test** | [projects/codex-invoice/email-batch-test/](../projects/codex-invoice/email-batch-test/) | 跑批测试标准与双邮箱回归门禁：P0/P1/P2 标准与保护区改动的双邮箱验证。 |
-| **qq-email-ground-truth** | [projects/codex-invoice/qq-email-ground-truth/](../projects/codex-invoice/qq-email-ground-truth/) | 构建/重建/审计/比对 QQ 邮箱发票真值集，验证跑批输出。 |
+_暂无项目私有技能。_

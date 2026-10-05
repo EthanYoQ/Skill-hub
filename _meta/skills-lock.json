@@ -1,11 +1,11 @@
 {
   "version": "2.0",
-  "generated_at": "2026-09-19T22:57:38+08:00",
-  "note": "Rebuilt indexes from repository SKILL.md files. Total: 52 shared + 8 projects = 60 total",
+  "generated_at": "2026-10-05T12:57:20+08:00",
+  "note": "Rebuilt indexes from repository SKILL.md files. Total: 55 shared + 0 projects = 55 total",
   "counts": {
-    "shared": 52,
-    "projects": 8,
-    "total": 60
+    "shared": 55,
+    "projects": 0,
+    "total": 55
   },
   "shared": [
     {
@@ -51,6 +51,12 @@
       "descriptionZh": "管理本地/全局/项目级 skill 与 Skill-hub 生命周期：搜索、推荐、安装、升级、同步、合并、清理、来源校验、质量审计和发布。"
     },
     {
+      "name": "yq-clear-context",
+      "domain": "01-agent-engineering",
+      "path": "skills/01-agent-engineering/yq-clear-context/",
+      "descriptionZh": "设计工具说明、技能加载或上下文组织时使用。"
+    },
+    {
       "name": "yq-pre-push-checks",
       "domain": "01-agent-engineering",
       "path": "skills/01-agent-engineering/yq-pre-push-checks/",
@@ -61,6 +67,12 @@
       "domain": "01-agent-engineering",
       "path": "skills/01-agent-engineering/yq-simplify-code/",
       "descriptionZh": "审计代码、测试或门禁是否重复、过度设计或失去用途。"
+    },
+    {
+      "name": "yq-stable-tests",
+      "domain": "01-agent-engineering",
+      "path": "skills/01-agent-engineering/yq-stable-tests/",
+      "descriptionZh": "测试出现偶发失败、资源争用或异步清理问题时使用。"
     },
     {
       "name": "yq-windows-trash-cleaner",
@@ -250,6 +262,12 @@
       "descriptionZh": "Anthropic 暖色编辑设计语言，用于演示/case sharing/战略汇报。"
     },
     {
+      "name": "yq-ui-checks",
+      "domain": "07-media-content",
+      "path": "skills/07-media-content/yq-ui-checks/",
+      "descriptionZh": "开发或审查界面的反馈、可读性和交互边界时使用。"
+    },
+    {
       "name": "yq-article-style-imitation",
       "domain": "08-writing-marketing",
       "path": "skills/08-writing-marketing/yq-article-style-imitation/",
@@ -322,54 +340,5 @@
       "descriptionZh": "面向外资药企员工痛点的小红书证据化舆情研究：采集并分析药企、岗位、合规、医学事务与 AI 相关笔记和评论，按去重笔记加去重评论计算独立证据，并处理 MediaCrawler CAPTCHA/461 与 OpenCLI 回退。"
     }
   ],
-  "projects": [
-    {
-      "name": "aliyun-openapi-mcp-ops",
-      "project": "ai-seed-project",
-      "path": "projects/ai-seed-project/aliyun-openapi-mcp-ops/",
-      "descriptionZh": "通过自建 OpenAPI MCP 运维阿里云，聚焦 SWAS 部署：OAuth、选择器更新、诊断、预发验证。"
-    },
-    {
-      "name": "feishu-automation",
-      "project": "ai-seed-project",
-      "path": "projects/ai-seed-project/feishu-automation/",
-      "descriptionZh": "飞书自动化能力，优先用官方 OpenAPI MCP/CLI，不把后台配置动作误判为 MCP 能力。"
-    },
-    {
-      "name": "aliyun-swas-manage",
-      "project": "ai-seed-project-phase-one-feishu",
-      "path": "projects/ai-seed-project-phase-one-feishu/aliyun-swas-manage/",
-      "descriptionZh": "端到端管理阿里云 SWAS：实例、命令、磁盘快照、防火墙、监控与轻量数据库。"
-    },
-    {
-      "name": "feishu-card-ws",
-      "project": "ai-seed-project-phase-one-feishu",
-      "path": "projects/ai-seed-project-phase-one-feishu/feishu-card-ws/",
-      "descriptionZh": "飞书交互式卡片在 WebSocket 长连接模式下的配置指南与回调处理。"
-    },
-    {
-      "name": "163-email-ground-truth",
-      "project": "codex-invoice",
-      "path": "projects/codex-invoice/163-email-ground-truth/",
-      "descriptionZh": "163/网易邮箱真值集构建、审计与跑批，含 IMAP ID 命令等特殊处理。"
-    },
-    {
-      "name": "controlled-lockcheck-autofix",
-      "project": "codex-invoice",
-      "path": "projects/codex-invoice/controlled-lockcheck-autofix/",
-      "descriptionZh": "QQ 受控前端 lockcheck 自动化：失败分类、受限自动修复、打包门的证据留存。"
-    },
-    {
-      "name": "email-batch-test",
-      "project": "codex-invoice",
-      "path": "projects/codex-invoice/email-batch-test/",
-      "descriptionZh": "跑批测试标准与双邮箱回归门禁：P0/P1/P2 标准与保护区改动的双邮箱验证。"
-    },
-    {
-      "name": "qq-email-ground-truth",
-      "project": "codex-invoice",
-      "path": "projects/codex-invoice/qq-email-ground-truth/",
-      "descriptionZh": "构建/重建/审计/比对 QQ 邮箱发票真值集，验证跑批输出。"
-    }
-  ]
+  "projects": []
 }
