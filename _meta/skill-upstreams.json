@@ -1,14 +1,14 @@
 {
   "version": "1.1",
-  "updated_at": "2026-10-05",
+  "updated_at": "2026-10-16",
   "purpose": "Track verified original upstream repositories for Skill-hub skills so future upgrades can compare evidence-backed sources instead of guessing by skill name.",
   "scope": {
     "startsFrom": [
       "_meta/skill-upstreams.json",
       "_meta/skills-lock.json"
     ],
-    "localSkillCount": 63,
-    "sharedSkillCount": 55,
+    "localSkillCount": 64,
+    "sharedSkillCount": 56,
     "projectSkillCount": 8
   },
   "rules": [
@@ -27,7 +27,7 @@
   "verificationSummary": {
     "countsByClassification": {
       "open-source": 36,
-      "self": 16,
+      "self": 17,
       "local": 10,
       "candidate": 1
     },
@@ -1397,6 +1397,18 @@
         "Generalization spans recorded and checked separately; unrelated candidate and existing skill files unchanged."
       ],
       "notes": "Local candidate only. No automatic upstream replacement. DSH-specific mixed requirements minimally generalized; no pending DSH dependencies. See docs/skill-adaptations/yq-dsh-generalization-20261005.md."
+    },
+    {
+      "name": "vps-reality-deploy",
+      "path": "skills/03-frameworks/vps-reality-deploy/",
+      "classification": "self",
+      "updatePolicy": "none",
+      "status": "owner-maintained",
+      "evidence": [
+        "Generalized from an owner-authorized VPS deployment and target-selection workflow.",
+        "Protocol references point to official Xray and mihomo documentation; no server credentials or instance artifacts are included."
+      ],
+      "notes": "Reusable procedure; target and version selection require fresh testing for each deployment."
     }
   ],
   "alternateCandidates": [

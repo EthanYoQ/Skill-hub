@@ -1,12 +1,12 @@
 # 按能力域索引
 
-共 55 个技能，按 7 个能力域 + projects（项目私有）分组。
+共 56 个技能，按 7 个能力域 + projects（项目私有）分组。
 
 ## 目录
 
 - [01 Agent 工程](#01-agent-工程)（12）
 - [02 编程语言](#02-编程语言)（1）
-- [03 框架与技术栈](#03-框架与技术栈)（3）
+- [03 框架与技术栈](#03-框架与技术栈)（4）
 - [06 数据与检索](#06-数据与检索)（1）
 - [07 媒体与内容制作](#07-媒体与内容制作)（26）
 - [08 写作与营销](#08-写作与营销)（5）
@@ -36,13 +36,14 @@
 |---|---|---|
 | **liquid-glass-design** | [skills/02-coding-languages/swift/liquid-glass-design/](../skills/02-coding-languages/swift/liquid-glass-design/) | iOS 26 Liquid Glass 设计系统：SwiftUI/UIKit/WidgetKit 的玻璃材质与交互。 |
 
-## 03 框架与技术栈（3）
+## 03 框架与技术栈（4）
 
 | 技能名 | 路径 | 中文简介 |
 |---|---|---|
 | **electron-development** | [skills/03-frameworks/electron-development/](../skills/03-frameworks/electron-development/) | 开发 Electron 应用、本地打包，并在 GitHub Actions 构建和验收 macOS 安装包。 |
 | **frontend-design** | [skills/03-frameworks/frontend-design/](../skills/03-frameworks/frontend-design/) | 创建具有高设计质量的生产级前端界面。 |
 | **netlify-cli** | [skills/03-frameworks/netlify-cli/](../skills/03-frameworks/netlify-cli/) | 使用 Netlify CLI 完成安装、认证、站点关联、本地开发、环境变量管理与部署。 |
+| **vps-reality-deploy** | [skills/03-frameworks/vps-reality-deploy/](../skills/03-frameworks/vps-reality-deploy/) | 为搬瓦工等 VPS 部署代理或优化 REALITY 伪装时使用。 |
 
 ## 06 数据与检索（1）
 

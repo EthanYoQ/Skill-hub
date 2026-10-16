@@ -1,6 +1,6 @@
 # 按技能名 A-Z 索引
 
-共 55 个技能（55 个共享 + 0 个项目私有）。项目私有技能以 *(项目)* 标注。
+共 56 个技能（56 个共享 + 0 个项目私有）。项目私有技能以 *(项目)* 标注。
 
 | # | 技能名 | 路径 | 中文简介 |
 |---|---|---|---|
@@ -44,18 +44,19 @@
 | 38 | **skill-creator** | [skills/01-agent-engineering/skill-creator/](../skills/01-agent-engineering/skill-creator/) | 创建、修改和优化 skill，并可跑 eval 衡量触发准确率与性能。 |
 | 39 | **skill-lifecycle-manager** | [skills/01-agent-engineering/skill-lifecycle-manager/](../skills/01-agent-engineering/skill-lifecycle-manager/) | 管理本地/全局/项目级 skill 与 Skill-hub 生命周期：搜索、推荐、安装、升级、同步、合并、清理、来源校验、质量审计和发布。 |
 | 40 | **ui-ux-pro-max** | [skills/07-media-content/ui-ux-pro-max/](../skills/07-media-content/ui-ux-pro-max/) | 设计、构建或审查 Web/移动端 UI 时，检索风格、配色、字体、布局、UX、动效、图表及多技术栈实现建议。 |
-| 41 | **wechat-article** | [skills/07-media-content/wechat-article/](../skills/07-media-content/wechat-article/) | 傅盛风格的公众号文章创作：对话式、故事驱动、有观点。 |
-| 42 | **xhs-pharma-social-listening** | [skills/10-business-industry/xhs-pharma-social-listening/](../skills/10-business-industry/xhs-pharma-social-listening/) | 面向外资药企员工痛点的小红书证据化舆情研究：采集并分析药企、岗位、合规、医学事务与 AI 相关笔记和评论，按去重笔记加去重评论计算独立证据，并处理 MediaCrawler CAPTCHA/461 与 OpenCLI 回退。 |
-| 43 | **xlsx** | [skills/07-media-content/xlsx/](../skills/07-media-content/xlsx/) | 电子表格 .xlsx/.csv 等创建、编辑、公式、格式、数据分析与可视化。 |
-| 44 | **yq-article-style-imitation** | [skills/08-writing-marketing/yq-article-style-imitation/](../skills/08-writing-marketing/yq-article-style-imitation/) | 任意作家文章风格仿写：验证作者原文、拆解表达 DNA、生成并修复公众号/小红书稿。 |
-| 45 | **yq-clear-context** | [skills/01-agent-engineering/yq-clear-context/](../skills/01-agent-engineering/yq-clear-context/) | 设计工具说明、技能加载或上下文组织时使用。 |
-| 46 | **yq-doc-maintenance** | [skills/08-writing-marketing/yq-doc-maintenance/](../skills/08-writing-marketing/yq-doc-maintenance/) | 文档出现腐化、冲突、重复、导航或归档混乱时使用。 |
-| 47 | **yq-editorial-presentation-html** | [skills/07-media-content/yq-editorial-presentation-html/](../skills/07-media-content/yq-editorial-presentation-html/) | Anthropic 暖色编辑设计语言，用于演示/case sharing/战略汇报。 |
-| 48 | **yq-pre-push-checks** | [skills/01-agent-engineering/yq-pre-push-checks/](../skills/01-agent-engineering/yq-pre-push-checks/) | 推送或宣称就绪前，选择与变更风险匹配的最小验证。 |
-| 49 | **yq-remove-reasoning-leaks** | [skills/08-writing-marketing/yq-remove-reasoning-leaks/](../skills/08-writing-marketing/yq-remove-reasoning-leaks/) | 技术文本残留评审过程、草稿引用或推理旁白时使用。 |
-| 50 | **yq-simplify-code** | [skills/01-agent-engineering/yq-simplify-code/](../skills/01-agent-engineering/yq-simplify-code/) | 审计代码、测试或门禁是否重复、过度设计或失去用途。 |
-| 51 | **yq-stable-tests** | [skills/01-agent-engineering/yq-stable-tests/](../skills/01-agent-engineering/yq-stable-tests/) | 测试出现偶发失败、资源争用或异步清理问题时使用。 |
-| 52 | **yq-technical-writing** | [skills/08-writing-marketing/yq-technical-writing/](../skills/08-writing-marketing/yq-technical-writing/) | 编写或精简技术文档、注释、提示词和界面文案时使用。 |
-| 53 | **yq-translate-docs** | [skills/08-writing-marketing/yq-translate-docs/](../skills/08-writing-marketing/yq-translate-docs/) | 维护中英双语文档的语义一致、结构对应和自然表达。 |
-| 54 | **yq-ui-checks** | [skills/07-media-content/yq-ui-checks/](../skills/07-media-content/yq-ui-checks/) | 开发或审查界面的反馈、可读性和交互边界时使用。 |
-| 55 | **yq-windows-trash-cleaner** | [skills/01-agent-engineering/yq-windows-trash-cleaner/](../skills/01-agent-engineering/yq-windows-trash-cleaner/) | Windows C盘、项目垃圾、Docker/WSL、Git worktree、CodeGraph、Agent 会话或内存异常需要安全审计、清理和验证时使用。 |
+| 41 | **vps-reality-deploy** | [skills/03-frameworks/vps-reality-deploy/](../skills/03-frameworks/vps-reality-deploy/) | 为搬瓦工等 VPS 部署代理或优化 REALITY 伪装时使用。 |
+| 42 | **wechat-article** | [skills/07-media-content/wechat-article/](../skills/07-media-content/wechat-article/) | 傅盛风格的公众号文章创作：对话式、故事驱动、有观点。 |
+| 43 | **xhs-pharma-social-listening** | [skills/10-business-industry/xhs-pharma-social-listening/](../skills/10-business-industry/xhs-pharma-social-listening/) | 面向外资药企员工痛点的小红书证据化舆情研究：采集并分析药企、岗位、合规、医学事务与 AI 相关笔记和评论，按去重笔记加去重评论计算独立证据，并处理 MediaCrawler CAPTCHA/461 与 OpenCLI 回退。 |
+| 44 | **xlsx** | [skills/07-media-content/xlsx/](../skills/07-media-content/xlsx/) | 电子表格 .xlsx/.csv 等创建、编辑、公式、格式、数据分析与可视化。 |
+| 45 | **yq-article-style-imitation** | [skills/08-writing-marketing/yq-article-style-imitation/](../skills/08-writing-marketing/yq-article-style-imitation/) | 任意作家文章风格仿写：验证作者原文、拆解表达 DNA、生成并修复公众号/小红书稿。 |
+| 46 | **yq-clear-context** | [skills/01-agent-engineering/yq-clear-context/](../skills/01-agent-engineering/yq-clear-context/) | 设计工具说明、技能加载或上下文组织时使用。 |
+| 47 | **yq-doc-maintenance** | [skills/08-writing-marketing/yq-doc-maintenance/](../skills/08-writing-marketing/yq-doc-maintenance/) | 文档出现腐化、冲突、重复、导航或归档混乱时使用。 |
+| 48 | **yq-editorial-presentation-html** | [skills/07-media-content/yq-editorial-presentation-html/](../skills/07-media-content/yq-editorial-presentation-html/) | Anthropic 暖色编辑设计语言，用于演示/case sharing/战略汇报。 |
+| 49 | **yq-pre-push-checks** | [skills/01-agent-engineering/yq-pre-push-checks/](../skills/01-agent-engineering/yq-pre-push-checks/) | 推送或宣称就绪前，选择与变更风险匹配的最小验证。 |
+| 50 | **yq-remove-reasoning-leaks** | [skills/08-writing-marketing/yq-remove-reasoning-leaks/](../skills/08-writing-marketing/yq-remove-reasoning-leaks/) | 技术文本残留评审过程、草稿引用或推理旁白时使用。 |
+| 51 | **yq-simplify-code** | [skills/01-agent-engineering/yq-simplify-code/](../skills/01-agent-engineering/yq-simplify-code/) | 审计代码、测试或门禁是否重复、过度设计或失去用途。 |
+| 52 | **yq-stable-tests** | [skills/01-agent-engineering/yq-stable-tests/](../skills/01-agent-engineering/yq-stable-tests/) | 测试出现偶发失败、资源争用或异步清理问题时使用。 |
+| 53 | **yq-technical-writing** | [skills/08-writing-marketing/yq-technical-writing/](../skills/08-writing-marketing/yq-technical-writing/) | 编写或精简技术文档、注释、提示词和界面文案时使用。 |
+| 54 | **yq-translate-docs** | [skills/08-writing-marketing/yq-translate-docs/](../skills/08-writing-marketing/yq-translate-docs/) | 维护中英双语文档的语义一致、结构对应和自然表达。 |
+| 55 | **yq-ui-checks** | [skills/07-media-content/yq-ui-checks/](../skills/07-media-content/yq-ui-checks/) | 开发或审查界面的反馈、可读性和交互边界时使用。 |
+| 56 | **yq-windows-trash-cleaner** | [skills/01-agent-engineering/yq-windows-trash-cleaner/](../skills/01-agent-engineering/yq-windows-trash-cleaner/) | Windows C盘、项目垃圾、Docker/WSL、Git worktree、CodeGraph、Agent 会话或内存异常需要安全审计、清理和验证时使用。 |
