@@ -1,6 +1,6 @@
 {
   "version": "1.1",
-  "updated_at": "2026-10-16",
+  "updated_at": "2026-10-17",
   "purpose": "Track verified original upstream repositories for Skill-hub skills so future upgrades can compare evidence-backed sources instead of guessing by skill name.",
   "scope": {
     "startsFrom": [
@@ -1408,7 +1408,7 @@
         "Generalized from an owner-authorized VPS deployment and target-selection workflow.",
         "Protocol references point to official Xray and mihomo documentation; no server credentials or instance artifacts are included."
       ],
-      "notes": "Reusable procedure; target and version selection require fresh testing for each deployment."
+      "notes": "Reusable procedure covering REALITY plus independent TUIC, measured clock correction, verified TLS and certificate renewal, and bounded concurrency and long-stream acceptance. Target and version selection require fresh testing for each deployment."
     }
   ],
   "alternateCandidates": [

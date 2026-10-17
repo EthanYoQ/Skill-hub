@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "generated_at": "2026-10-16T23:02:47+08:00",
+  "generated_at": "2026-10-17T09:45:05+08:00",
   "note": "Rebuilt indexes from repository SKILL.md files. Total: 56 shared + 0 projects = 56 total",
   "counts": {
     "shared": 56,
@@ -109,7 +109,7 @@
       "name": "vps-reality-deploy",
       "domain": "03-frameworks",
       "path": "skills/03-frameworks/vps-reality-deploy/",
-      "descriptionZh": "为搬瓦工等 VPS 部署代理或优化 REALITY 伪装时使用。"
+      "descriptionZh": "部署 VPS REALITY、TUIC 双协议或排查时钟断流时使用。"
     },
     {
       "name": "data-scraper-agent",

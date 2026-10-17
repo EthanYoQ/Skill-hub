@@ -1,4 +1,4 @@
 interface:
-  display_name: "VPS REALITY 部署"
-  short_description: "部署双节点 XHTTP REALITY，实测伪装目标并生成客户端交付文件"
-  default_prompt: "使用 $vps-reality-deploy 为我的 VPS 部署两个节点，筛选伪装目标，生成 YAML、二维码及私密恢复文档。"
+  display_name: "VPS REALITY 与 TUIC 部署"
+  short_description: "部署 REALITY 与 TUIC 双协议，核对时钟、证书并生成私密交付文件"
+  default_prompt: "使用 $vps-reality-deploy 为我的 VPS 部署 VLESS XHTTP REALITY TCP 主节点和 TUIC v5 UDP 备用，保留现有可用入口，生成 YAML、二维码及私密恢复文档，并逐项验证。"

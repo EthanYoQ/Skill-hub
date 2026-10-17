@@ -44,7 +44,7 @@
 | 38 | **skill-creator** | [skills/01-agent-engineering/skill-creator/](../skills/01-agent-engineering/skill-creator/) | 创建、修改和优化 skill，并可跑 eval 衡量触发准确率与性能。 |
 | 39 | **skill-lifecycle-manager** | [skills/01-agent-engineering/skill-lifecycle-manager/](../skills/01-agent-engineering/skill-lifecycle-manager/) | 管理本地/全局/项目级 skill 与 Skill-hub 生命周期：搜索、推荐、安装、升级、同步、合并、清理、来源校验、质量审计和发布。 |
 | 40 | **ui-ux-pro-max** | [skills/07-media-content/ui-ux-pro-max/](../skills/07-media-content/ui-ux-pro-max/) | 设计、构建或审查 Web/移动端 UI 时，检索风格、配色、字体、布局、UX、动效、图表及多技术栈实现建议。 |
-| 41 | **vps-reality-deploy** | [skills/03-frameworks/vps-reality-deploy/](../skills/03-frameworks/vps-reality-deploy/) | 为搬瓦工等 VPS 部署代理或优化 REALITY 伪装时使用。 |
+| 41 | **vps-reality-deploy** | [skills/03-frameworks/vps-reality-deploy/](../skills/03-frameworks/vps-reality-deploy/) | 部署 VPS REALITY、TUIC 双协议或排查时钟断流时使用。 |
 | 42 | **wechat-article** | [skills/07-media-content/wechat-article/](../skills/07-media-content/wechat-article/) | 傅盛风格的公众号文章创作：对话式、故事驱动、有观点。 |
 | 43 | **xhs-pharma-social-listening** | [skills/10-business-industry/xhs-pharma-social-listening/](../skills/10-business-industry/xhs-pharma-social-listening/) | 面向外资药企员工痛点的小红书证据化舆情研究：采集并分析药企、岗位、合规、医学事务与 AI 相关笔记和评论，按去重笔记加去重评论计算独立证据，并处理 MediaCrawler CAPTCHA/461 与 OpenCLI 回退。 |
 | 44 | **xlsx** | [skills/07-media-content/xlsx/](../skills/07-media-content/xlsx/) | 电子表格 .xlsx/.csv 等创建、编辑、公式、格式、数据分析与可视化。 |
