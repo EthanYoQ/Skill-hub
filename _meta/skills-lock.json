@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "generated_at": "2026-10-17T09:45:05+08:00",
+  "generated_at": "2026-10-18T14:57:21+08:00",
   "note": "Rebuilt indexes from repository SKILL.md files. Total: 56 shared + 0 projects = 56 total",
   "counts": {
     "shared": 56,
@@ -106,10 +106,10 @@
       "descriptionZh": "使用 Netlify CLI 完成安装、认证、站点关联、本地开发、环境变量管理与部署。"
     },
     {
-      "name": "vps-reality-deploy",
+      "name": "yq-vps-vpn-deploy",
       "domain": "03-frameworks",
-      "path": "skills/03-frameworks/vps-reality-deploy/",
-      "descriptionZh": "部署 VPS REALITY、TUIC 双协议或排查时钟断流时使用。"
+      "path": "skills/03-frameworks/yq-vps-vpn-deploy/",
+      "descriptionZh": "引导新手用 Agent 为搬瓦工等 VPS 部署双协议代理并导入客户端。"
     },
     {
       "name": "data-scraper-agent",

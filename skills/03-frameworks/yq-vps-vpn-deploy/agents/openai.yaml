@@ -1,0 +1,4 @@
+interface:
+  display_name: "YQ VPS VPN 引导部署"
+  short_description: "引导新手提供搬瓦工邮件，由 Agent 部署双协议节点并说明客户端导入步骤"
+  default_prompt: "使用 $yq-vps-vpn-deploy 引导我为搬瓦工 VPS 搭建双协议 VPN。先告诉我需要提供哪三封邮件，再由你部署、验证并交付 YAML、两张 Shadowrocket 二维码和私密恢复文档，教我自行导入。"
