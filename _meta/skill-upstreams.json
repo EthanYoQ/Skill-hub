@@ -1,6 +1,6 @@
 {
   "version": "1.1",
-  "updated_at": "2026-10-17",
+  "updated_at": "2026-10-18",
   "purpose": "Track verified original upstream repositories for Skill-hub skills so future upgrades can compare evidence-backed sources instead of guessing by skill name.",
   "scope": {
     "startsFrom": [
@@ -1399,8 +1399,8 @@
       "notes": "Local candidate only. No automatic upstream replacement. DSH-specific mixed requirements minimally generalized; no pending DSH dependencies. See docs/skill-adaptations/yq-dsh-generalization-20261005.md."
     },
     {
-      "name": "vps-reality-deploy",
-      "path": "skills/03-frameworks/vps-reality-deploy/",
+      "name": "yq-vps-vpn-deploy",
+      "path": "skills/03-frameworks/yq-vps-vpn-deploy/",
       "classification": "self",
       "updatePolicy": "none",
       "status": "owner-maintained",
@@ -1408,7 +1408,7 @@
         "Generalized from an owner-authorized VPS deployment and target-selection workflow.",
         "Protocol references point to official Xray and mihomo documentation; no server credentials or instance artifacts are included."
       ],
-      "notes": "Reusable procedure covering REALITY plus independent TUIC, measured clock correction, verified TLS and certificate renewal, and bounded concurrency and long-stream acceptance. Target and version selection require fresh testing for each deployment."
+      "notes": "Reusable procedure covering REALITY plus independent TUIC, measured clock correction, verified TLS and certificate renewal, and bounded concurrency and long-stream acceptance. Target and version selection require fresh testing for each deployment. Guided intake defaults to user-supplied mail text or private files, with no mailbox-connector prerequisite; delivery includes novice client import steps."
     }
   ],
   "alternateCandidates": [
