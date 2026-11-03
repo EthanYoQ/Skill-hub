@@ -1,11 +1,11 @@
 {
   "version": "2.0",
-  "generated_at": "2026-10-18T14:57:21+08:00",
-  "note": "Rebuilt indexes from repository SKILL.md files. Total: 56 shared + 0 projects = 56 total",
+  "generated_at": "2026-11-03T22:00:48+08:00",
+  "note": "Rebuilt indexes from repository SKILL.md files. Total: 57 shared + 0 projects = 57 total",
   "counts": {
-    "shared": 56,
+    "shared": 57,
     "projects": 0,
-    "total": 56
+    "total": 57
   },
   "shared": [
     {
@@ -314,6 +314,12 @@
       "domain": "10-business-industry",
       "path": "skills/10-business-industry/creating-financial-models/",
       "descriptionZh": "高级财务建模套件，含 DCF 估值、敏感性分析、蒙特卡洛模拟。"
+    },
+    {
+      "name": "dxy-task-clarify",
+      "domain": "10-business-industry",
+      "path": "skills/10-business-industry/dxy-task-clarify/",
+      "descriptionZh": "需求含糊时先带选项追问问清任务，写成任务卡，确认后再执行。"
     },
     {
       "name": "healthcare-cdss-patterns",

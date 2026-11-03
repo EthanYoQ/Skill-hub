@@ -1,6 +1,6 @@
 # 按能力域索引
 
-共 56 个技能，按 7 个能力域 + projects（项目私有）分组。
+共 57 个技能，按 7 个能力域 + projects（项目私有）分组。
 
 ## 目录
 
@@ -10,7 +10,7 @@
 - [06 数据与检索](#06-数据与检索)（1）
 - [07 媒体与内容制作](#07-媒体与内容制作)（26）
 - [08 写作与营销](#08-写作与营销)（5）
-- [10 行业与业务](#10-行业与业务)（7）
+- [10 行业与业务](#10-行业与业务)（8）
 - [Projects 项目私有](#projects-项目私有)（0）
 
 ## 01 Agent 工程（12）
@@ -92,12 +92,13 @@
 | **yq-technical-writing** | [skills/08-writing-marketing/yq-technical-writing/](../skills/08-writing-marketing/yq-technical-writing/) | 编写或精简技术文档、注释、提示词和界面文案时使用。 |
 | **yq-translate-docs** | [skills/08-writing-marketing/yq-translate-docs/](../skills/08-writing-marketing/yq-translate-docs/) | 维护中英双语文档的语义一致、结构对应和自然表达。 |
 
-## 10 行业与业务（7）
+## 10 行业与业务（8）
 
 | 技能名 | 路径 | 中文简介 |
 |---|---|---|
 | **contract-review** | [skills/10-business-industry/contract-review/](../skills/10-business-industry/contract-review/) | 合同审核：三层审查（基础/业务/法律）、结构化注释、摘要与 Mermaid 流程图。 |
 | **creating-financial-models** | [skills/10-business-industry/creating-financial-models/](../skills/10-business-industry/creating-financial-models/) | 高级财务建模套件，含 DCF 估值、敏感性分析、蒙特卡洛模拟。 |
+| **dxy-task-clarify** | [skills/10-business-industry/dxy-task-clarify/](../skills/10-business-industry/dxy-task-clarify/) | 需求含糊时先带选项追问问清任务，写成任务卡，确认后再执行。 |
 | **healthcare-cdss-patterns** | [skills/10-business-industry/healthcare-cdss-patterns/](../skills/10-business-industry/healthcare-cdss-patterns/) | 临床决策支持系统开发：药物互作、剂量校验、临床评分、告警分级与 EMR 集成。 |
 | **healthcare-emr-patterns** | [skills/10-business-industry/healthcare-emr-patterns/](../skills/10-business-industry/healthcare-emr-patterns/) | 医疗 EMR/EHR 开发模式：临床安全、就诊流程、处方生成、CDSS 集成、无障碍 UI。 |
 | **healthcare-eval-harness** | [skills/10-business-industry/healthcare-eval-harness/](../skills/10-business-industry/healthcare-eval-harness/) | 医疗发布的病人安全评测 harness：CDSS、PHI、临床流程与集成合规，失败阻断上线。 |

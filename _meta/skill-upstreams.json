@@ -1129,6 +1129,18 @@
       "notes": "Self-maintained shared skill; external automatic updates disabled."
     },
     {
+      "name": "dxy-task-clarify",
+      "path": "skills/10-business-industry/dxy-task-clarify/",
+      "classification": "self",
+      "updatePolicy": "none",
+      "status": "owner-maintained",
+      "evidence": [
+        "Skill was built locally from the DXY handbook 好问题才有好答案：药企AI提示词实战手册 (method, role scenarios, prompt texts, figures) and iterated against multi-turn DeepSeek evaluations.",
+        "No upstream skill repository; the handbook is source material, not an upstream copy of this skill."
+      ],
+      "notes": "Prompt texts under references/prompts/ are taken verbatim from the handbook; rights to handbook content remain with the publisher."
+    },
+    {
       "name": "xhs-pharma-social-listening",
       "path": "skills/10-business-industry/xhs-pharma-social-listening/",
       "classification": "self",
