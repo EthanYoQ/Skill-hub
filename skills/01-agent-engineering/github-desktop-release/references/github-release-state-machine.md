@@ -18,7 +18,7 @@ UNQUALIFIED
 
 进入 `READ_ONLY_PLAN` 前先完成 [promotion-preflight.md](promotion-preflight.md)。本地缺少解压工具、磁盘不足、账号选择错误或 output/cache 计划无效时，在下载大 artifact 前停止；修复这些本地条件后沿用同一 immutable run identities，不重新 qualification。
 
-不要让每个项目重写这套状态机。将 Skill 的 `scripts/github-desktop-promotion.mjs` 与 `scripts/validate-release-profile.mjs` 原样复制到项目的 `.release/scripts/`，保留文件名，并复制 promotion workflow 模板。项目只维护 release profile 与 qualification acceptance adapters。
+不要让每个项目重写这套状态机。将 Skill 的 `scripts/github-desktop-promotion.mjs`、`scripts/validate-release-profile.mjs` 与 `scripts/freeze-release-contract.mjs` 原样复制到项目的 `.release/scripts/`，保留文件名，并复制 promotion workflow 模板与各平台 qualification 模板。前两份由 promotion 使用，冻结脚本由 qualification 模板在 install 前调用，写出带身份字段的 contract 与 ledger。项目只维护 release profile 与 qualification acceptance adapters。复制后项目须遵守校验脚本的命名要求：macOS 资产名含 `-mac-<arch>-`。
 
 两份脚本的行为要点：
 

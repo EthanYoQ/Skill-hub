@@ -190,16 +190,19 @@ $scriptRoot = [System.IO.Path]::GetDirectoryName($PSCommandPath)
 $skillRoot = Split-Path -Parent $scriptRoot
 $skillPath = Join-Path $skillRoot 'SKILL.md'
 $qualificationPath = Join-Path $skillRoot 'assets\electron-nsis-qualification.yml'
-$macosQualificationPath = Join-Path $skillRoot 'assets\macos-qualification.yml'
+$macosArm64QualificationPath = Join-Path $skillRoot 'assets\macos-arm64-qualification.yml'
+$macosX64QualificationPath = Join-Path $skillRoot 'assets\macos-x64-qualification.yml'
 $promotionPath = Join-Path $skillRoot 'assets\github-desktop-release-promotion.yml'
 $promotionEnginePath = Join-Path $scriptRoot 'github-desktop-promotion.mjs'
+$freezeScriptPath = Join-Path $scriptRoot 'freeze-release-contract.mjs'
 $preflightPath = Join-Path $scriptRoot 'preflight-windows-release.ps1'
 $preflightTestPath = Join-Path $scriptRoot 'test-preflight.ps1'
 $evidenceReferencePath = Join-Path $skillRoot 'references\evidence-contract.md'
 $contractReferencePath = Join-Path $skillRoot 'references\release-contract.md'
 $adapterReferencePath = Join-Path $skillRoot 'references\stack-adapters.md'
 
-foreach ($path in @($qualificationPath, $macosQualificationPath, $promotionPath)) {
+Assert-Condition -Condition (-not (Test-Path -LiteralPath (Join-Path $skillRoot 'assets\macos-qualification.yml'))) -Message 'The legacy single-entity macOS template must not return.'
+foreach ($path in @($qualificationPath, $macosArm64QualificationPath, $macosX64QualificationPath, $promotionPath)) {
     Assert-Condition -Condition (Test-Path -LiteralPath $path -PathType Leaf) -Message "Workflow asset is missing: $path"
     $content = Get-Content -LiteralPath $path -Raw
     Assert-WorkflowHeaderIsClean -Content $content -AssetName $path
@@ -207,21 +210,24 @@ foreach ($path in @($qualificationPath, $macosQualificationPath, $promotionPath)
     foreach ($rootKey in @('name:', 'on:', 'permissions:', 'jobs:')) {
         Assert-Condition -Condition ($content -match ('(?m)^' + [regex]::Escape($rootKey))) -Message "Workflow asset is missing root key ${rootKey}: $path"
     }
-    foreach ($line in @($content -split [Environment]::NewLine | Where-Object { $_ -match '^\s+\S' })) {
+    foreach ($line in @($content -split '\r?\n' | Where-Object { $_ -match '^\s+\S' })) {
         $indent = ($line -replace '^(\s*).*$', '$1').Length
         Assert-Condition -Condition (($indent % 2) -eq 0) -Message "Workflow asset has uneven YAML indentation: $path"
     }
 }
 
 $qualification = Get-Content -LiteralPath $qualificationPath -Raw
-$macosQualification = Get-Content -LiteralPath $macosQualificationPath -Raw
+$macosArm64Qualification = Get-Content -LiteralPath $macosArm64QualificationPath -Raw
+$macosX64Qualification = Get-Content -LiteralPath $macosX64QualificationPath -Raw
+$macosQualifications = @($macosArm64Qualification, $macosX64Qualification)
 $promotion = Get-Content -LiteralPath $promotionPath -Raw
 $promotionEngine = Get-Content -LiteralPath $promotionEnginePath -Raw
 $qualificationBlocks = Get-PwshRunBlocks -Path $qualificationPath
 Assert-Condition -Condition ($qualificationBlocks.Count -gt 0) -Message 'Qualification must contain shell: pwsh run blocks.'
 Assert-PowerShellParses -Blocks $qualificationBlocks
 Assert-GitHubExpressionDelimiters -Content $qualification -AssetName 'qualification workflow'
-Assert-GitHubExpressionDelimiters -Content $macosQualification -AssetName 'macOS qualification workflow'
+Assert-GitHubExpressionDelimiters -Content $macosArm64Qualification -AssetName 'macOS arm64 qualification workflow'
+Assert-GitHubExpressionDelimiters -Content $macosX64Qualification -AssetName 'macOS x64 qualification workflow'
 Assert-GitHubExpressionDelimiters -Content $promotion -AssetName 'promotion workflow'
 Assert-Throws -Action { Assert-GitHubExpressionDelimiters -Content '${{{ github.sha }}' -AssetName 'invalid fixture' } -Message 'GitHub expression validation must reject a triple-open delimiter.'
 Assert-Throws -Action { Assert-WorkflowHeaderIsClean -Content 'Exit code: 0' -AssetName 'invalid fixture' } -Message 'Workflow header validation must reject Exit code tool output.'
@@ -235,7 +241,7 @@ $expectedPins = @{
     'upload-artifact' = 'ea165f8d65b6e75b540449e92b4886f43607fa02'
     'download-artifact' = 'd3f86a106a0bac45b974a628896c90dbdf5c8093'
 }
-foreach ($asset in @($qualification, $macosQualification, $promotion)) {
+foreach ($asset in @($qualification, $macosArm64Qualification, $macosX64Qualification, $promotion)) {
     $uses = [regex]::Matches($asset, '(?m)^\s*uses:\s*actions/(?<action>[a-z0-9-]+)@(?<ref>[^\s#]+)\s*$')
     Assert-Condition -Condition ($uses.Count -gt 0) -Message 'Workflow assets must use immutable actions pins.'
     foreach ($use in $uses) {
@@ -264,8 +270,10 @@ $skillAcceptanceIndex = $skillContent.IndexOf('对 installer 做真实安装')
 Assert-Condition -Condition ($skillFreezeIndex -ge 0 -and $skillFreezeIndex -lt $skillInstallIndex -and $skillInstallIndex -lt $skillAcceptanceIndex) -Message 'SKILL.md must freeze/hash the contract before install, build, and acceptance.'
 
 Assert-Condition -Condition ($qualification -match '\$profile\.platforms\.windows\.acceptanceReceipts') -Message 'Windows receipt set must come from the frozen profile.'
-Assert-Condition -Condition ($macosQualification -match 'profile\.platforms\.macos\.acceptanceReceipts') -Message 'macOS receipt set must come from the frozen profile.'
-foreach ($producer in @($qualification, $macosQualification)) {
+foreach ($macosQualification in $macosQualifications) {
+    Assert-Condition -Condition ($macosQualification -match 'const policy = profile\.platforms\?\.\[entity\]' -and $macosQualification -match 'policy\.acceptanceReceipts\.map') -Message 'macOS receipt set must come from the frozen profile entity.'
+}
+foreach ($producer in @($qualification) + $macosQualifications) {
     Assert-Condition -Condition ($producer -match 'acceptance JSON set must exactly equal profile acceptanceReceipts') -Message 'Producer must fail closed when on-disk acceptance JSON differs from profile.'
     Assert-Condition -Condition ($producer -match 'exactly one signing\.json receipt') -Message 'Producer must require exactly one profile-declared signing receipt.'
     Assert-Condition -Condition ($producer -match 'acceptance evidence root cannot be a (?:reparse point|symlink)') -Message 'Producer must reject a reparse/symlink acceptance root.'
@@ -279,7 +287,9 @@ foreach ($field in @('accepted', 'observations', 'status', 'validationResult', '
     Assert-Condition -Condition ($qualification -match [regex]::Escape($field)) -Message "Qualification signing/evidence validation is missing $field."
 }
 Assert-Condition -Condition ($qualification -match 'signing = \$signingEnvelope' -and $qualification -match 'NotePropertyName signing -NotePropertyValue \$signingEnvelope') -Message 'Windows ledger and manifest must reuse the same four-field signing envelope.'
-Assert-Condition -Condition ($macosQualification -match 'ledger\.signing = \{ status: signing\.status, validationResult: signing\.validationResult, unsignedDistributionImpact: signing\.unsignedDistributionImpact, evidencePath: signing\.evidencePath \}' -and $macosQualification -match 'artifacts, evidence, signing') -Message 'macOS ledger signing must match the manifest signing envelope including evidencePath.'
+foreach ($macosQualification in $macosQualifications) {
+    Assert-Condition -Condition ($macosQualification -match 'ledger\.signing = \{ status: signing\.status, validationResult: signing\.validationResult, unsignedDistributionImpact: signing\.unsignedDistributionImpact, evidencePath: signing\.evidencePath \}' -and $macosQualification -match 'artifacts, evidence, signing') -Message 'macOS ledger signing must match the manifest signing envelope including evidencePath.'
+}
 Assert-Condition -Condition ($qualification -match 'Get-AcceptanceRecord' -and $qualification -match 'Get-RawRecord' -and $qualification -match 'SHA256SUMS\.txt') -Message 'Independent evidence must be raw-byte recorded in manifest and checksums.'
 Assert-Condition -Condition ($qualification -match 'id:\s*upload-qualified' -and $qualification -match 'artifact-id' -and $qualification -match 'artifact-digest' -and $qualification -match 'artifact-url') -Message 'Qualification upload must persist immutable artifact attestation metadata.'
 Assert-Condition -Condition ($qualification -match 'Collect sanitized failure diagnostics') -Message 'Qualification must have an explicit sanitized diagnostics collector.'
@@ -294,28 +304,47 @@ Assert-Condition -Condition ($qualification -match 'Get-CanonicalArtifactInputPa
 Assert-Condition -Condition ($qualification -match 'artifacts = \$records\.ToArray\(\)' -and $qualification -notmatch 'artifacts = @\(\$records\)') -Message 'Manifest must materialize List[object] artifacts with ToArray().'
 
 # Qualification producer contract must exactly match the promotion consumer contract.
-Assert-Condition -Condition ($qualification -match '(?m)^\s+profile_path:' -and $macosQualification -match '(?m)^\s+profile_path:') -Message 'Both qualification templates must receive profile_path.'
-Assert-Condition -Condition ($qualification -match 'profileRawBytesSha256' -and $macosQualification -match 'profileRawBytesSha256') -Message 'Both qualification templates must raw-byte bind the profile.'
-Assert-Condition -Condition ($qualification -match 'contractRawBytesSha256' -and $macosQualification -match 'contractRawBytesSha256') -Message 'Both qualification ledgers/manifests must carry the common contract hash.'
-$windowsCommonContract = [regex]::Match($qualification, '(?m)^\s*const contract = \{ schemaVersion: 2, stage: ''qualification''.*$').Value.Trim()
-$macosCommonContract = [regex]::Match($macosQualification, '(?m)^\s*const contract = \{ schemaVersion: 2, stage: ''qualification''.*$').Value.Trim()
-Assert-Condition -Condition (-not [string]::IsNullOrWhiteSpace($windowsCommonContract) -and $windowsCommonContract -eq $macosCommonContract) -Message 'Windows and macOS must generate byte-identical common release contract shapes.'
+foreach ($producer in @($qualification) + $macosQualifications) {
+    Assert-Condition -Condition ($producer -match '(?m)^\s+profile_path:') -Message 'Every qualification template must receive profile_path.'
+    Assert-Condition -Condition ($producer -match 'profileRawBytesSha256') -Message 'Every qualification template must raw-byte bind the profile.'
+    Assert-Condition -Condition ($producer -match 'contractRawBytesSha256') -Message 'Every qualification ledger/manifest must carry the common contract hash.'
+    # 公共 contract 与实体 ledger 只能由共享冻结脚本写出，模板内不得再内联 contract 形状。
+    Assert-Condition -Condition ($producer -notmatch 'const contract = \{') -Message 'Templates must not inline the common release contract shape.'
+    Assert-Condition -Condition ($producer -match '\.release[\\/]scripts[\\/]freeze-release-contract\.mjs' -and $producer -match '--workflow-ref' -and $producer -match '--output-root' -and $producer -match '--event') -Message 'Templates must freeze the contract and ledger through the vendored freeze-release-contract.mjs.'
+}
+$freezeScript = Get-Content -LiteralPath $freezeScriptPath -Raw
+Assert-Condition -Condition ($freezeScript -match 'qualificationEntities: Object\.keys\(profile\.platforms\)\.sort\(\)' -and $freezeScript -match 'architecture: policy\.architectures\[0\]' -and $freezeScript -match 'platform: options\.platform') -Message 'Freeze script must write contract qualificationEntities and ledger platform/architecture.'
+Assert-Condition -Condition ($freezeScript -notmatch '\.release/release-profile\.json' -and $freezeScript -notmatch 'package\.json' -and $freezeScript -notmatch '`v\$\{') -Message 'Freeze script must not hard-code a project profile path, version file, or tag convention.'
 
 $producerContracts = @(
-    [pscustomobject]@{ platform = 'windows'; content = $qualification; artifactName = 'qualified-windows' },
-    [pscustomobject]@{ platform = 'macos'; content = $macosQualification; artifactName = 'qualified-macos' }
+    [pscustomobject]@{ platform = 'windows'; content = $qualification; artifactName = 'qualified-windows'; freezeEntity = '--platform windows'; manifestIdentity = "platform = 'windows'" },
+    [pscustomobject]@{ platform = 'macos-arm64'; content = $macosArm64Qualification; artifactName = 'qualified-macos-arm64'; freezeEntity = '--platform "$QUALIFICATION_ENTITY"'; manifestIdentity = 'platform: entity, architecture: arch' },
+    [pscustomobject]@{ platform = 'macos-x64'; content = $macosX64Qualification; artifactName = 'qualified-macos-x64'; freezeEntity = '--platform "$QUALIFICATION_ENTITY"'; manifestIdentity = 'platform: entity, architecture: arch' }
 )
 foreach ($producer in $producerContracts) {
     Assert-Condition -Condition ($producer.content -match ('(?m)^\s+name:\s*' + [regex]::Escape($producer.artifactName) + '\s*$')) -Message "$($producer.platform) upload artifact name must exactly equal profile artifactName."
     Assert-Condition -Condition ($producer.content -notmatch ('name:\s*' + [regex]::Escape($producer.artifactName) + '-\$\{\{')) -Message "$($producer.platform) qualification artifact name must not drift dynamically."
-    foreach ($required in @('release-bundle', 'schemaVersion', 'releaseCreated', 'contractRawBytesSha256', 'profileRawBytesSha256', 'artifacts', 'evidence', 'signing', 'release-contract.json', 'run-ledger.json', 'signing.json', 'SHA256SUMS.txt')) {
+    Assert-Condition -Condition ($producer.content.Contains($producer.freezeEntity)) -Message "$($producer.platform) must freeze its own qualification entity."
+    Assert-Condition -Condition ($producer.content.Contains($producer.manifestIdentity)) -Message "$($producer.platform) manifest must record its platform and architecture."
+    foreach ($required in @('release-bundle', 'schemaVersion', 'releaseCreated', 'contractRawBytesSha256', 'profileRawBytesSha256', 'artifacts', 'evidence', 'signing', 'release-contract.json', 'run-ledger.json', 'signing.json', 'SHA256SUMS.txt', 'qualificationEntities', 'architecture')) {
         Assert-Condition -Condition ($producer.content -match [regex]::Escape($required)) -Message "$($producer.platform) producer contract is missing $required."
     }
 }
-foreach ($consumerToken in @('manifest.schemaVersion !== 2', 'manifest.releaseCreated !== false', 'manifest.contractRawBytesSha256', 'manifest.profileRawBytesSha256', 'release-contract.json', 'run-ledger.json', 'release-bundle/', 'manifest.signing', 'SHA256SUMS.txt')) {
+Assert-Condition -Condition ($qualification -match 'architecture = \$architecture' -and $qualification -match "Windows qualification entity architecture must be x64") -Message 'Windows manifest must carry the fixed x64 architecture.'
+foreach ($consumerToken in @('manifest.schemaVersion !== 2', 'manifest.releaseCreated !== false', 'manifest.contractRawBytesSha256', 'manifest.profileRawBytesSha256', 'release-contract.json', 'run-ledger.json', 'release-bundle/', 'manifest.signing', 'SHA256SUMS.txt', 'manifest.platform !== platform', 'manifest.architecture !== expectedArchitecture', 'ledger.platform !== platform', 'contract.frozen.qualificationEntities.includes(platform)')) {
     Assert-Condition -Condition ($promotionEngine -match [regex]::Escape($consumerToken)) -Message "Promotion engine consumer contract is missing $consumerToken."
 }
-Assert-Condition -Condition ($macosQualification -match 'macos-assets\.json' -and $macosQualification -match 'qualification artifact file set is not exact') -Message 'macOS generic finalizer must consume only the platform asset map and fail closed on the exact output set.'
+foreach ($entity in @(
+    [pscustomobject]@{ name = 'macos-arm64'; content = $macosArm64Qualification; arch = 'arm64'; machine = 'arm64'; runner = 'macos-14' },
+    [pscustomobject]@{ name = 'macos-x64'; content = $macosX64Qualification; arch = 'x64'; machine = 'x86_64'; runner = 'macos-15-intel' }
+)) {
+    Assert-Condition -Condition ($entity.content -match ('(?m)^      QUALIFICATION_ENTITY: ' + [regex]::Escape($entity.name) + '\s*$') -and $entity.content -match ('(?m)^      QUALIFICATION_ARCH: ' + [regex]::Escape($entity.arch) + '\s*$') -and $entity.content -match ('(?m)^      QUALIFICATION_MACHINE: ' + [regex]::Escape($entity.machine) + '\s*$') -and $entity.content -match ('(?m)^    runs-on: ' + [regex]::Escape($entity.runner) + '\s*$')) -Message "$($entity.name) template must pin its entity, architecture, machine type, and runner."
+    Assert-Condition -Condition ($entity.content -match 'uname -m' -and $entity.content -match '-mac-\$\{arch\}-' -and $entity.content -match '\$QUALIFICATION_ENTITY-assets\.json' -and $entity.content -match 'qualification artifact file set is not exact') -Message "$($entity.name) finalizer must verify the runner machine, the -mac-<arch>- asset names, its own asset map, and the exact output set."
+}
+# 两个 macOS 模板只允许在实体、架构、runner 与机器类型上不同，防止一份改了另一份漏改。
+$x64Normalized = $macosX64Qualification.Replace('runs-on: macos-15-intel', 'runs-on: macos-14').Replace('QUALIFICATION_MACHINE: x86_64', 'QUALIFICATION_MACHINE: arm64').Replace('x64', 'arm64')
+Assert-Condition -Condition ($macosArm64Qualification -notmatch 'x64|x86_64|macos-15-intel' -and $macosX64Qualification -notmatch 'arm64|macos-14\b') -Message 'Each macOS template must name only its own entity.'
+Assert-Condition -Condition ($x64Normalized -ceq $macosArm64Qualification) -Message 'macOS arm64 and x64 templates must be identical except for entity, architecture, runner, and machine type.'
 
 Assert-Condition -Condition ($promotion -notmatch 'promotion_node_version') -Message 'Promotion must not expose a user-controlled verifier Node input.'
 Assert-Condition -Condition ($promotion -match "node-version: '22\.23\.1'" -and $promotion -match 'node --version.*v22\.23\.1') -Message 'Promotion must use and verify exact fixed Node 22.23.1.'
@@ -391,4 +420,4 @@ $ledgerDescription = ([regex]::Match($evidenceReference, '(?m)^`run-ledger\.json
 Assert-Condition -Condition ($ledgerDescription -match '上传前可知' -and $ledgerDescription -match '只能在上传后' -and $ledgerDescription -match '不要回写') -Message 'Run ledger documentation must place upload-after artifact metadata outside the ledger.'
 Assert-Condition -Condition ($evidenceReference -match 'job outputs' -and $evidenceReference -match 'step summary' -and $evidenceReference -match '不回写') -Message 'Upload-after artifact metadata must be documented as outer attestation.'
 
-[Console]::Out.WriteLine('{"passed":true,"checks":"pwsh-parser,yaml-basics,workflow-header-pollution,github-expression-delimiters,immutable-actions,contract-order,independent-evidence,manifest-list-materialization,qualification-promotion-contract,exact-bundle-set,profile-binding,artifact-attestation,lockfile-canonicalization,artifact-path-inputs,diagnostics,preflight-guards,signing-references"}')
+[Console]::Out.WriteLine('{"passed":true,"checks":"pwsh-parser,yaml-basics,workflow-header-pollution,github-expression-delimiters,immutable-actions,contract-order,independent-evidence,manifest-list-materialization,qualification-promotion-contract,qualification-entity-identity,shared-freeze-script,macos-template-isomorphism,exact-bundle-set,profile-binding,artifact-attestation,lockfile-canonicalization,artifact-path-inputs,diagnostics,preflight-guards,signing-references"}')

@@ -46,6 +46,8 @@ The release contract is immutable input frozen before qualification, not a retro
 
 Field names may follow an existing repository schema, but the semantic boundaries cannot be omitted or reinterpreted during promotion.
 
+The bundled `scripts/freeze-release-contract.mjs` writes the minimal public contract that promotion reads (`schemaVersion: 2`, `stage`, `repository`, and `frozen.commit`, `tag`, `version`, `profilePath`, `profileRawBytesSha256`, `qualificationEntities`). It contains no platform-specific field, so every entity freezes byte-identical contract bytes from the same inputs. Runner, toolchain, and asset paths belong in the platform ledger or qualification plan.
+
 ## Freeze rules
 
 - Use a full commit SHA, never a branch, short SHA, or later default-branch tip. Promotion must directly prove the qualified SHA satisfies the repository's ancestry policy.

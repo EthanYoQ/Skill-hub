@@ -1,6 +1,6 @@
 ---
 name: github-desktop-release
-description: "Qualify Windows desktop installers in GitHub Actions and promote verified Windows/macOS assets from one frozen SHA. Use for cloud packaging, installer failures, or GitHub Release publication; not local packaging or macOS qualification."
+description: "Qualify Windows desktop installers in GitHub Actions and promote verified Windows/macOS assets from one frozen SHA. Use for cloud packaging, installer failures, GitHub Release publication, when a cloud qualification run serves as acceptance evidence for a fix, or when a release gate such as windows-cloud-build-test or release-win-verify fails intermittently; not local packaging or macOS qualification."
 ---
 
 # GitHub Desktop Release
@@ -94,12 +94,22 @@ Deep acceptance adds the project-specific upgrade-data and native-ABI checks, pl
 
 Windows Electron/NSIS qualification must follow [references/electron-nsis.md](references/electron-nsis.md). A macOS qualification artifact is an external input owned by `electron-development`; validate it against [references/macos-qualification.md](references/macos-qualification.md) before promotion. Qualification success proves an Actions artifact, not a public Release.
 
-Use [assets/electron-nsis-qualification.yml](assets/electron-nsis-qualification.yml) as the fail-closed Windows qualification starting point. The bundled [assets/macos-qualification.yml](assets/macos-qualification.yml) is retained only as a contract-compatible handoff template for `electron-development`; using it does not transfer macOS execution ownership to this Skill.
+Use [assets/electron-nsis-qualification.yml](assets/electron-nsis-qualification.yml) as the fail-closed Windows qualification starting point (entity `windows`, architecture `x64`). The bundled [assets/macos-arm64-qualification.yml](assets/macos-arm64-qualification.yml) and [assets/macos-x64-qualification.yml](assets/macos-x64-qualification.yml) are contract-compatible handoff templates for `electron-development`, one workflow per macOS entity (`macos-arm64`, `macos-x64`); copy each to the path its profile entity names in `qualificationWorkflow`. Using them does not transfer macOS execution ownership to this Skill.
 
-Promotion is shared infrastructure, not a project adapter. Reuse [scripts/github-desktop-promotion.mjs](scripts/github-desktop-promotion.mjs), [scripts/validate-release-profile.mjs](scripts/validate-release-profile.mjs), and [assets/github-desktop-release-promotion.yml](assets/github-desktop-release-promotion.yml) rather than reimplementing profile validation, artifact selection, same-SHA/contract binding, manifest hashing, resume, upload, channel, or readback logic per project. A project-specific workflow wrapper may adapt invocation, but it must preserve the verified consumer contract. Run the shared offline tests after changing those scripts:
+All three templates freeze the common contract and the entity run ledger through [scripts/freeze-release-contract.mjs](scripts/freeze-release-contract.mjs) before install, so the evidence carries the identity promotion requires: contract `frozen.qualificationEntities`, ledger and manifest `platform`/`architecture`. Copy that script verbatim to `.release/scripts/` next to the two promotion scripts. Its `--tag-format` and `--version-file` arguments are project-convention adapters (the templates pass `v{version}` and `package.json`); change or drop them when the project differs.
+
+Promotion is shared infrastructure, not a project adapter. Reuse [scripts/github-desktop-promotion.mjs](scripts/github-desktop-promotion.mjs), [scripts/validate-release-profile.mjs](scripts/validate-release-profile.mjs), and [assets/github-desktop-release-promotion.yml](assets/github-desktop-release-promotion.yml) rather than reimplementing profile validation, artifact selection, same-SHA/contract binding, manifest hashing, resume, upload, channel, or readback logic per project. A project-specific workflow wrapper may adapt invocation, but it must preserve the verified consumer contract.
+
+Copy `github-desktop-promotion.mjs`, `validate-release-profile.mjs`, and `freeze-release-contract.mjs` verbatim to the project's `.release/scripts/`; do not edit them per project. After copying, the project must follow the naming rule the copied validator enforces: every macOS release asset name contains `-mac-<arch>-` for its entity (`-mac-arm64-` for `macos-arm64`, `-mac-x64-` for `macos-x64`), for example `App-mac-arm64-{version}.dmg`. A profile that breaks it is rejected before qualification, and the macOS templates check it again on the built asset names.
+
+Run the shared offline tests after changing those scripts or the qualification templates:
 
 ```text
 node <skill-root>/scripts/test-github-desktop-promotion.mjs
+node <skill-root>/scripts/test-freeze-release-contract.mjs
+node <skill-root>/scripts/test-qualification-evidence-e2e.mjs
+node <skill-root>/scripts/test-release-tools.mjs
+pwsh -NoProfile -File <skill-root>/scripts/test-workflow-assets.ps1
 ```
 
 ## Diagnose without cloud trial-and-error
@@ -132,6 +142,16 @@ Before downloading large qualification artifacts, run the zero-side-effect local
 7. After the final mutation, perform bounded authoritative readback of tag target, Release state, draft/prerelease/latest flags against the profile's release-channel policy, exact assets, uploaded state, platform digests, release notes, signing/notarization disclosures, and URL. A verified draft reports `draftVerified: true` and `publicationVerified: false`; only a verified non-draft public state may report publication success.
 
 Workflow success is not publication success. A missing or unverifiable readback leaves the release incomplete.
+
+### 发布说明怎么写
+
+读回只能证明说明已经挂上去，证明不了说明写得对。说明是给用户看的承诺，写错了用户会按错的行为去用，所以在起草时就按下面三条约束内容：
+
+1. **范围**：从上一个已发布（非草稿）的 tag 到本次发版 SHA。用 `git log <上一个 tag>..<发版 SHA>` 列出合并的 PR，逐个核对，不要凭记忆或沿用上一版草稿。
+2. **每条行为附出处**：写明对应的 PR 号，以及验证该行为的测试名或截图。找不到验证出处的条目，先去验证再写，验证不了就删掉或改成不承诺具体行为的说法。
+3. **数字附测量条件**：性能、体积、时长之类的数字，写明测量条件（机器或 runner、平台、数据规模、样本数）和出处。没有测量出处的数字不写。
+
+起草完、发布前，按 PR 实际改动逐条复核一遍说明，确认每条描述的都是该 PR 真正的行为。
 
 ## Report evidence states
 

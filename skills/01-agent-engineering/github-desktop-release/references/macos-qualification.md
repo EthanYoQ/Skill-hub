@@ -19,6 +19,19 @@ Use this branch only when the release profile requests macOS. Derive commands an
 6. Verify notarization and stapling when required. When absent by policy, record Gatekeeper/distribution impact instead of implying success.
 7. Record independent receipts for package, mount, launch, architecture, signing, notarization, native/vendor smoke, and updater compatibility as required by the project profile.
 
+## Bundled templates
+
+`assets/macos-arm64-qualification.yml` and `assets/macos-x64-qualification.yml` are one workflow per qualification entity. They differ only in the job `env` block (`QUALIFICATION_ENTITY`, `QUALIFICATION_ARCH`, `QUALIFICATION_MACHINE`), the runner label (`macos-14`, `macos-15-intel`), and the artifact names; keep the two copies otherwise identical. A universal build is not a third entity: qualify each architecture under its own entity.
+
+Each template:
+
+- checks `uname -m` against the entity before freezing;
+- calls `.release/scripts/freeze-release-contract.mjs --platform <entity>` before install, then checks the profile's `artifactName`, single architecture, and `-mac-<arch>-` asset names;
+- passes the entity to the project hooks `configure-macos-toolchain.sh`, `verify-frozen-environment.sh`, `install-locked.sh`, `build-desktop.sh`, and `accept-macos-package.sh <entity> release-evidence/acceptance`;
+- reads the built assets from `.release/out/<entity>-assets.json` (`[{ "name", "sourcePath" }]`) and writes manifest `platform`/`architecture`.
+
+The hooks and the asset map are the project adapter; the template does not guess build commands or package paths.
+
 ## Common failure boundaries
 
 - A successful DMG/ZIP build is not launch, signing, notarization, or public Release qualification.

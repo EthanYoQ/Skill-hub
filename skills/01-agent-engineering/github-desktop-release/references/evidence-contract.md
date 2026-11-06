@@ -61,7 +61,15 @@ normalised lockfile hash 用于 Windows / Linux 之间的来源比较，不能�
 
 验证命令顺序时优先使用 `sequence` 与明确的 stage transition；不能用两个独立进程采集到的 wall-clock 大小关系代替顺序证据。
 
-模板 artifact 名是 profile 的固定身份：Windows 为 `qualified-windows`，macOS 每个架构实体各一个（如 `qualified-macos-arm64`、`qualified-macos-x64`）。随附的 `assets/macos-qualification.yml` 与 `assets/electron-nsis-qualification.yml` 尚未产出 `platform`/`architecture`/`qualificationEntities` 身份字段，macOS 模板仍是旧的单一 `macos` 实体；直接用于当前 promotion 脚本前需按上述字段改造。禁止拼接 SHA、run ID 或 attempt 形成动态 artifact 名；不可变身份由 workflow/run/attempt/artifact ID 共同提供。
+模板 artifact 名是 profile 的固定身份：Windows 为 `qualified-windows`，macOS 每个架构实体各一个（`qualified-macos-arm64`、`qualified-macos-x64`）。禁止拼接 SHA、run ID 或 attempt 形成动态 artifact 名；不可变身份由 workflow/run/attempt/artifact ID 共同提供。
+
+身份字段的写入链：
+
+1. install 之前，模板调用 `.release/scripts/freeze-release-contract.mjs`（Skill `scripts/` 原样复制）。它校验 profile 与 `--platform` 实体、workflow 路径（取自 `GITHUB_WORKFLOW_REF`，须等于 profile 的 `qualificationWorkflow`），写出公共 contract（`frozen.qualificationEntities` 为 profile 全部实体排序）与 ledger（`platform`、`architecture` 取 profile 该实体唯一架构）。
+2. finalize 步骤复核 ledger 身份与 contract 是否声明本实体，再把同样的 `platform`、`architecture` 写进 manifest。
+3. promotion 的 `verifyExtractedQualification` 要求 manifest、ledger 的 `platform`/`architecture` 等于实体及 profile 架构，contract 的 `qualificationEntities` 含该实体，contract 与 ledger 的 `repository` 等于资格仓库。
+
+随附模板：`assets/electron-nsis-qualification.yml`（`windows`）、`assets/macos-arm64-qualification.yml`、`assets/macos-x64-qualification.yml`。`scripts/test-qualification-evidence-e2e.mjs` 真实执行三份模板的证据生成代码，并把产出交给 promotion 校验。
 
 ## 验收表达
 

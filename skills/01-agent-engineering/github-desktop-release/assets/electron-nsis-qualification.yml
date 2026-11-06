@@ -197,40 +197,20 @@ jobs:
           }
           $signingReceiptPaths = @($acceptanceFiles | Where-Object { [string]$_ -match '(^|/)signing\.json$' })
           if ($signingReceiptPaths.Count -ne 1) { throw 'profile acceptanceReceipts must contain exactly one signing.json receipt.' }
-          $env:QUALIFICATION_PROFILE_ABSOLUTE = $profilePath
-          $env:QUALIFICATION_PROFILE_RELATIVE = $canonicalProfilePath
-          $env:QUALIFICATION_CONTRACT_PATH = $contractPath
-          @'
-          const crypto = require('node:crypto');
-          const fs = require('node:fs');
-          const raw = fs.readFileSync(process.env.QUALIFICATION_PROFILE_ABSOLUTE);
-          const profileRawBytesSha256 = crypto.createHash('sha256').update(raw).digest('hex');
-          const contract = { schemaVersion: 2, stage: 'qualification', repository: process.env.GITHUB_REPOSITORY, frozen: { commit: process.env.EXPECTED_SHA.toLowerCase(), tag: process.env.RELEASE_TAG, version: process.env.RELEASE_VERSION, profilePath: process.env.QUALIFICATION_PROFILE_RELATIVE, profileRawBytesSha256 } };
-          fs.writeFileSync(process.env.QUALIFICATION_CONTRACT_PATH, `${JSON.stringify(contract, null, 2)}\n`, 'utf8');
-          '@ | node
-          if ($LASTEXITCODE -ne 0) { throw 'Failed to write the common release contract.' }
+          # 公共 contract（含 frozen.qualificationEntities）与带 platform/architecture 的 run ledger 由 Skill 的冻结脚本写入。
+          # 该脚本须与 github-desktop-promotion.mjs、validate-release-profile.mjs 一起原样复制到 .release/scripts/。
+          # --tag-format 与 --version-file 是项目约定的 adapter：tag 不是 v<版本号> 或版本号不在 package.json 时改这两项或删掉。
+          $freezeScript = Join-Path $env:GITHUB_WORKSPACE '.release\scripts\freeze-release-contract.mjs'
+          if (-not (Test-Path -LiteralPath $freezeScript -PathType Leaf)) { throw 'REQUIRED: copy <skill-root>/scripts/freeze-release-contract.mjs and validate-release-profile.mjs to .release/scripts/.' }
+          & node $freezeScript --repository $env:GITHUB_REPOSITORY --expected-sha $env:EXPECTED_SHA.ToLowerInvariant() --tag $env:RELEASE_TAG --version $env:RELEASE_VERSION --workspace $env:GITHUB_WORKSPACE --profile $canonicalProfilePath --output-root $evidenceRoot --platform windows --run-id $env:GITHUB_RUN_ID --run-attempt $env:GITHUB_RUN_ATTEMPT --workflow-ref $env:GITHUB_WORKFLOW_REF --actor $env:GITHUB_ACTOR --event $env:GITHUB_EVENT_NAME --tag-format 'v{version}' --version-file package.json
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to freeze the common release contract and Windows run ledger.' }
           $contractHash = (Get-FileHash -LiteralPath $contractPath -Algorithm SHA256).Hash.ToLowerInvariant()
           $profileHash = (Get-FileHash -LiteralPath $profilePath -Algorithm SHA256).Hash.ToLowerInvariant()
+          $frozenLedger = Get-Content -LiteralPath $ledgerPath -Raw | ConvertFrom-Json
+          if ([string]$frozenLedger.platform -ne 'windows' -or [string]$frozenLedger.architecture -ne 'x64' -or [string]$frozenLedger.contractRawBytesSha256 -ne $contractHash -or [string]$frozenLedger.profileRawBytesSha256 -ne $profileHash) { throw 'Frozen Windows ledger identity or binding mismatch.' }
           $artifactPlan = @($canonicalArtifactPaths | ForEach-Object { [ordered]@{ sourcePath = $_; name = [System.IO.Path]::GetFileName($_) } })
           $plan = [ordered]@{ schemaVersion = 1; platform = 'windows'; artifactSet = $artifactPlan; acceptance = [ordered]@{ evidenceFiles = $acceptanceFiles; signingEvidencePath = [string]$signingReceiptPaths[0] } }
-          $ledger = [ordered]@{
-            schemaVersion = 2
-            workflow = $env:GITHUB_WORKFLOW
-            runId = $env:GITHUB_RUN_ID
-            runAttempt = $env:GITHUB_RUN_ATTEMPT
-            repository = $env:GITHUB_REPOSITORY
-            actor = $env:GITHUB_ACTOR
-            event = $env:GITHUB_EVENT_NAME
-            startedAtUtc = [DateTime]::UtcNow.ToString('o')
-            qualifiedCommit = $env:EXPECTED_SHA.ToLowerInvariant()
-            releaseTag = $env:RELEASE_TAG
-            releaseVersion = $env:RELEASE_VERSION
-            releaseCreated = $false
-            contractRawBytesSha256 = $contractHash
-            profileRawBytesSha256 = $profileHash
-          }
           Write-Utf8Json -Path $planPath -Value $plan
-          Write-Utf8Json -Path $ledgerPath -Value $ledger
           "WCR_EVIDENCE_ROOT=$evidenceRoot" | Out-File -LiteralPath $env:GITHUB_ENV -Encoding utf8 -Append
           "WCR_CONTRACT_SHA256=$contractHash" | Out-File -LiteralPath $env:GITHUB_ENV -Encoding utf8 -Append
           "WCR_PROFILE_SHA256=$profileHash" | Out-File -LiteralPath $env:GITHUB_ENV -Encoding utf8 -Append
@@ -490,8 +470,13 @@ jobs:
             }
           }
 
+          $frozenProfile = Get-Content -LiteralPath (Join-Path $env:GITHUB_WORKSPACE ([string]$contract.frozen.profilePath).Replace('/', '\')) -Raw | ConvertFrom-Json
+          $architecture = [string]@($frozenProfile.platforms.windows.architectures)[0]
+          if ($architecture -ne 'x64') { throw 'Windows qualification entity architecture must be x64.' }
+          if (@($contract.frozen.qualificationEntities) -notcontains 'windows') { throw 'Common contract does not declare the windows qualification entity.' }
           $ledger = Get-Content -LiteralPath $ledgerPath -Raw | ConvertFrom-Json
           if ([string]$ledger.contractRawBytesSha256 -ne $env:WCR_CONTRACT_SHA256 -or [string]$ledger.profileRawBytesSha256 -ne $env:WCR_PROFILE_SHA256) { throw 'Ledger contract/profile binding mismatch.' }
+          if ([string]$ledger.platform -ne 'windows' -or [string]$ledger.architecture -ne $architecture) { throw 'Ledger qualification entity identity mismatch.' }
           $ledger | Add-Member -NotePropertyName completedAtUtc -NotePropertyValue ([DateTime]::UtcNow.ToString('o')) -Force
           $ledger | Add-Member -NotePropertyName runtimeVerification -NotePropertyValue 'runtime-verification.json' -Force
           $signingEnvelope = [ordered]@{
@@ -512,6 +497,8 @@ jobs:
           )
           $manifest = [ordered]@{
             schemaVersion = 2
+            platform = 'windows'
+            architecture = $architecture
             gateLevel = 'RUNTIME_VERIFIED'
             releaseCreated = $false
             commit = $env:EXPECTED_SHA.ToLowerInvariant()
