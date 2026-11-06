@@ -30,11 +30,11 @@ macOS 或其他 profile-defined 平台使用自己的精确 receipt set；不要
 
 Producer 必须直接读取 `profile.platforms.<platform>.acceptanceReceipts`，不得用模板硬编码列表静默替代。进入 manifest finalize 前，递归枚举 `acceptance/` 下实际 JSON，要求其规范相对路径集合与 profile 完全一致：缺一项、额外一项、大小写碰撞、symlink/reparse point 或不安全路径都 fail closed。项目 adapter 只能生成这些平台事实，不能改写通用集合门禁。
 
-该目录树是 promotion consumer 的精确输入，不是建议性的示意：`manifest.json` 必须是 `schemaVersion: 2`，顶层包含 `commit`、`releaseCreated: false`、`contractRawBytesSha256`、`profileRawBytesSha256`、`artifacts`、`evidence` 和 `signing`。`artifacts` 只索引 `release-bundle/` 下将发布的原始字节；`evidence` 至少精确索引 `release-contract.json`、`run-ledger.json` 和 profile 要求的全部 receipt。`signing.evidencePath` 必须指向 manifest 已绑定的 signing receipt。
+该目录树是 promotion consumer 的精确输入，不是建议性的示意：`manifest.json` 必须是 `schemaVersion: 2`，顶层包含 `platform`、`architecture`（等于 profile 的资格实体及其唯一架构）、`commit`、`releaseCreated: false`、`contractRawBytesSha256`、`profileRawBytesSha256`、`artifacts`、`evidence` 和 `signing`。`artifacts` 只索引 `release-bundle/` 下将发布的原始字节；`evidence` 至少精确索引 `release-contract.json`、`run-ledger.json` 和 profile 要求的全部 receipt。`signing.evidencePath` 必须指向 manifest 已绑定的 signing receipt。
 
 除 `manifest.json` 和 `SHA256SUMS.txt` 外，解包后的每个文件都必须恰好出现一次在 `artifacts` 或 `evidence` 中；checksum 表的键集合必须恰好等于全部 manifest record 加 `manifest.json`。不得夹带构建目录、诊断日志或未索引文件。
 
-`run-ledger.json` 只记录上传前可知的 repository、workflow、run ID、attempt、actor、dispatch inputs、head SHA、runner image、开始/结束时间、命令结果，以及 `contractRawBytesSha256` / `profileRawBytesSha256`。这两个 hash 必须与 manifest 及 promotion 当前读取的 profile 原始字节一致。ledger 的 `signing` 必须与 manifest `signing` 使用同一四字段 envelope：`status`、`validationResult`、`unsignedDistributionImpact`、`evidencePath`；该路径必须是 profile 声明、已存在且已被 manifest raw hash 绑定的 signing receipt。artifact ID、digest、URL 只能在上传后由 job outputs、step summary 或独立外层 attestation 记录；不要回写已上传 evidence artifact 或 ledger。避免记录 token、证书、私钥或用户数据。
+`run-ledger.json` 只记录上传前可知的 platform、architecture（与 manifest 相同）、repository（必须等于资格仓库，与 contract 的 `repository` 相同）、workflow、run ID、attempt、actor、dispatch inputs、head SHA、runner image、开始/结束时间、命令结果，以及 `contractRawBytesSha256` / `profileRawBytesSha256`。这两个 hash 必须与 manifest 及 promotion 当前读取的 profile 原始字节一致。ledger 的 `signing` 必须与 manifest `signing` 使用同一四字段 envelope：`status`、`validationResult`、`unsignedDistributionImpact`、`evidencePath`；该路径必须是 profile 声明、已存在且已被 manifest raw hash 绑定的 signing receipt。artifact ID、digest、URL 只能在上传后由 job outputs、step summary 或独立外层 attestation 记录；不要回写已上传 evidence artifact 或 ledger。避免记录 token、证书、私钥或用户数据。
 
 跨进程 ledger 不能假设 runner wall clock 单调。每个事件记录递增 `sequence` 作为权威顺序；时间戳用于观察和持续时间。若既有 schema 要求时间戳非递减，writer 将新时间夹紧到前一已提交时间并另记 `clockRollbackObserved` 与原始观察值，而不是重排或拒绝真实命令。用跨进程时钟回拨 fixture 覆盖 writer、finalizer 和 verifier；不要通过放宽命令顺序门禁掩盖回拨。
 
@@ -49,7 +49,7 @@ Producer 必须直接读取 `profile.platforms.<platform>.acceptanceReceipts`，
 
 normalised lockfile hash 用于 Windows / Linux 之间的来源比较，不能替代 installer 的 raw-byte hash。manifest 应清楚标示 `hashMode`，避免把二者混为一谈。
 
-所有 required platform 必须读取同一路径、同一提交中的 profile 原始字节，并用相同输入生成逐字节一致的公共 `release-contract.json`；promotion 会要求各平台的 contract/profile raw-byte hash 完全相同。平台 runner、toolchain、source path 等差异写入平台 verification 或 qualification plan，不得污染公共 contract。
+所有 required platform 必须读取同一路径、同一提交中的 profile 原始字节，并用相同输入生成逐字节一致的公共 `release-contract.json`，其 `frozen.qualificationEntities` 列出 profile 的全部资格实体；promotion 会要求各平台的 contract/profile raw-byte hash 完全相同。平台 runner、toolchain、source path 等差异写入平台 verification 或 qualification plan，不得污染公共 contract。
 
 ## Evidence 生成顺序
 
@@ -61,7 +61,7 @@ normalised lockfile hash 用于 Windows / Linux 之间的来源比较，不能�
 
 验证命令顺序时优先使用 `sequence` 与明确的 stage transition；不能用两个独立进程采集到的 wall-clock 大小关系代替顺序证据。
 
-模板 artifact 名是 profile 的固定身份：Windows 为 `qualified-windows`，macOS 为 `qualified-macos`。禁止拼接 SHA、run ID 或 attempt 形成动态 artifact 名；不可变身份由 workflow/run/attempt/artifact ID 共同提供。
+模板 artifact 名是 profile 的固定身份：Windows 为 `qualified-windows`，macOS 每个架构实体各一个（如 `qualified-macos-arm64`、`qualified-macos-x64`）。随附的 `assets/macos-qualification.yml` 与 `assets/electron-nsis-qualification.yml` 尚未产出 `platform`/`architecture`/`qualificationEntities` 身份字段，macOS 模板仍是旧的单一 `macos` 实体；直接用于当前 promotion 脚本前需按上述字段改造。禁止拼接 SHA、run ID 或 attempt 形成动态 artifact 名；不可变身份由 workflow/run/attempt/artifact ID 共同提供。
 
 ## 验收表达
 

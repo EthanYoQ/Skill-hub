@@ -20,6 +20,12 @@ UNQUALIFIED
 
 不要让每个项目重写这套状态机。将 Skill 的 `scripts/github-desktop-promotion.mjs` 与 `scripts/validate-release-profile.mjs` 原样复制到项目的 `.release/scripts/`，保留文件名，并复制 promotion workflow 模板。项目只维护 release profile 与 qualification acceptance adapters。
 
+两份脚本的行为要点：
+
+- 平台键是资格实体，只接受 `windows`、`macos-arm64`、`macos-x64`，各自架构固定为 `x64`、`arm64`、`x64`；macOS 资产名必须含 `-mac-<arch>-`。
+- `--repository` 是发布仓库；`--qualification-repository` 可选，指定跑资格构建的仓库，缺省等于发布仓库。下载 run 与 artifact 走资格仓库，tag、Release 与默认分支祖先校验走发布仓库。
+- `--release-notes` 必填，指向仓库内相对路径的 Markdown 文件（UTF-8、无 BOM、不超过 64 KiB、非空），verify 与 publish 都要传；内容放在 Release body 生成的来源说明之前。
+
 ## 最小权限分层
 
 - workflow 顶层 `permissions: {}`；
@@ -37,6 +43,8 @@ UNQUALIFIED
 5. 下载全部 required platform artifact 后逐字节复核 evidence，聚合 exact release asset set，再创建仅本次 promotion 可用的 verified package artifact。
 
 下载前先用 API metadata 确认 artifact 大小、未过期状态和 immutable identity。qualification 已绿而本地下载、解压或 verifier runtime 失败属于 promotion 环境故障；只要 source、bytes 与 acceptance meaning 未变，就修复本地环境并从只读计划恢复。
+
+每个平台的 manifest 和 run ledger 的 `platform`、`architecture` 必须等于该资格实体及其唯一架构；`release-contract.json` 的 `frozen.qualificationEntities` 必须包含该实体；contract 与 ledger 的 `repository` 必须等于资格仓库。publish 读入的已验证计划必须与本次的资格仓库、发布仓库、SHA、tag、version 逐项相同。
 
 每个平台的 schema-v2 manifest 和 run ledger 都必须记录同一个 `contractRawBytesSha256` 与 `profileRawBytesSha256`。`release-contract.json` 必须属于 manifest/checksum exact set，且其 raw SHA-256 等于前者；promotion 当下读取的 profile 原始字节 SHA-256 必须等于后者。所有 required platform 的两个 hash 必须完全一致。`signing.evidencePath` 也必须指向 manifest evidence 中已经 raw-hash 绑定的文件。
 

@@ -81,7 +81,7 @@ export function validatePromotionProfile(profile) {
     throw new Error("release profile does not select immutable GitHub Actions artifacts");
   }
   const platforms = Object.keys(profile.platforms || {});
-  if (platforms.length === 0 || platforms.some((platform) => !["windows", "macos"].includes(platform))) throw new Error("release profile platforms are invalid");
+  if (platforms.length === 0 || platforms.some((platform) => !["windows", "macos-arm64", "macos-x64"].includes(platform))) throw new Error("release profile qualification entities are invalid");
   for (const platform of platforms) {
     const policy = profile.platforms[platform];
     if (typeof policy.qualificationWorkflow !== "string" || !policy.qualificationWorkflow.startsWith(".github/workflows/") || typeof policy.artifactName !== "string" || policy.artifactName.length === 0) {
@@ -356,8 +356,30 @@ function requireOption(options, name) {
   return value;
 }
 
+function validateRepository(repository, label) {
+  if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/u.test(repository)) throw new Error(`${label} must be owner/name`);
+  return repository;
+}
+
+export function resolvePromotionRepositories(options) {
+  const releaseRepository = validateRepository(requireOption(options, "repository"), "repository");
+  const qualificationRepository = validateRepository(options["qualification-repository"] || releaseRepository, "qualification repository");
+  return { qualificationRepository, releaseRepository };
+}
+
+export function assertQualificationEvidenceRepositories({ contract, ledger, qualificationRepository }) {
+  if (contract?.repository !== qualificationRepository) throw new Error("release contract repository does not match the qualification repository");
+  if (ledger?.repository !== qualificationRepository) throw new Error("run ledger repository does not match the qualification repository");
+}
+
+export function assertPromotionPlanIdentity(plan, expected) {
+  for (const field of ["qualificationRepository", "releaseRepository", "expectedSha", "tag", "version"]) {
+    if (plan?.[field] !== expected[field]) throw new Error("verified promotion plan identity mismatch");
+  }
+}
+
 function validateIdentity({ repository, expectedSha, tag, version }) {
-  if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/u.test(repository)) throw new Error("repository must be owner/name");
+  validateRepository(repository, "repository");
   if (!COMMIT_SHA.test(expectedSha)) throw new Error("expected SHA must be a lowercase full commit SHA");
   if (!/^[A-Za-z0-9][A-Za-z0-9._/-]{0,199}$/u.test(tag) || tag.includes("..") || tag.endsWith("/") || tag.includes("//")) throw new Error("release tag is unsafe");
   if (!/^[A-Za-z0-9][A-Za-z0-9._+-]{0,99}$/u.test(version)) throw new Error("release version is unsafe");
@@ -475,14 +497,25 @@ async function findRelease(api, repository, tag) {
   return matches[0] || null;
 }
 
-function expectedReleaseProvenance(tag, expectedSha, assets, qualifications) {
+export function expectedReleaseProvenance(tag, expectedSha, assets, qualifications, releaseNotes) {
+  if (typeof releaseNotes !== "string" || releaseNotes.trim().length === 0) throw new Error("release notes must not be empty");
   const lines = [...assets.values()].sort((a, b) => a.name.localeCompare(b.name)).map((asset) => `- ${asset.name}: sha256:${asset.sha256}`);
   const signingLines = [...qualifications].sort((a, b) => a.platform.localeCompare(b.platform)).map((qualification) =>
     `- ${qualification.platform}: ${qualification.signing.status}; validation=${qualification.signing.validationResult}; unsigned-impact=${qualification.signing.unsignedDistributionImpact}`);
   return {
     title: tag,
-    body: [`Qualified desktop release ${tag}`, "", `Source: ${expectedSha}`, "", "Verified assets:", ...lines, "", "Signing and notarization disclosure:", ...signingLines].join("\n"),
+    body: [releaseNotes.trim(), "", "---", "", `Qualified desktop release ${tag}`, "", `Source: ${expectedSha}`, "", "Verified assets:", ...lines, "", "Signing and notarization disclosure:", ...signingLines].join("\n"),
   };
+}
+
+async function readReleaseNotes(candidate) {
+  if (candidate.includes(":")) throw new Error("release notes path must be repository-relative");
+  const relativePath = normalizeRelativePath(candidate);
+  if (!relativePath.toLowerCase().endsWith(".md")) throw new Error("release notes must be a Markdown file");
+  const bytes = await readFile(resolve(relativePath));
+  if (bytes.length > 64 * 1024) throw new Error("release notes exceed 64 KiB");
+  if (bytes[0] === 0xef && bytes[1] === 0xbb && bytes[2] === 0xbf) throw new Error("release notes must not contain a BOM");
+  return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
 }
 
 async function uploadAsset(api, repository, releaseId, asset) {
@@ -514,7 +547,7 @@ async function uploadAsset(api, repository, releaseId, asset) {
   });
 }
 
-export async function verifyExtractedQualification({ root, platform, policy, releaseAssetPolicy, version, expectedSha, mapping, artifact, profileRawBytesSha256, previousBindings = null }) {
+export async function verifyExtractedQualification({ root, platform, policy, releaseAssetPolicy, version, expectedSha, mapping, artifact, profileRawBytesSha256, qualificationRepository, previousBindings = null }) {
   const files = await listFiles(root);
   const manifest = await loadJson(join(root, "manifest.json"));
   const checksumText = new TextDecoder("utf-8", { fatal: true }).decode(await readFile(join(root, "SHA256SUMS.txt")));
@@ -522,6 +555,18 @@ export async function verifyExtractedQualification({ root, platform, policy, rel
   for (const file of files) actualDigests.set(file.toLowerCase(), await sha256File(join(root, ...file.split("/"))));
   const manifestIndex = verifyManifestIndex({ manifest, checksumText, actualFiles: files, actualDigests, expectedSha });
   const ledger = await loadJson(join(root, "run-ledger.json"));
+  const contract = await loadJson(join(root, "release-contract.json"));
+  assertQualificationEvidenceRepositories({ contract, ledger, qualificationRepository });
+  const expectedArchitecture = policy.architectures?.[0];
+  if (manifest.platform !== platform || manifest.architecture !== expectedArchitecture) {
+    throw new Error(`${platform} qualification manifest entity mismatch`);
+  }
+  if (ledger.platform !== platform || ledger.architecture !== expectedArchitecture) {
+    throw new Error(`${platform} run ledger entity mismatch`);
+  }
+  if (!Array.isArray(contract?.frozen?.qualificationEntities) || !contract.frozen.qualificationEntities.includes(platform)) {
+    throw new Error(`${platform} release contract does not declare the qualification entity`);
+  }
   if (Number(ledger.runId) !== mapping.runId || Number(ledger.runAttempt) !== mapping.attempt || String(ledger.qualifiedCommit).toLowerCase() !== expectedSha) {
     throw new Error(`${platform} run ledger identity mismatch`);
   }
@@ -559,43 +604,45 @@ export async function verifyExtractedQualification({ root, platform, policy, rel
 }
 
 async function verifyCommand(options) {
-  const repository = requireOption(options, "repository");
+  const { qualificationRepository, releaseRepository } = resolvePromotionRepositories(options);
   const expectedSha = requireOption(options, "expected-sha");
   const tag = requireOption(options, "tag");
   const version = requireOption(options, "version");
   const profilePath = resolve(requireOption(options, "profile"));
+  const releaseNotes = await readReleaseNotes(requireOption(options, "release-notes"));
   const output = resolve(requireOption(options, "output"));
-  validateIdentity({ repository, expectedSha, tag, version });
+  validateIdentity({ repository: releaseRepository, expectedSha, tag, version });
   const profile = validatePromotionProfile(await readJsonFile(profilePath));
   const profileRawBytesSha256 = await sha256File(profilePath);
   const platforms = Object.keys(profile.platforms || {}).sort();
   const runMapping = parseQualificationRuns(requireOption(options, "qualification-runs-json"), platforms);
   const token = process.env.GITHUB_TOKEN;
   if (!token) throw new Error("GITHUB_TOKEN is required");
-  const api = new GitHubApi(repository, token);
+  const qualificationApi = new GitHubApi(qualificationRepository, token);
+  const releaseApi = new GitHubApi(releaseRepository, token);
   const workRoot = await mkdtemp(join(tmpdir(), "github-desktop-promotion-"));
   const releaseAssets = new Map();
   const qualifications = [];
   let sharedBindings = null;
   try {
-    const repositoryState = await api.get(`/repos/${repository}`);
+    const repositoryState = await releaseApi.get(`/repos/${releaseRepository}`);
     const defaultBranch = String(repositoryState.default_branch || "");
     if (!defaultBranch) throw new Error("repository default branch is unavailable");
-    const comparison = await api.get(`/repos/${repository}/compare/${expectedSha}...${encodeURIComponent(defaultBranch)}`);
+    const comparison = await releaseApi.get(`/repos/${releaseRepository}/compare/${expectedSha}...${encodeURIComponent(defaultBranch)}`);
     assertDefaultBranchAncestry(comparison, expectedSha);
     for (const platform of platforms) {
       const mapping = runMapping[platform];
       const policy = profile.platforms[platform];
-      const run = await api.get(`/repos/${repository}/actions/runs/${mapping.runId}`);
+      const run = await qualificationApi.get(`/repos/${qualificationRepository}/actions/runs/${mapping.runId}`);
       assertQualificationRun({ run, expectedSha, expectedAttempt: mapping.attempt, expectedWorkflow: policy.qualificationWorkflow });
-      const artifacts = await api.paged(`/repos/${repository}/actions/runs/${mapping.runId}/artifacts`, "artifacts");
+      const artifacts = await qualificationApi.paged(`/repos/${qualificationRepository}/actions/runs/${mapping.runId}/artifacts`, "artifacts");
       const artifact = selectQualificationArtifact({ artifacts, artifactId: mapping.artifactId, expectedName: policy.artifactName, runId: mapping.runId, expectedSha });
       const zipPath = join(workRoot, `${platform}.zip`);
       const extracted = join(workRoot, platform);
       await mkdir(extracted);
-      await api.downloadArtifact(artifact.id, zipPath);
+      await qualificationApi.downloadArtifact(artifact.id, zipPath);
       extractZip(zipPath, extracted);
-      const verified = await verifyExtractedQualification({ root: extracted, platform, policy, releaseAssetPolicy: profile.releaseAssets, version, expectedSha, mapping, artifact, profileRawBytesSha256, previousBindings: sharedBindings });
+      const verified = await verifyExtractedQualification({ root: extracted, platform, policy, releaseAssetPolicy: profile.releaseAssets, version, expectedSha, mapping, artifact, profileRawBytesSha256, qualificationRepository, previousBindings: sharedBindings });
       sharedBindings = verified.bindings;
       for (const asset of verified.assets) {
         const key = asset.name.toLowerCase();
@@ -607,10 +654,11 @@ async function verifyCommand(options) {
     await rm(output, { recursive: true, force: true });
     await mkdir(output, { recursive: true });
     for (const asset of releaseAssets.values()) await copyFile(asset.source, join(output, asset.name));
-    const provenance = expectedReleaseProvenance(tag, expectedSha, releaseAssets, qualifications);
+    const provenance = expectedReleaseProvenance(tag, expectedSha, releaseAssets, qualifications, releaseNotes);
     const plan = {
       schemaVersion: 1,
-      repository,
+      qualificationRepository,
+      releaseRepository,
       expectedSha,
       tag,
       version,
@@ -628,14 +676,14 @@ async function verifyCommand(options) {
 }
 
 async function publishCommand(options) {
-  const repository = requireOption(options, "repository");
+  const { qualificationRepository, releaseRepository } = resolvePromotionRepositories(options);
   const expectedSha = requireOption(options, "expected-sha");
   const tag = requireOption(options, "tag");
   const version = requireOption(options, "version");
   const profilePath = resolve(requireOption(options, "profile"));
   const packageRoot = resolve(requireOption(options, "verified-package"));
   const outerDigest = requireOption(options, "outer-artifact-digest").toLowerCase();
-  validateIdentity({ repository, expectedSha, tag, version });
+  validateIdentity({ repository: releaseRepository, expectedSha, tag, version });
   if (!SHA256.test(outerDigest)) throw new Error("outer artifact digest is invalid");
   const profile = validatePromotionProfile(await readJsonFile(profilePath));
   const profileRawBytesSha256 = await sha256File(profilePath);
@@ -643,7 +691,7 @@ async function publishCommand(options) {
   if (planPathCandidates.length !== 1) throw new Error("verified package must contain exactly one promotion-plan.json");
   const planRoot = dirname(join(packageRoot, ...planPathCandidates[0].split("/")));
   const plan = await loadJson(join(planRoot, "promotion-plan.json"));
-  if (plan.repository !== repository || plan.expectedSha !== expectedSha || plan.tag !== tag || plan.version !== version) throw new Error("verified promotion plan identity mismatch");
+  assertPromotionPlanIdentity(plan, { qualificationRepository, releaseRepository, expectedSha, tag, version });
   if (JSON.stringify(plan.channel) !== JSON.stringify(profile.releaseChannel)) throw new Error("verified promotion channel/profile mismatch");
   const qualificationBindings = new Set((plan.qualifications || []).map((qualification) => `${qualification.contractRawBytesSha256}:${qualification.profileRawBytesSha256}`));
   if (qualificationBindings.size !== 1 || ![...qualificationBindings][0]?.endsWith(`:${profileRawBytesSha256}`)) {
@@ -666,40 +714,40 @@ async function publishCommand(options) {
   if (JSON.stringify(expectedProfileNames) !== JSON.stringify(actualNames)) throw new Error("verified package asset set/profile mismatch");
   const token = process.env.GITHUB_TOKEN;
   if (!token) throw new Error("GITHUB_TOKEN is required");
-  const api = new GitHubApi(repository, token);
-  let tagSha = await resolveTagSha(api, repository, tag);
-  let release = await findRelease(api, repository, tag);
+  const api = new GitHubApi(releaseRepository, token);
+  let tagSha = await resolveTagSha(api, releaseRepository, tag);
+  let release = await findRelease(api, releaseRepository, tag);
   const normalizedRelease = release ? { ...release, tagName: release.tag_name, expectedTag: tag } : null;
   const decision = decideSafeResume({ tagSha, expectedSha, expectedTag: tag, release: normalizedRelease, expectedTitle: plan.title, expectedBody: plan.body, localAssets });
   if (decision.createTag) {
-    await api.post(`/repos/${repository}/git/refs`, { ref: `refs/tags/${tag}`, sha: expectedSha });
+    await api.post(`/repos/${releaseRepository}/git/refs`, { ref: `refs/tags/${tag}`, sha: expectedSha });
     tagSha = await boundedAuthoritativeReadback({
       label: "tag creation",
-      read: () => resolveTagSha(api, repository, tag),
+      read: () => resolveTagSha(api, releaseRepository, tag),
       assert: (value) => { if (value !== expectedSha) throw new Error("created tag target is not visible"); },
     });
   }
   if (decision.createDraft) {
-    await api.post(`/repos/${repository}/releases`, { tag_name: tag, target_commitish: expectedSha, name: plan.title, body: plan.body, draft: true, prerelease: profile.releaseChannel.prerelease });
+    await api.post(`/repos/${releaseRepository}/releases`, { tag_name: tag, target_commitish: expectedSha, name: plan.title, body: plan.body, draft: true, prerelease: profile.releaseChannel.prerelease });
     release = await boundedAuthoritativeReadback({
       label: "draft creation",
-      read: () => findRelease(api, repository, tag),
+      read: () => findRelease(api, releaseRepository, tag),
       assert: (value) => assertDraftReadback(value, tag, plan.title, plan.body),
     });
   }
   if (decision.alreadyPublished) {
-    release = await findRelease(api, repository, tag);
+    release = await findRelease(api, releaseRepository, tag);
   } else {
     for (const name of decision.upload) {
       const local = localAssets.get(name.toLowerCase());
-      await uploadAsset(api, repository, release.id, local);
+      await uploadAsset(api, releaseRepository, release.id, local);
       release = await boundedAuthoritativeReadback({
         label: `asset upload ${name}`,
-        read: () => findRelease(api, repository, tag),
+        read: () => findRelease(api, releaseRepository, tag),
         assert: (value) => assertUploadedAssetReadback(value, local),
       });
     }
-    await api.patch(`/repos/${repository}/releases/${release.id}`, {
+    await api.patch(`/repos/${releaseRepository}/releases/${release.id}`, {
       name: plan.title,
       body: plan.body,
       draft: profile.releaseChannel.draft,
@@ -710,9 +758,9 @@ async function publishCommand(options) {
   const readback = await boundedAuthoritativeReadback({
     label: "final release state",
     read: async () => ({
-      tagSha: await resolveTagSha(api, repository, tag),
-      release: await findRelease(api, repository, tag),
-      latest: await api.get(`/repos/${repository}/releases/latest`, true),
+      tagSha: await resolveTagSha(api, releaseRepository, tag),
+      release: await findRelease(api, releaseRepository, tag),
+      latest: await api.get(`/repos/${releaseRepository}/releases/latest`, true),
     }),
     assert: (value) => assertAuthoritativeReadback({ release: value.release, tagSha: value.tagSha, expectedSha, expectedTitle: plan.title, expectedBody: plan.body, localAssets, channel: profile.releaseChannel, latestReleaseId: value.latest?.id ?? null }),
   });

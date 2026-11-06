@@ -18,8 +18,12 @@ import {
   boundedAuthoritativeReadback,
   completionClaims,
   decideSafeResume,
+  assertPromotionPlanIdentity,
+  assertQualificationEvidenceRepositories,
+  expectedReleaseProvenance,
   parseQualificationRuns,
   parseSigningReceiptBytes,
+  resolvePromotionRepositories,
   selectQualificationArtifact,
   validatePromotionProfile,
   verifyExtractedQualification,
@@ -63,10 +67,30 @@ rejects(() => validatePromotionProfile({ ...profileFixture, artifactSelection: "
 
 const mapping = parseQualificationRuns(JSON.stringify({
   windows: { runId: 101, attempt: 2, artifactId: 9001 },
-  macos: { runId: 102, attempt: 1, artifactId: 9002 },
-}), ["windows", "macos"]);
+  "macos-arm64": { runId: 102, attempt: 1, artifactId: 9002 },
+}), ["windows", "macos-arm64"]);
 assert.deepEqual(mapping.windows, { runId: 101, attempt: 2, artifactId: 9001 });
-rejects(() => parseQualificationRuns(JSON.stringify({ windows: mapping.windows }), ["windows", "macos"]), /keys must be exactly/u);
+rejects(() => parseQualificationRuns(JSON.stringify({ windows: mapping.windows }), ["windows", "macos-arm64"]), /keys must be exactly/u);
+// 平台键是资格实体：通用 macos 别名不能顶替带架构的实体。
+rejects(() => parseQualificationRuns(JSON.stringify({ windows: mapping.windows, macos: mapping["macos-arm64"] }), ["windows", "macos-arm64", "macos-x64"]), /keys must be exactly/u);
+rejects(() => validatePromotionProfile({ ...profileFixture, platforms: { ...profileFixture.platforms, macos: { ...profileFixture.platforms.windows, architectures: ["arm64"] } } }), /Unsupported platform: macos/u);
+
+// 资格仓库与发布仓库分离：缺省同一仓库，显式参数可拆开。
+assert.deepEqual(resolvePromotionRepositories({ repository: "release-owner/app" }), { qualificationRepository: "release-owner/app", releaseRepository: "release-owner/app" });
+assert.deepEqual(resolvePromotionRepositories({ repository: "release-owner/app", "qualification-repository": "builder-owner/app-builds" }), { qualificationRepository: "builder-owner/app-builds", releaseRepository: "release-owner/app" });
+rejects(() => resolvePromotionRepositories({ repository: "release-owner/app", "qualification-repository": "not-a-repository" }), /qualification repository must be owner\/name/u);
+assert.doesNotThrow(() => assertQualificationEvidenceRepositories({ contract: { repository: "builder-owner/app-builds" }, ledger: { repository: "builder-owner/app-builds" }, qualificationRepository: "builder-owner/app-builds" }));
+rejects(() => assertQualificationEvidenceRepositories({ contract: { repository: "release-owner/app" }, ledger: { repository: "builder-owner/app-builds" }, qualificationRepository: "builder-owner/app-builds" }), /release contract repository/u);
+rejects(() => assertQualificationEvidenceRepositories({ contract: { repository: "builder-owner/app-builds" }, ledger: { repository: "release-owner/app" }, qualificationRepository: "builder-owner/app-builds" }), /run ledger repository/u);
+const planIdentity = { qualificationRepository: "builder-owner/app-builds", releaseRepository: "release-owner/app", expectedSha: sha, tag: "v1.2.3", version: "1.2.3" };
+assert.doesNotThrow(() => assertPromotionPlanIdentity(planIdentity, planIdentity));
+rejects(() => assertPromotionPlanIdentity({ ...planIdentity, qualificationRepository: "attacker/builds" }, planIdentity), /plan identity mismatch/u);
+rejects(() => assertPromotionPlanIdentity({ ...planIdentity, releaseRepository: "attacker/releases" }, planIdentity), /plan identity mismatch/u);
+
+// Release 说明必填，并放在生成的来源说明之前。
+const notedProvenance = expectedReleaseProvenance("v1.0.0", sha, new Map([["installer", { name: "app.exe", sha256: digestA }]]), [{ platform: "windows", signing: { status: "unsigned", validationResult: "not signed", unsignedDistributionImpact: "warning expected" } }], "# Notes\n\nBody\n");
+assert.ok(notedProvenance.body.startsWith("# Notes\n\nBody\n\n---\n\nQualified desktop release v1.0.0"));
+rejects(() => expectedReleaseProvenance("v1.0.0", sha, new Map(), [], "   "), /release notes must not be empty/u);
 rejects(() => parseQualificationRuns(JSON.stringify({ windows: { runId: 101, attempt: 2 } }), ["windows"]), /artifactId/u);
 
 const run = {
@@ -233,10 +257,12 @@ function hashBytes(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
 }
 
-async function writeSyntheticQualification(root, { platform, mapping, assetName, assetBytes, includeBom, receiptAccepted = true, ledgerSigningMode = "valid" }) {
+const qualificationRepository = "owner/app";
+const contractText = '{"schemaVersion":2,"repository":"owner/app","frozen":{"qualificationEntities":["macos-arm64","windows"]}}\n';
+
+async function writeSyntheticQualification(root, { platform, architecture, mapping, assetName, assetBytes, includeBom, receiptAccepted = true, ledgerSigningMode = "valid", contractBytes = Buffer.from(contractText, "utf8"), ledgerOverrides = {}, manifestArchitecture = architecture }) {
   await mkdir(join(root, "acceptance"), { recursive: true });
   await mkdir(join(root, "release-bundle"), { recursive: true });
-  const contractBytes = Buffer.from('{"schemaVersion":2,"scope":"windows+macos"}\n', "utf8");
   const fixtureReceipt = { ...receiptObject, accepted: receiptAccepted, platform };
   const signingBytes = Buffer.concat([includeBom ? bom : Buffer.alloc(0), Buffer.from(JSON.stringify(fixtureReceipt), "utf8")]);
   const signingBinding = {
@@ -247,11 +273,15 @@ async function writeSyntheticQualification(root, { platform, mapping, assetName,
   };
   const ledgerValue = {
     schemaVersion: 2,
+    platform,
+    architecture,
+    repository: qualificationRepository,
     runId: mapping.runId,
     runAttempt: mapping.attempt,
     qualifiedCommit: sha,
     contractRawBytesSha256: hashBytes(contractBytes),
     profileRawBytesSha256: profileDigest,
+    ...ledgerOverrides,
   };
   if (ledgerSigningMode === "valid") ledgerValue.signing = signingBinding;
   if (ledgerSigningMode === "conflict") ledgerValue.signing = { ...signingBinding, validationResult: "conflicting ledger value" };
@@ -262,6 +292,8 @@ async function writeSyntheticQualification(root, { platform, mapping, assetName,
   await writeFile(join(root, "release-bundle", assetName), assetBytes);
   const manifestValue = {
     schemaVersion: 2,
+    platform,
+    architecture: manifestArchitecture,
     releaseCreated: false,
     commit: sha,
     contractRawBytesSha256: hashBytes(contractBytes),
@@ -290,34 +322,35 @@ const integrationRoot = await mkdtemp(join(tmpdir(), "promotion-consumer-test-")
 try {
   const releaseAssetPolicy = [
     { platform: "windows", name: "App-{version}.exe" },
-    { platform: "macos", name: "App-{version}.dmg" },
+    { platform: "macos-arm64", name: "App-mac-arm64-{version}.dmg" },
   ];
   const platformCases = [
-    { platform: "windows", mapping: { runId: 501, attempt: 2, artifactId: 7001 }, assetName: "App-1.0.0.exe", artifactName: "qualified-windows", bytes: Buffer.from([0x4d, 0x5a, 0x01]), includeBom: true },
-    { platform: "macos", mapping: { runId: 502, attempt: 1, artifactId: 7002 }, assetName: "App-1.0.0.dmg", artifactName: "qualified-macos", bytes: Buffer.from([0x78, 0x61, 0x72, 0x21]), includeBom: false },
+    { platform: "windows", architecture: "x64", mapping: { runId: 501, attempt: 2, artifactId: 7001 }, assetName: "App-1.0.0.exe", artifactName: "qualified-windows", bytes: Buffer.from([0x4d, 0x5a, 0x01]), includeBom: true },
+    { platform: "macos-arm64", architecture: "arm64", mapping: { runId: 502, attempt: 1, artifactId: 7002 }, assetName: "App-mac-arm64-1.0.0.dmg", artifactName: "qualified-macos-arm64", bytes: Buffer.from([0x78, 0x61, 0x72, 0x21]), includeBom: false },
   ];
   let integrationBindings = null;
   const aggregateAssets = new Map();
   for (const fixture of platformCases) {
     const root = join(integrationRoot, fixture.platform);
-    await writeSyntheticQualification(root, { platform: fixture.platform, mapping: fixture.mapping, assetName: fixture.assetName, assetBytes: fixture.bytes, includeBom: fixture.includeBom });
+    await writeSyntheticQualification(root, { platform: fixture.platform, architecture: fixture.architecture, mapping: fixture.mapping, assetName: fixture.assetName, assetBytes: fixture.bytes, includeBom: fixture.includeBom });
     const verified = await verifyExtractedQualification({
       root,
       platform: fixture.platform,
-      policy: { signingPolicy: { mode: "allow-unsigned-with-disclosure" }, acceptanceReceipts: ["acceptance/signing.json"] },
+      policy: { architectures: [fixture.architecture], signingPolicy: { mode: "allow-unsigned-with-disclosure" }, acceptanceReceipts: ["acceptance/signing.json"] },
       releaseAssetPolicy,
       version: "1.0.0",
       expectedSha: sha,
       mapping: fixture.mapping,
       artifact: { name: fixture.artifactName },
       profileRawBytesSha256: profileDigest,
+      qualificationRepository,
       previousBindings: integrationBindings,
     });
     integrationBindings = verified.bindings;
     for (const asset of verified.assets) aggregateAssets.set(asset.name, asset.sha256);
   }
-  assert.deepEqual(integrationBindings, { contractRawBytesSha256: hashBytes(Buffer.from('{"schemaVersion":2,"scope":"windows+macos"}\n', "utf8")), profileRawBytesSha256: profileDigest });
-  assert.deepEqual([...aggregateAssets.keys()].sort(), ["App-1.0.0.dmg", "App-1.0.0.exe"]);
+  assert.deepEqual(integrationBindings, { contractRawBytesSha256: hashBytes(Buffer.from(contractText, "utf8")), profileRawBytesSha256: profileDigest });
+  assert.deepEqual([...aggregateAssets.keys()].sort(), ["App-1.0.0.exe", "App-mac-arm64-1.0.0.dmg"]);
   const windowsCase = platformCases[0];
   const baseConsumer = {
     platform: "windows",
@@ -327,24 +360,32 @@ try {
     mapping: windowsCase.mapping,
     artifact: { name: windowsCase.artifactName },
     profileRawBytesSha256: profileDigest,
+    qualificationRepository,
   };
   await assert.rejects(() => verifyExtractedQualification({
     ...baseConsumer,
     root: join(integrationRoot, "windows"),
-    policy: { signingPolicy: { mode: "allow-unsigned-with-disclosure" }, acceptanceReceipts: ["acceptance/signing.json", "acceptance/missing.json"] },
+    policy: { architectures: ["x64"], signingPolicy: { mode: "allow-unsigned-with-disclosure" }, acceptanceReceipts: ["acceptance/signing.json", "acceptance/missing.json"] },
   }), /required receipt is not hash-bound/u);
 
   for (const negative of [
     { name: "rejected", receiptAccepted: false, ledgerSigningMode: "valid", error: /accepted=true/u },
     { name: "ledger-missing", receiptAccepted: true, ledgerSigningMode: "missing", error: /binding is missing/u },
     { name: "ledger-conflict", receiptAccepted: true, ledgerSigningMode: "conflict", error: /validationResult/u },
+    // 身份核对：manifest、ledger 的平台与架构，contract 的资格实体，以及两份证据的仓库。
+    { name: "manifest-architecture", manifestArchitecture: "arm64", error: /qualification manifest entity mismatch/u },
+    { name: "ledger-architecture", ledgerOverrides: { architecture: "arm64" }, error: /run ledger entity mismatch/u },
+    { name: "ledger-platform", ledgerOverrides: { platform: "macos-x64" }, error: /run ledger entity mismatch/u },
+    { name: "contract-entity", contractBytes: Buffer.from('{"schemaVersion":2,"repository":"owner/app","frozen":{"qualificationEntities":["macos-arm64"]}}\n', "utf8"), error: /does not declare the qualification entity/u },
+    { name: "contract-repository", contractBytes: Buffer.from('{"schemaVersion":2,"repository":"other/app","frozen":{"qualificationEntities":["windows"]}}\n', "utf8"), error: /release contract repository/u },
+    { name: "ledger-repository", ledgerOverrides: { repository: "other/app" }, error: /run ledger repository/u },
   ]) {
     const root = join(integrationRoot, negative.name);
-    await writeSyntheticQualification(root, { platform: "windows", mapping: windowsCase.mapping, assetName: windowsCase.assetName, assetBytes: windowsCase.bytes, includeBom: false, receiptAccepted: negative.receiptAccepted, ledgerSigningMode: negative.ledgerSigningMode });
+    await writeSyntheticQualification(root, { platform: "windows", architecture: "x64", mapping: windowsCase.mapping, assetName: windowsCase.assetName, assetBytes: windowsCase.bytes, includeBom: false, receiptAccepted: negative.receiptAccepted ?? true, ledgerSigningMode: negative.ledgerSigningMode ?? "valid", ledgerOverrides: negative.ledgerOverrides ?? {}, ...(negative.contractBytes ? { contractBytes: negative.contractBytes } : {}), ...(negative.manifestArchitecture ? { manifestArchitecture: negative.manifestArchitecture } : {}) });
     await assert.rejects(() => verifyExtractedQualification({
       ...baseConsumer,
       root,
-      policy: { signingPolicy: { mode: "allow-unsigned-with-disclosure" }, acceptanceReceipts: ["acceptance/signing.json"] },
+      policy: { architectures: ["x64"], signingPolicy: { mode: "allow-unsigned-with-disclosure" }, acceptanceReceipts: ["acceptance/signing.json"] },
     }), negative.error);
   }
 } finally {
@@ -357,5 +398,6 @@ assert.match(workflow, /\.release\/scripts\/github-desktop-promotion\.mjs/u);
 assert.match(workflow, /validate-release-profile\.mjs/u);
 assert.match(workflow, /Vendor both Skill scripts/u);
 assert.match(workflow, /--version "\$RELEASE_VERSION"/u);
+assert.match(workflow, /--release-notes "\$RELEASE_NOTES_PATH"/u);
 
-process.stdout.write('{"passed":true,"checks":"profile-validator,run-mapping,same-sha,contract-profile-binding,required-receipt-set,receipt-envelope,signing-receipt-consistency,ledger-signing-binding,single-bom,default-branch-ancestry,attempt,artifact-id-name,manifest-exact-set,raw-sha,two-platform-consumer-integration,safe-resume,bounded-readback,digest-required,draft-publication-boundary,channel-readback,vendored-workflow"}\n');
+process.stdout.write('{"passed":true,"checks":"profile-validator,run-mapping,same-sha,contract-profile-binding,required-receipt-set,receipt-envelope,signing-receipt-consistency,ledger-signing-binding,single-bom,default-branch-ancestry,attempt,artifact-id-name,manifest-exact-set,raw-sha,two-platform-consumer-integration,qualification-entity-identity,repository-separation,release-notes,safe-resume,bounded-readback,digest-required,draft-publication-boundary,channel-readback,vendored-workflow"}\n');

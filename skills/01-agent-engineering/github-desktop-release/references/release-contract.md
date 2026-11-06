@@ -13,7 +13,8 @@ The release contract is immutable input frozen before qualification, not a retro
     "commit": "40-character-lowercase-sha",
     "tag": "vX.Y.Z",
     "version": "X.Y.Z",
-    "requiredPlatforms": ["windows", "macos"],
+    "requiredPlatforms": ["windows", "macos-arm64"],
+    "qualificationEntities": ["macos-arm64", "windows"],
     "platforms": {
       "windows": {
         "workflow": ".github/workflows/qualify-windows.yml",
@@ -22,17 +23,17 @@ The release contract is immutable input frozen before qualification, not a retro
         "artifactName": "qualified-windows",
         "acceptanceProfile": "profile-defined exact receipt set"
       },
-      "macos": {
-        "workflow": ".github/workflows/qualify-macos.yml",
+      "macos-arm64": {
+        "workflow": ".github/workflows/qualify-macos-arm64.yml",
         "runner": { "expectedLabel": "macos-14", "actualImageVersion": "captured-before-install" },
         "appToolchain": { "source": "committed project contract" },
-        "artifactName": "qualified-macos",
+        "artifactName": "qualified-macos-arm64",
         "acceptanceProfile": "profile-defined exact receipt set"
       }
     },
     "releaseAssetSet": [
       { "name": "App-Setup-X.Y.Z.exe", "platform": "windows", "role": "installer" },
-      { "name": "App-X.Y.Z-arm64.dmg", "platform": "macos", "role": "installer" }
+      { "name": "App-mac-arm64-X.Y.Z.dmg", "platform": "macos-arm64", "role": "installer" }
     ],
     "promotion": {
       "workflow": ".github/workflows/publish-verified-release.yml",
@@ -50,6 +51,7 @@ Field names may follow an existing repository schema, but the semantic boundarie
 - Use a full commit SHA, never a branch, short SHA, or later default-branch tip. Promotion must directly prove the qualified SHA satisfies the repository's ancestry policy.
 - Generate and hash the contract before install, build, or acceptance. Verify dispatch inputs, checkout, runner image, application runtime, package manager, and tool versions against it.
 - Treat the promotion verifier runtime as separate from every application toolchain.
+- `repository` names the repository that runs qualification; promotion requires it to equal the qualification repository. `frozen.qualificationEntities` lists every profile platform key (sorted); promotion rejects an entity the contract does not declare.
 - List exact requested platforms, architectures, workflows, artifact names, receipt paths, signing/notarization policies, release assets, retention, and channel expectations.
 - Require signing evidence for every platform. When unsigned or unnotarized delivery is allowed, bind the validation result and non-empty unsigned distribution impact to the contract and release notes.
 - Select cross-run artifacts by workflow, run ID, attempt, and artifact ID. A matching name from another run is not identity.

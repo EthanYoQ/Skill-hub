@@ -30,10 +30,10 @@ The profile defines stable project policy, not a release instance. The release c
         "disclosureRequired": true
       }
     },
-    "macos": {
-      "qualificationWorkflow": ".github/workflows/qualify-macos.yml",
-      "artifactName": "qualified-macos",
-      "architectures": ["arm64", "x64"],
+    "macos-arm64": {
+      "qualificationWorkflow": ".github/workflows/qualify-macos-arm64.yml",
+      "artifactName": "qualified-macos-arm64",
+      "architectures": ["arm64"],
       "retentionDays": 14,
       "acceptanceReceipts": [
         "acceptance/package.json",
@@ -51,7 +51,7 @@ The profile defines stable project policy, not a release instance. The release c
   },
   "releaseAssets": [
     { "name": "App-Setup-{version}-x64.exe", "platform": "windows", "role": "installer" },
-    { "name": "App-{version}-arm64.dmg", "platform": "macos", "role": "installer" }
+    { "name": "App-mac-arm64-{version}.dmg", "platform": "macos-arm64", "role": "installer" }
   ],
   "promotion": {
     "workflow": ".github/workflows/publish-verified-release.yml",
@@ -81,9 +81,11 @@ The profile defines stable project policy, not a release instance. The release c
 - For deep Windows acceptance, use a separate committed profile (for example `release-profile.windows-deep.json`) that adds exact `acceptance/upgrade-data.json`, `acceptance/native-abi.json`, and any project-specific migration receipts. Select the profile before qualification; its raw hash binds every qualification and promotion run, so an undeclared deep receipt or a late profile edit is rejected.
 - A profile may describe either tier, never an implicit mixture. Do not use a wildcard, an optional receipt, or an undeclared extra JSON file to make a deep check conditional.
 - Use `{version}` only as an explicit asset-name placeholder; resolve it when freezing the release contract.
-- List one or more architecture tokens per platform. Tokens are non-empty and limited to ASCII letters, digits, dot, underscore, and hyphen (for example `x64`, `arm64`, or `universal`); comparison is case-insensitive.
+- Platform keys are qualification entities, not operating-system families: `windows`, `macos-arm64`, and `macos-x64`. A generic `macos` key is rejected so the two macOS architectures keep independent run identities, artifacts, and signing receipts. Add `macos-x64` as its own entity (own workflow, artifact name, and assets) when Intel is released.
+- Each entity lists exactly one architecture: `windows` → `["x64"]`, `macos-arm64` → `["arm64"]`, `macos-x64` → `["x64"]`. Tokens are limited to ASCII letters, digits, dot, underscore, and hyphen; comparison is case-insensitive.
+- Every macOS release asset name must contain `-mac-<arch>-` (for example `App-mac-arm64-{version}.dmg`).
 - Select artifacts by workflow, run ID, attempt, and artifact ID; an equal artifact name is not identity.
-- Bundled qualification templates require fixed `artifactName` values: `qualified-windows` and `qualified-macos`. Do not append SHA, run ID, or attempt; promotion separately binds immutable workflow/run/attempt/artifact IDs.
+- Use a fixed `artifactName` per entity, for example `qualified-windows`, `qualified-macos-arm64`, and `qualified-macos-x64`. The bundled macOS qualification template still emits the legacy single `macos` entity; adapt it per architecture entity before use. Do not append SHA, run ID, or attempt; promotion separately binds immutable workflow/run/attempt/artifact IDs.
 - Every qualification workflow must receive the same committed `profile_path`, hash its raw bytes before build, and carry that hash in the common contract, run ledger, and manifest.
 - Keep `promotion.finalState` and `releaseChannel.draft` consistent: `draft` requires `draft: true`, while `published` requires `draft: false`.
 - Interpret `expectedLatest` as project policy rather than a universal completion rule. It must be `false` for draft or prerelease channels.

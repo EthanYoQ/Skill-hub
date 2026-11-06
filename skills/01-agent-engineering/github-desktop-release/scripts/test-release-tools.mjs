@@ -19,10 +19,10 @@ const profile = {
       acceptanceReceipts: ['acceptance/launch.json', 'acceptance/signing.json'],
       signingPolicy: { mode: 'allow-unsigned-with-disclosure', disclosureRequired: true }
     },
-    macos: {
-      qualificationWorkflow: '.github/workflows/qualify-macos.yml',
-      artifactName: 'qualified-macos',
-      architectures: ['arm64', 'x64'],
+    'macos-arm64': {
+      qualificationWorkflow: '.github/workflows/qualify-macos-arm64.yml',
+      artifactName: 'qualified-macos-arm64',
+      architectures: ['arm64'],
       retentionDays: 14,
       acceptanceReceipts: ['acceptance/launch.json', 'acceptance/signing.json'],
       signingPolicy: { mode: 'required', disclosureRequired: true }
@@ -30,7 +30,7 @@ const profile = {
   },
   releaseAssets: [
     { name: 'App-Setup-{version}.exe', platform: 'windows', role: 'installer' },
-    { name: 'App-{version}-arm64.dmg', platform: 'macos', role: 'installer' }
+    { name: 'App-mac-arm64-{version}.dmg', platform: 'macos-arm64', role: 'installer' }
   ],
   promotion: { workflow: '.github/workflows/publish-release.yml', finalState: 'published' },
   artifactSelection: 'workflow-run-attempt-artifact-id',
@@ -61,8 +61,28 @@ const unsafeArchitecture = structuredClone(profile);
 unsafeArchitecture.platforms.windows.architectures = ['x64/../../escape'];
 assert.equal(validateReleaseProfile(unsafeArchitecture).ok, false);
 const duplicateArchitecture = structuredClone(profile);
-duplicateArchitecture.platforms.macos.architectures.push('ARM64');
+duplicateArchitecture.platforms['macos-arm64'].architectures.push('ARM64');
 assert.equal(validateReleaseProfile(duplicateArchitecture).ok, false);
+
+// 平台键是资格实体：架构固定，macOS 资产名必须带架构，通用 macos 键不再接受。
+const mergedMacArchitectures = structuredClone(profile);
+mergedMacArchitectures.platforms['macos-arm64'].architectures = ['arm64', 'x64'];
+assert.match(validateReleaseProfile(mergedMacArchitectures).errors.join('\n'), /macos-arm64\.architectures must be exactly \[arm64\]/);
+const wrongWindowsArchitecture = structuredClone(profile);
+wrongWindowsArchitecture.platforms.windows.architectures = ['arm64'];
+assert.match(validateReleaseProfile(wrongWindowsArchitecture).errors.join('\n'), /windows\.architectures must be exactly \[x64\]/);
+const unlabeledMacAsset = structuredClone(profile);
+unlabeledMacAsset.releaseAssets[1].name = 'App-{version}-arm64.dmg';
+assert.match(validateReleaseProfile(unlabeledMacAsset).errors.join('\n'), /must encode the arm64 macOS architecture/);
+const genericMacos = structuredClone(profile);
+genericMacos.platforms.macos = genericMacos.platforms['macos-arm64'];
+delete genericMacos.platforms['macos-arm64'];
+genericMacos.releaseAssets[1].platform = 'macos';
+assert.match(validateReleaseProfile(genericMacos).errors.join('\n'), /Unsupported platform: macos/);
+const intelProfile = structuredClone(profile);
+intelProfile.platforms['macos-x64'] = { ...structuredClone(profile.platforms['macos-arm64']), qualificationWorkflow: '.github/workflows/qualify-macos-x64.yml', artifactName: 'qualified-macos-x64', architectures: ['x64'] };
+intelProfile.releaseAssets.push({ name: 'App-mac-x64-{version}.dmg', platform: 'macos-x64', role: 'installer' });
+assert.equal(validateReleaseProfile(intelProfile).ok, true, JSON.stringify(validateReleaseProfile(intelProfile).errors));
 
 const unknownFieldCases = [
   ['profile', (candidate) => { candidate.providre = 'github-actions'; }],
@@ -110,7 +130,7 @@ const container = await mkdtemp(path.join(os.tmpdir(), 'github-desktop-release-t
 const root = path.join(container, 'evidence');
 try {
   await mkdir(root, { recursive: true });
-  for (const platform of ['windows', 'macos']) {
+  for (const platform of ['windows', 'macos-arm64']) {
     const acceptanceRoot = path.join(root, platform, 'acceptance');
     await mkdir(acceptanceRoot, { recursive: true });
     const launch = JSON.stringify({ schemaVersion: 1, platform, accepted: true, observations: ['packaged app launched'], processObserved: true }, null, 2);
@@ -133,8 +153,8 @@ try {
   assert.equal(replay.receipts.length, 4);
   assert.equal(replay.receipts.find((receipt) => receipt.platform === 'windows' && receipt.path.endsWith('launch.json')).utf8Bom, true);
 
-  const rejectedPath = path.join(root, 'macos', 'acceptance', 'launch.json');
-  await writeFile(rejectedPath, JSON.stringify({ platform: 'macos', accepted: false, observations: ['crash'], processObserved: false }));
+  const rejectedPath = path.join(root, 'macos-arm64', 'acceptance', 'launch.json');
+  await writeFile(rejectedPath, JSON.stringify({ platform: 'macos-arm64', accepted: false, observations: ['crash'], processObserved: false }));
   const rejected = await replayReleaseEvidence(profile, root);
   assert.equal(rejected.ok, false);
   assert.match(rejected.errors.join('\n'), /accepted=true/);
@@ -149,12 +169,12 @@ try {
   const outsideAcceptance = path.join(container, 'outside-acceptance');
   await mkdir(outsideAcceptance, { recursive: true });
   await writeFile(path.join(outsideAcceptance, 'launch.json'), JSON.stringify({
-    platform: 'macos', accepted: true, observations: ['outside launch'], processObserved: true
+    platform: 'macos-arm64', accepted: true, observations: ['outside launch'], processObserved: true
   }));
   await writeFile(path.join(outsideAcceptance, 'signing.json'), JSON.stringify({
-    platform: 'macos', accepted: true, observations: ['outside signature'], status: 'signed', validationResult: 'outside'
+    platform: 'macos-arm64', accepted: true, observations: ['outside signature'], status: 'signed', validationResult: 'outside'
   }));
-  const reparsePath = path.join(root, 'macos', 'acceptance');
+  const reparsePath = path.join(root, 'macos-arm64', 'acceptance');
   await rm(reparsePath, { recursive: true, force: true });
   let reparseCreated = false;
   try {
@@ -171,4 +191,4 @@ try {
   await rm(container, { recursive: true, force: true });
 }
 
-process.stdout.write('{"passed":true,"checks":"profile-validation,unknown-fields,channel-consistency,architectures,path-safety,reparse-escape,case-collision,bom-crlf-replay,strict-single-bom,signing-envelope,negative-receipt,failure-classification,two-failure-stop"}\n');
+process.stdout.write('{"passed":true,"checks":"profile-validation,unknown-fields,channel-consistency,architectures,qualification-entities,mac-asset-architecture,path-safety,reparse-escape,case-collision,bom-crlf-replay,strict-single-bom,signing-envelope,negative-receipt,failure-classification,two-failure-stop"}\n');

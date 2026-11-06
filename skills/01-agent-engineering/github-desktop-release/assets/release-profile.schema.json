@@ -14,7 +14,8 @@
       "additionalProperties": false,
       "properties": {
         "windows": { "$ref": "#/$defs/platform" },
-        "macos": { "$ref": "#/$defs/platform" }
+        "macos-arm64": { "$ref": "#/$defs/platform" },
+        "macos-x64": { "$ref": "#/$defs/platform" }
       }
     },
     "releaseAssets": {
@@ -26,7 +27,7 @@
         "required": ["name", "platform", "role"],
         "properties": {
           "name": { "type": "string", "minLength": 1 },
-          "platform": { "enum": ["windows", "macos"] },
+          "platform": { "enum": ["windows", "macos-arm64", "macos-x64"] },
           "role": { "type": "string", "minLength": 1 }
         }
       }
