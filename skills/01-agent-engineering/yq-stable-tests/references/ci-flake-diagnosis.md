@@ -35,7 +35,9 @@ Start with the owning test file or focused test name. Increase concurrency only 
 4. the owning repository gate with its configured worker count;
 5. separate jobs or runner processes sharing the implicated host resource.
 
-Match the active Vitest config, environment knobs, source/build mode, and platform. Do not lower a production timeout or add random load merely to manufacture a different failure.
+升并发之外还有一档「降速」。只在慢 runner 上失败的用例（例如只挂在 macOS Intel 或负载高的共享池上），先在本机把 CPU 降下来（限制进程可用核数或给进程降优先级、用 CPU 节流工具）或加大帧回调延迟（拉长 `requestAnimationFrame`、定时器或 IPC 回调的间隔），看能否复现同一个失败签名。复现之后再判是测试时序问题（测试假设了某个回调一定先到）还是产品缺陷（真实用户在慢机器上也会遇到）。没做这一档、只凭「快机器上过了」，不能把它归为偶发。
+
+Match the active Vitest config, environment knobs, source/build mode, and platform. Do not lower a production timeout or add random load merely to manufacture a different failure; slowing the host is a reproduction step for a signature already seen on a slow runner, not a way to manufacture a new one.
 
 Where the signature belongs to a platform the available host cannot run, the ladder stops at the last reachable rung. Record that limit rather than substituting a passing run on another platform, then use CI as the reproduction, changing one suspected owner per run so the result stays attributable.
 

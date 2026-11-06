@@ -1,6 +1,6 @@
 ---
 name: yq-pre-push-checks
-description: 推送或宣称就绪前，选择与变更风险匹配的最小验证。
+description: Use before git push, opening or updating a PR, marking a PR ready for review, or claiming work is ready or done. 推送（git push）、交 PR、更新 PR、标 ready for review、宣称就绪或完成之前使用。Selects the smallest validation that matches the change's risk. 选与变更风险匹配的最小验证。
 ---
 
 # Pre-Push Checks

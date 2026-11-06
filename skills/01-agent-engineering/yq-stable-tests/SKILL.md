@@ -1,6 +1,6 @@
 ---
 name: yq-stable-tests
-description: Design, review, and diagnose tests and fixtures that can fail nondeterministically under CI concurrency, shared host resources, clocks, process-global state, subprocesses, network listeners, or asynchronous teardown. Use when adding or changing tests with those risks, investigating flaky CI, or reviewing test isolation; use pre-push-checks separately to select outgoing commands.
+description: Use before calling any test or CI failure load flakiness, before rerunning a failed CI check, and before merging a PR that still carries a failing check. Diagnose, design, and review tests and fixtures that can fail nondeterministically under CI concurrency, slow runners, shared host resources, clocks, process-global state, subprocesses, network listeners, or asynchronous teardown. Also use when a test fails only in a parallel full-suite run or only on a slow runner but passes alone, fails with file-system errors such as EBUSY, ENOENT (including mkdtemp), or EEXIST, when investigating flaky CI, or when adding, changing, or reviewing tests with those risks; use pre-push-checks separately to select outgoing commands.
 ---
 
 # Reliable CI tests
@@ -24,6 +24,8 @@ Assume these layers can overlap unless the active configuration proves otherwise
 4. Different Actions jobs whose runners share one host.
 
 Process isolation does not isolate host ports, predictable filesystem paths, external services, databases, sockets, or inherited child processes. For every acquired resource, identify its owner, atomic allocation mechanism, observable readiness signal, registered cleanup, and quiescent completion signal.
+
+Before attributing a failure to load, check that the runner's reported Test Files count equals the intended subset. A mismatch means the invocation was wrong, not that the test is flaky.
 
 Do not serialize an entire suite merely because one fixture lacks isolation. Narrow the exclusive scope or change the resource allocation first. A sequential Vitest block cannot protect a host resource from another file, process, job, or runner.
 
@@ -117,6 +119,11 @@ Restoring a budget is not masking. Raising a suite to the lane budget it already
 ## Diagnose existing flakes
 
 For an existing probabilistic CI failure, read [the CI flake diagnosis workflow](references/ci-flake-diagnosis.md). A diagnosis-only request remains read-only: report the cause and evidence unless the user also asks for a fix.
+
+### Before a rerun
+
+- Before rerunning a failed CI check, intersect the failing test's transitive import closure with the PR diff. Name the base SHA you diffed against. Put both the base SHA and the intersection in the rerun reason. A non-empty intersection means the failure is not a flake; do not rerun it as one.
+- When the same mechanism blocks a second PR, stop rerunning. Open a separate fix for the test or script that owns the mechanism right away.
 
 ## Validate and report
 
