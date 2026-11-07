@@ -25,19 +25,33 @@ CDP 按 URL 返回可用 Cookie。按授权根域核对 `domain`，只接受根�
 [随附扩展](../assets/chrome-extension/manifest.json)预设 `douyin`、`xiaohongshu`、`zhihu`、`tiktok`。扩展使用 Chrome 的 Cookie API，按平台请求可选 HTTPS 域权限，在本机完成加解密。需要支持其他站点时，先审查并同步调整域名清单、站点选择项和 manifest 权限。 [Chrome Permissions API](https://developer.chrome.com/docs/extensions/reference/api/permissions)
 
 - CDP 路径可从本地 [transfer.mjs](../assets/chrome-extension/transfer.mjs) 调用 `encrypt(site, passphrase, cookies)` 和 `decrypt(site, passphrase, bundle)`。可使用具备 Web Crypto 的运行时。扩展路径从工具栏打开扩展页面，选择平台，输入随机口令并点「导出加密包」。
-- 优先用系统随机源生成 32 字节，再编码为口令。用独立密码管理器或系统凭据存储保管。例如 Windows 可用当前用户 DPAPI 留存本机副本，Mac 端使用密码管理器或 Keychain 接收。两端传递口令走独立的受控途径。
+- 优先用系统随机源生成 32 字节，再编码为口令。按下节要求单独交付口令。
 - 格式 `browser-session-handoff-v1` 使用 AES-256-GCM、PBKDF2-SHA256（600,000 次）、16 字节随机 salt、12 字节随机 IV，以及 UTF-8 的 `格式:站点` 作为认证数据。使用与加密文件格式匹配的导入器。
 - 在同一个受控运行时从磁盘回读密文。解密后核对记录数和完整内容。日志只记录平台与检查结果。若仅完成扩展中的内存往返校验，状态仍为「磁盘回读待核验」。
 - 将密文、导入器的四个源文件和一份简短接入说明放进一个 ZIP。检查归档实际文件列表后，用 Windows `Get-FileHash -Algorithm SHA256` 或 macOS `shasum -a 256` 算出归档哈希。通过受控途径发送 ZIP 和预期哈希。说明可以使用下面的清单。
 
 ```text
-README.md                    # 已授权站点、文件映射、目标配置和验证步骤
+README.md                    # 已授权站点、文件映射、预期记录数、目标配置和验证步骤
 encrypted/<site>.encrypted.json
 importer/manifest.json
 importer/open-transfer.js
 importer/transfer.html
 importer/transfer.mjs
 ```
+
+## 口令交付与签收
+
+1. 将口令放入目标操作者能打开的获准密码管理器条目，或使用双方已确认的加密渠道。仅在私有交接记录中列出条目名称、接收人和状态。归档及其备份只含密文和通用说明。聊天、日志和仓库不保存口令。
+2. Windows 当前用户的 DPAPI 副本用于恢复。若只剩此副本，由原 Windows 用户在原机恢复到内存，通过已确认的渠道交付。确需本机明文临时文件时，先将文件访问权限限定为当前用户，写入后回读确认完整，并在签收后删除。
+3. 请接收方在目标设备打开条目并确认拿到口令，同时核对 ZIP 的 SHA-256。用匹配的导入器或其解密函数逐站点验证，记录解包得到的条数。可先在内存中解包，不打印 Cookie 值。浏览器写入时可能因过期而跳过记录，单独记录写入数。
+4. 对照下表记录实际进度。任一站点解包失败时，保留密文并核对口令条目和归档版本。恢复和重新交付失败时，再安排重新导出或在目标设备登录。
+
+| 已观察到的结果 | 交接状态 |
+| --- | --- |
+| 源端回读通过，接收方尚未确认可读取 ZIP 或口令 | 待签收 |
+| 接收方确认可读取 ZIP 和口令，任一站点尚未核对解包条数 | 待解包验收 |
+| 目标端每个站点均已解包，实际条数与预期相符 | 交接完成 |
+| 在目标配置的原生后台核对到正确账号和评论入口 | 单独记录该站点的登录验收 |
 
 ## 目标设备
 
@@ -48,6 +62,6 @@ importer/transfer.mjs
 
 ## 验收样例
 
-- 已授权两个站点，要求只传一个 ZIP。归档包含两个密文和匹配的导入器，口令单独保管。清单列出逐站点回读和目标端验证状态。
+- ZIP 已到 Mac，口令只存在源机 DPAPI。状态为「待签收」。在源机恢复口令，通过独立渠道交付，再让 Mac 操作者签收和核对各站点的解包条数。
 - 站点选错、口令错误或密文被修改。解密失败，导入器在写入前停止。
 - 用户拒绝 Chrome 权限或平台要求重新验证。记录该站点的实际状态，等待用户操作。
