@@ -1,13 +1,19 @@
 {
   "version": "2.0",
-  "generated_at": "2026-11-06T17:22:25+08:00",
-  "note": "Rebuilt indexes from repository SKILL.md files. Total: 57 shared + 0 projects = 57 total",
+  "generated_at": "2026-11-07T14:36:19+08:00",
+  "note": "Rebuilt indexes from repository SKILL.md files. Total: 58 shared + 0 projects = 58 total",
   "counts": {
-    "shared": 57,
+    "shared": 58,
     "projects": 0,
-    "total": 57
+    "total": 58
   },
   "shared": [
+    {
+      "name": "browser-session-handoff",
+      "domain": "01-agent-engineering",
+      "path": "skills/01-agent-engineering/browser-session-handoff/",
+      "descriptionZh": "按站点加密迁移已授权的 Chrome 登录 Cookie。"
+    },
     {
       "name": "deep-research",
       "domain": "01-agent-engineering",

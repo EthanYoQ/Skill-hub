@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Chrome Session Handoff",
+  "version": "1.0.0",
+  "description": "Move approved Chrome sessions between trusted profiles using encrypted files.",
+  "permissions": ["cookies"],
+  "optional_host_permissions": [
+    "https://*.douyin.com/*",
+    "https://*.xiaohongshu.com/*",
+    "https://*.zhihu.com/*",
+    "https://*.tiktok.com/*"
+  ],
+  "action": {},
+  "background": { "service_worker": "open-transfer.js" }
+}

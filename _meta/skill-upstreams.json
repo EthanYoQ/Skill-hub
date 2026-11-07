@@ -1,14 +1,14 @@
 {
   "version": "1.1",
-  "updated_at": "2026-10-18",
+  "updated_at": "2026-11-07",
   "purpose": "Track verified original upstream repositories for Skill-hub skills so future upgrades can compare evidence-backed sources instead of guessing by skill name.",
   "scope": {
     "startsFrom": [
       "_meta/skill-upstreams.json",
       "_meta/skills-lock.json"
     ],
-    "localSkillCount": 64,
-    "sharedSkillCount": 56,
+    "localSkillCount": 66,
+    "sharedSkillCount": 58,
     "projectSkillCount": 8
   },
   "rules": [
@@ -27,7 +27,7 @@
   "verificationSummary": {
     "countsByClassification": {
       "open-source": 36,
-      "self": 17,
+      "self": 19,
       "local": 10,
       "candidate": 1
     },
@@ -35,6 +35,17 @@
     "readOnlyAuditCommand": ".\\skills\\01-agent-engineering\\skill-lifecycle-manager\\scripts\\check_upstreams.ps1"
   },
   "sources": [
+    {
+      "name": "browser-session-handoff",
+      "path": "skills/01-agent-engineering/browser-session-handoff/",
+      "classification": "self",
+      "updatePolicy": "none",
+      "status": "self-maintained",
+      "evidence": [
+        "Documented from an owner-authorized local browser session handoff.",
+        "The bundled extension is a sanitized local implementation, validated with synthetic cookies."
+      ]
+    },
     {
       "name": "deep-research",
       "path": "skills/01-agent-engineering/deep-research/",

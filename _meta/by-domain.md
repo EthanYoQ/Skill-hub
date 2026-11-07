@@ -1,10 +1,10 @@
 # 按能力域索引
 
-共 57 个技能，按 7 个能力域 + projects（项目私有）分组。
+共 58 个技能，按 7 个能力域 + projects（项目私有）分组。
 
 ## 目录
 
-- [01 Agent 工程](#01-agent-工程)（12）
+- [01 Agent 工程](#01-agent-工程)（13）
 - [02 编程语言](#02-编程语言)（1）
 - [03 框架与技术栈](#03-框架与技术栈)（4）
 - [06 数据与检索](#06-数据与检索)（1）
@@ -13,10 +13,11 @@
 - [10 行业与业务](#10-行业与业务)（8）
 - [Projects 项目私有](#projects-项目私有)（0）
 
-## 01 Agent 工程（12）
+## 01 Agent 工程（13）
 
 | 技能名 | 路径 | 中文简介 |
 |---|---|---|
+| **browser-session-handoff** | [skills/01-agent-engineering/browser-session-handoff/](../skills/01-agent-engineering/browser-session-handoff/) | 按站点加密迁移已授权的 Chrome 登录 Cookie。 |
 | **deep-research** | [skills/01-agent-engineering/deep-research/](../skills/01-agent-engineering/deep-research/) | 多源深度研究，使用 firecrawl/exa 搜索并综合发现。 |
 | **find-skills** | [skills/01-agent-engineering/find-skills/](../skills/01-agent-engineering/find-skills/) | 自动发现与推荐可用 Agent 技能，回答"有没有能做 X 的技能"。 |
 | **github-desktop-release** | [skills/01-agent-engineering/github-desktop-release/](../skills/01-agent-engineering/github-desktop-release/) | GitHub Actions 验收 Windows 安装包，并编排跨平台安装包的提升、发布与权威回读。 |
